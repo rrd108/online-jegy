@@ -46,8 +46,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset(json_decode($data)->email)) {
         $orderId = uniqid();
 
-//        var_dump($orderId);var_dump(json_decode($data));die;
-
         $data = json_decode($data);
         $simple = new SimpleLiveUpdate($config, 'HUF');
         $simple->logFunc(
@@ -98,6 +96,35 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+    if (isset($_REQUEST['timeout'])) {
+        $orderCurrency = $_REQUEST['order_currency'];
+        $timeOut = new SimpleLiveUpdate($config, $orderCurrency);
+
+        $timeOut->formData['ORDER_REF'] = $_REQUEST['order_ref'];
+
+        $response = new stdClass;
+
+        if (isset($_REQUEST['redirect'])) {
+            $response->error = 'Megszakítottad a tranzakciót, fizetés nem történt';
+            $log['TRANSACTION'] = 'ABORT';
+        } else {
+            $response->error = 'A tranzakcióhoz szükséges idő limit lejárt, fizetés nem történt';
+            $log['TRANSACTION'] = 'TIMEOUT';
+        }
+
+        $log['ORDER_ID'] = (isset($_REQUEST['order_ref'])) ? $_REQUEST['order_ref'] : 'N/A';
+        $log['CURRENCY'] = (isset($_REQUEST['order_currency'])) ? $_REQUEST['order_currency'] : 'N/A';
+        $log['REDIRECT'] = (isset($_REQUEST['redirect'])) ? $_REQUEST['redirect'] : '0';
+        $timeOut->logFunc("Timeout", $log, $log['ORDER_ID']);
+        $timeOut->errorLogger();
+
+        $response->simpleTransactionId = '-';
+        $response->orderId = $log['ORDER_ID'];
+        $response->date = '-';
+
+        echo json_encode($response);
+        return;
+    }
     if (isset($_REQUEST['ctrl'])) {
         $orderCurrency = $_REQUEST['order_currency'];
         $backref = new SimpleBackRef($config, $orderCurrency);
@@ -132,5 +159,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $response->date= $backStatus['BACKREF_DATE'];
 
         echo json_encode($response);
+        return;
     }
 }

@@ -1,7 +1,10 @@
 <template>
   <div>
-      <div class="callout alert">
+      <div v-if="response.error" class="callout alert">
           {{response.error}}
+      </div>
+      <div v-if="response.status" class="callout info">
+          {{response.status}}
       </div>
       <div class="row">
           <div class="column small-8">
@@ -28,9 +31,6 @@
           </div>
       </div>
 
-      TODO successful Payment
-      TODO errors
-      TODO timeout
       TODO IPN
   </div>
 </template>

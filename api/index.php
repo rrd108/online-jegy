@@ -26,22 +26,22 @@ header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $data = file_get_contents('php://input');
+    // $response = new stdClass;
 
-    /* if (isset(json_decode($data)->newsletter)) {
-        TODO
+    if (isset(json_decode($data)->newsletter)) {
         $ch = curl_init($secrets['mailchimpUrl']);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
             'Content-Type: application/json',
             'Authorization: Basic '.base64_encode('user:' . $secrets['mailchimpApiKey']),
-            'Content-Length: ' . strlen($data)),
+            'Content-Length: ' . strlen($data)
+            ],
         );
         $result = curl_exec($ch);
-        echo $result;
-        return;
-    } */
+        // $response->newsletter = $result;
+    }
 
     if (isset(json_decode($data)->email)) {
         $orderId = uniqid();
@@ -53,7 +53,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             ['version' => '0.0.1'],
             $orderId
         );
-        // TODO
         $simple->addProduct([
             'name' => 'online jegy rendelés',
             'code' => $data->date,

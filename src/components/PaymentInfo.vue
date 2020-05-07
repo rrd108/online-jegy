@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="column">
       <div v-if="response.error" class="callout alert">
           {{response.error}}
       </div>

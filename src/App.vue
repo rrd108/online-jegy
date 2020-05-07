@@ -1,8 +1,10 @@
 <template>
   <div id="app">
     <AppHeader />
-    <DateSelect v-if="!urlParams" />
-    <PaymentInfo v-if="urlParams" :urlParams="urlParams" />
+    <main class="row align-center">
+      <DateSelect v-if="!urlParams" />
+      <PaymentInfo v-if="urlParams" :urlParams="urlParams" />
+    </main>
   </div>
 </template>
 

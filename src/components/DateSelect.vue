@@ -1,5 +1,5 @@
 <template>
-  <main class="align-center">
+  <div class="column">
     <section v-show="!summary">
         <h3>Látogatás dátuma</h3>
         <p class="callout alert" v-show="dateError">Válassz időpontot!</p>
@@ -90,7 +90,7 @@
             <span v-html="simpleForm"></span>
         </div>
     </section>
-  </main>
+  </div>
 </template>
 
 <script>

@@ -18,7 +18,7 @@ Vue.filter('toNumFormat', function(
   thousands_sep
 ) {
   let n = value,
-    c = isNaN((decimals = Math.abs(decimals))) ? 2 : decimals
+  c = isNaN((decimals = Math.abs(decimals))) ? 2 : decimals
   let d = dec_point == undefined ? ',' : dec_point
   let t = thousands_sep == undefined ? ' ' : thousands_sep,
     s = n < 0 ? '-' : ''

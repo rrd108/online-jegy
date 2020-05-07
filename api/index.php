@@ -9,8 +9,10 @@ require('./secrets.php');
 require('./simplepay/config.php');
 require('./simplepay/SimplePayment.class.php');
 
+$pdo = new PDO('mysql:host=localhost;dbname=' . $secrets['mysqlTable'], $secrets['mysqlUser'], $secrets['mysqlPass']);
 $adultPrice = 4000;
 $childPrice = 3000;
+$maxSlots = 50;
 
 if($development) {
     ini_set('display_errors', 1);
@@ -50,7 +52,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $amount = $adultPrice * $data->adult + $childPrice * $data->child;
 
         // save order to the database
-        $pdo = new PDO('mysql:host=localhost;dbname=' . $secrets['mysqlTable'], $secrets['mysqlUser'], $secrets['mysqlPass']);
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 
@@ -115,6 +116,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+    if (isset($_GET['slots'])) {
+        $stmt = $pdo->prepare("SELECT (SUM(adult) + SUM(child)) AS visitors
+            FROM orders
+            WHERE date = ?");
+        $stmt->execute([$_GET['slots']]);
+        $result = $stmt->fetch();
+        echo $maxSlots - $result['visitors'];
+    }
     if (isset($_REQUEST['timeout'])) {
         $orderCurrency = $_REQUEST['order_currency'];
         $timeOut = new SimpleLiveUpdate($config, $orderCurrency);

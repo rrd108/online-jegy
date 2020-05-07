@@ -136,8 +136,9 @@ export default {
   methods: {
     checkAvailableSlots() {
         this.dateError = false
-        // TODO check available slots for this time from API
-        this.slots = 10
+        axios.get(process.env.VUE_APP_API_URL + '?slots=' + this.getFormattedDate(this.date))
+            .then(response => this.slots = response.data)
+            .catch(error => console.log(error))
     },
     isDisabledDate(date) {
         return this.isPast(date) || this.isToday(date) || this.isTomorrow(date) || this.isSpecialDate(date)
@@ -157,6 +158,10 @@ export default {
         // we should add 1 day to get it work as expected
         const d = new Date(date.setDate(date.getDate() + 1))
         return specialDates.indexOf(d.toISOString().split('T')[0]) != -1
+    },
+    getFormattedDate(date) {
+        // TODO handling leading zeros
+        return date.getFullYear() + '-0' + (parseInt(date.getMonth())+1) + '-' + date.getDate() + ' ' + date.getHours() + ':0' + date.getMinutes() + ':00'
     },
     order() {
         // TODO email validation
@@ -192,8 +197,7 @@ export default {
         this.summary = true
 
         axios.post(process.env.VUE_APP_API_URL, {
-            date: this.date,
-            date: this.date.getFullYear() + '-0' + (parseInt(this.date.getMonth())+1) + '-' + this.date.getDate() + ' ' + this.date.getHours() + ':' + this.date.getMinutes() + ':00',
+            date: this.getFormattedDate(this.date),
             adult: this.adult,
             child: this.child,
             name: this.name,

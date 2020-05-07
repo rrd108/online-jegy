@@ -161,4 +161,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         echo json_encode($response);
         return;
     }
+    // TODO check if ipn called via POST?
+    if (isset($_REQUEST['ipn'])) {
+        $orderCurrency = $_REQUEST['CURRENCY'];
+        $ipn = new SimpleIpn($config, $orderCurrency);
+        if ($ipn->validateReceived()) {
+            $ipn->confirmReceived();
+            // TODO update status of the order
+        }
+        $ipn->errorLogger();
+        return;
+    }
 }

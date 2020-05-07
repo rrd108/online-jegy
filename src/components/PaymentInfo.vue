@@ -30,8 +30,6 @@
               {{response.date}}
           </div>
       </div>
-
-      TODO IPN
   </div>
 </template>
 

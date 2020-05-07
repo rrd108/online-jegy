@@ -45,8 +45,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if (isset(json_decode($data)->email)) {
         $orderId = uniqid();
-
         $data = json_decode($data);
+
+        $amount = $adultPrice * $data->adult + $childPrice * $data->child;
+
+        // save order to the database
+        $pdo = new PDO('mysql:host=localhost;dbname=' . $secrets['mysqlTable'], $secrets['mysqlUser'], $secrets['mysqlPass']);
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+
+        $stmt = $pdo->prepare("INSERT INTO orders (id, date, adult, child, name, email, phone, newsletter, amount) VALUES (?,?,?,?,?,?,?,?,?)");
+        $stmt->bindValue(1, $orderId);
+        $stmt->bindValue(2, $data->date);
+        $stmt->bindValue(3, $data->adult);
+        $stmt->bindValue(4, $data->child);
+        $stmt->bindValue(5, $data->name);
+        $stmt->bindValue(6, $data->email);
+        $stmt->bindValue(7, $data->phone);
+        $stmt->bindValue(8, $data->newsletter);
+        $stmt->bindValue(9, $amount);
+        $stmt->execute();
+
+        // create simple form
         $simple = new SimpleLiveUpdate($config, 'HUF');
         $simple->logFunc(
             'SimpleObjectCreation',
@@ -57,7 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             'name' => 'online jegy rendelés',
             'code' => $data->date,
             'info' => 'Felnőtt: ' . $data->adult . ', gyerek: ' . $data->child,
-            'price' => $adultPrice * $data->adult + $childPrice * $data->child,
+            'price' => $amount,
             'qty' => 1,
             'vat' => 0, // no VAT $order_data['prices_include_tax']
         ]);

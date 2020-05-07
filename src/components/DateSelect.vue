@@ -193,12 +193,13 @@ export default {
 
         axios.post(process.env.VUE_APP_API_URL, {
             date: this.date,
+            date: this.date.getFullYear() + '-0' + (parseInt(this.date.getMonth())+1) + '-' + this.date.getDate() + ' ' + this.date.getHours() + ':' + this.date.getMinutes() + ':00',
             adult: this.adult,
             child: this.child,
             name: this.name,
             email: this.email,
             phone: this.phone,
-            newsletter: this.newsletter
+            newsletter: this.newsletter ? 1 : 0
         })
         .then(response => {
             this.simpleForm = response.data

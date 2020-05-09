@@ -117,7 +117,7 @@ export default {
         manError: false,
         name: null,
         nameError: false,
-        newsletter: false,
+        newsletter: true,
         summary: false,
         phone: null,
         phoneError: false,

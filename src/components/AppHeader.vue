@@ -1,7 +1,10 @@
 <template>
   <header>
     <div class="row">
-      <font-awesome-icon icon="info-circle" size="lg" class="column small-2 info" @click="showInfo=showInfo?false:true" title="Infók mutatása / rejtése" />
+      <div class="column small-2 info" @click="showInfo=showInfo?false:true">
+        <font-awesome-icon icon="info-circle" size="lg" title="Infók mutatása / rejtése" />
+        <p>Info</p>
+      </div>
       <h1 class="column small-7 text-center">Jegyrendelés</h1>
       <div class="column small-3">
         <img src="../assets/logo.png" />
@@ -43,5 +46,8 @@ h1 {
 }
 .info {
   cursor: pointer;
+}
+p {
+  margin: 0
 }
 </style>

@@ -7,7 +7,16 @@
           {{response.status}}
       </div>
       <div class="row">
-          <div class="column small-8">
+          <div class="column small-6">
+              <strong>Rendelési azonosító</strong>
+          </div>
+          <div class="column small-6">
+              <strong>{{response.orderId}}</strong>
+          </div>
+      </div>
+      <div class="row callout warning">A rendelési azonosítóval tudsz majd belépni a recepción, kérjük hozd magaddal!</div>
+      <div class="row">
+          <div class="column small-6">
               Simple tranzakció azonosító
           </div>
           <div class="column small-4">
@@ -15,15 +24,7 @@
           </div>
       </div>
       <div class="row">
-          <div class="column small-8">
-              Rendelési azonosító
-          </div>
-          <div class="column small-4">
-              {{response.orderId}}
-          </div>
-      </div>
-      <div class="row">
-          <div class="column small-8">
+          <div class="column small-6">
               Simple tranzakció dátuma
           </div>
           <div class="column small-4">

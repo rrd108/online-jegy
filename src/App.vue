@@ -2,13 +2,17 @@
   <div id="app">
     <AppHeader />
     <main class="row align-center">
-      <DateSelect v-if="!urlParams" />
-      <PaymentInfo v-if="urlParams" :urlParams="urlParams" />
+      <AdminPage v-if="url == '/admin'" />
+      <article v-if="url != '/admin'">
+        <DateSelect v-if="!urlParams" />
+        <PaymentInfo v-if="urlParams" :urlParams="urlParams" />
+      </article>
     </main>
   </div>
 </template>
 
 <script>
+import AdminPage from "./components/AdminPage"
 import AppHeader from "./components/AppHeader"
 import DateSelect from "./components/DateSelect"
 import PaymentInfo from "./components/PaymentInfo"
@@ -17,12 +21,14 @@ export default {
   // TODO prices hardcoded in vue and in php
   name: 'App',
   components: {
+    AdminPage,
     AppHeader,
     DateSelect,
     PaymentInfo
   },
   data() {
     return {
+      url : window.location.pathname,
       urlParams: window.location.href.split('?')[1],
     }
   },

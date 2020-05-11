@@ -14,7 +14,7 @@ $adultPrice = 4000;
 $childPrice = 3000;
 $maxSlots = 50;
 
-if($development) {
+if ($development) {
     ini_set('display_errors', 1);
     error_reporting(E_ALL);
     $config['BACK_REF'] = 'localhost:8080';
@@ -116,6 +116,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+    if (isset($_GET['checkins'])) {
+        $stmt = $pdo->prepare("SELECT date, (SUM(adult) + SUM(child)) AS visitors
+            FROM orders
+            WHERE date >= ?
+            GROUP BY date
+            ORDER BY date");
+        $stmt->execute([date('Y-m-01')]);
+        $result = $stmt->fetchAll();
+        echo json_encode($result);
+    }
     if (isset($_GET['slots'])) {
         $stmt = $pdo->prepare("SELECT (SUM(adult) + SUM(child)) AS visitors
             FROM orders

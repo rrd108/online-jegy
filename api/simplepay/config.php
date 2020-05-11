@@ -8,7 +8,7 @@ $config = [
 	'HUF_SECRET_KEY' => $secrets['HUF_SECRET_KEY'],
 	'LOGGER' => true,
     'LOG_PATH' => './logs',
-	'PROTOCOL' => 'http',
+	'PROTOCOL' => 'https',
 
 	'BACK_REF' => 'jegy.krisnavolgy.hu',
 	'TIMEOUT_URL' => 'jegy.krisnavolgy.hu&timeout=1',

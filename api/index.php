@@ -7,7 +7,7 @@ $development = true;
 
 require('./secrets.php');
 require('./simplepay/config.php');
-require('./simplepay/SimplePayment.class.php');
+require('./simplepay/SimplePayV21.php');
 
 $pdo = new PDO('mysql:host=localhost;dbname=' . $secrets['mysqlTable'], $secrets['mysqlUser'], $secrets['mysqlPass']);
 $adultPrice = 4000;
@@ -17,8 +17,7 @@ $maxSlots = 50;
 if ($development) {
     ini_set('display_errors', 1);
     error_reporting(E_ALL);
-    $config['BACK_REF'] = 'localhost:8080';
-	$config['TIMEOUT_URL'] = 'localhost:8080&timeout=1';
+    $config['URL'] = 'http://localhost:8080';
 }
 
 header('Access-Control-Allow-Origin: *');
@@ -68,50 +67,34 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $stmt->execute();
 
         // create simple form
-        $simple = new SimpleLiveUpdate($config, 'HUF');
-        $simple->logFunc(
-            'SimpleObjectCreation',
-            ['version' => '0.0.1'],
-            $orderId
-        );
-        $simple->addProduct([
-            'name' => 'online jegy rendelés',
-            'code' => $data->date,
-            'info' => 'Felnőtt: ' . $data->adult . ', gyerek: ' . $data->child,
-            'price' => $amount,
-            'qty' => 1,
-            'vat' => 0, // no VAT $order_data['prices_include_tax']
-        ]);
-        $simple->setField('BILL_FNAME', $data->name);
-        $simple->setField('BILL_LNAME', $data->name);
-        $simple->setField('BILL_EMAIL', $data->email); // must be valid address
-        $simple->setField('BILL_PHONE', $data->phone);
-        $simple->setField('BILL_ADDRESS', 'Sehol u 0');
-        $simple->setField('BILL_CITY', 'Budapest');
-        $simple->setField('BILL_STATE', 'Bp');
-        $simple->setField('BILL_ZIPCODE', 1234);
-        $simple->setField('BILL_COUNTRYCODE', 'HU');
+        $simple = new SimplePayStart;
+        $simple->addConfig($config);
 
-        $simple->setField('DELIVERY_COUNTRYCODE', 'HU');
-        $simple->setField('DELIVERY_FNAME', $data->name);
-        $simple->setField('DELIVERY_LNAME', $data->name);
-        $simple->setField('DELIVERY_ADDRESS', 'Sehol u 0');
-        $simple->setField('DELIVERY_PHONE', $data->phone);
-        $simple->setField('DELIVERY_ZIPCODE', 1234);
-        $simple->setField('DELIVERY_CITY', 'Budapest');
-        $simple->setField('DELIVERY_STATE', 'Bp');
+        $timeoutInSec = 600;
+        $simple->addData('timeout ', date("c", time() + $timeoutInSec));
 
-        $simple->setField('ORDER_REF', $orderId);
-        $simple->setField('ORDER_SHIPPING', 0);
+        $simple->addData('currency', 'HUF');
+        $simple->addData('total', $amount);
+        $simple->addData('orderRef', $orderId);
+        $simple->addData('customerEmail', $data->email);
+        $simple->addData('language', 'HU');
 
-        $simple->setField('DISCOUNT', 0);
+        $simple->addData('methods', ['CARD']);
+        $simple->addData('url', $config['URL']);
 
-        $simple->setField('BACK_REF', $config['BACK_REF']);
-        $simple->setField('TIMEOUT_URL', $config['TIMEOUT_URL']);
-        $simple->setField('LANGUAGE', 'HU');
-        $simple->setField('CURRENCY', 'HUF');
+        $simple->addGroupData('invoice', 'name', $data->name);
+        $simple->addGroupData('invoice', 'company', '');
+        $simple->addGroupData('invoice', 'country', 'hu');
+        $simple->addGroupData('invoice', 'state', 'Budapest');
+        $simple->addGroupData('invoice', 'city', 'Budapest');
+        $simple->addGroupData('invoice', 'zip', '1111');
+        $simple->addGroupData('invoice', 'address', '-');
+        $simple->addGroupData('invoice', 'address2', '');
+        $simple->addGroupData('invoice', 'phone', $data->phone);
 
-        echo $simple->createHtmlForm('SimplePayForm', 'button', 'Ugrás a fizető oldalra');
+        $simple->runStart();
+        $simple->getHtmlForm();
+        echo $simple->returnData['form'];
     }
 }
 

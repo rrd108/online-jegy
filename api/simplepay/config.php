@@ -1,32 +1,64 @@
 <?php
 
+/**
+ *  Copyright (C) 2020 OTP Mobil Kft.
+ *
+ *  PHP version 7
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * @category  SDK
+ * @package   SimplePayV2
+ * @author    SimplePay IT Support <itsupport@otpmobil.com>
+ * @copyright 2020 OTP Mobil Kft.
+ * @license   http://www.gnu.org/licenses/gpl-3.0.html  GNU GENERAL PUBLIC LICENSE (GPL V3.0)
+ * @link      http://simplepartner.hu/online_fizetesi_szolgaltatas.html
+ */
+
 $config = [
-	'CURL' => true,					//use cURL or not
-	'SANDBOX' => true,				//true: sandbox transaction, false: live transaction
+    //HUF
+    'HUF_MERCHANT' => $secrets['HUF_MERCHANT'],            //merchant account ID (HUF)
+    'HUF_SECRET_KEY' => $secrets['HUF_SECRET_KEY'],          //secret key for account ID (HUF)
 
-	'HUF_MERCHANT' => $secrets['HUF_MERCHANT'],
-	'HUF_SECRET_KEY' => $secrets['HUF_SECRET_KEY'],
-	'LOGGER' => true,
-    'LOG_PATH' => './logs',
-	'PROTOCOL' => 'https',
+    //EUR
+    'EUR_MERCHANT' => "",            //merchant account ID (EUR)
+    'EUR_SECRET_KEY' => "",          //secret key for account ID (EUR)
 
-	'BACK_REF' => 'jegy.krisnavolgy.hu',
-	'TIMEOUT_URL' => 'jegy.krisnavolgy.hu&timeout=1',
+    //USD
+    'USD_MERCHANT' => "",            //merchant account ID (USD)
+    'USD_SECRET_KEY' => "",          //secret key for account ID (USD)
 
-    'IRN_BACK_URL' => $_SERVER['HTTP_HOST'] . '/irn.php',        //url of payment irn page
-    'IDN_BACK_URL' => $_SERVER['HTTP_HOST'] . '/idn.php',        //url of payment idn page
-    'IOS_BACK_URL' => $_SERVER['HTTP_HOST'] . '/ios.php',        //url of payment idn page
+    'SANDBOX' => true,
 
-    'GET_DATA' => $_GET,
+    //common return URL
+    'URL' => 'http://' . $_SERVER['HTTP_HOST'],
+
+    //optional uniq URL for events
+    /*
+    'URLS_SUCCESS' => 'http://' . $_SERVER['HTTP_HOST'] . '/success.php',       //url for successful payment
+    'URLS_FAIL' => 'http://' . $_SERVER['HTTP_HOST'] . '/fail.php',             //url for unsuccessful
+    'URLS_CANCEL' => 'http://' . $_SERVER['HTTP_HOST'] . '/cancel.php',         //url for cancell on payment page
+    'URLS_TIMEOUT' => 'http://' . $_SERVER['HTTP_HOST'] . '/timeout.php',       //url for payment page timeout
+    */
+
+    'GET_DATA' => (isset($_GET['r']) && isset($_GET['s'])) ? ['r' => $_GET['r'], 's' => $_GET['s']] : [],
     'POST_DATA' => $_POST,
     'SERVER_DATA' => $_SERVER,
 
-	'DEBUG_LIVEUPDATE_PAGE' => false,					//Debug message on demo LiveUpdate page (only for development purpose)
-	'DEBUG_LIVEUPDATE' => false,						//LiveUpdate debug into log file
-	'DEBUG_BACKREF' => false,							//BackRef debug into log file
-	'DEBUG_IPN' => false,								//IPN debug into log file
-	'DEBUG_IRN' => false,								//IRN debug into log file
-	'DEBUG_IDN' => false,								//IDN debug into log file
-	'DEBUG_IOS' => false,								//IOS debug into log file
-	'DEBUG_ONECLICK' => false,							//OneClick debug into log file
+    'LOGGER' => true,                              //basic transaction log
+    'LOG_PATH' => 'log',                           //path of log file
+
+    //3DS
+    'AUTOCHALLENGE' => true,                      //in case of unsuccessful payment with registered card run automatic challange
 ];

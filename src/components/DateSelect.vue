@@ -83,7 +83,7 @@
             <p class="column small-10">{{email}}</p>
         </div>
         <div class="row">
-            <font-awesome-icon icon="phone" size="lg" class="column small-2"/>
+            <img src="../assets/simple.png" />
             <p class="column small-10">{{phone}}</p>
         </div>
         <div class="row align-center">

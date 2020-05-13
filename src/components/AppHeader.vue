@@ -13,8 +13,12 @@
     <div class="row">
       <div class="column-small-12" v-show="showInfo">
         <h1><font-awesome-icon icon="info-circle" size="lg" class="column small-2 info" /> Jegy információk</h1>
+        <h2>Általános szerződési feltételek</h2>
+        <h2>Adattovábbítási nyilatkozat</h2>
         <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Earum suscipit, sint, ea saepe ex debitis dicta eius, magni nihil excepturi culpa. Atque asperiores iure, repudiandae aliquam incidunt quidem eaque nulla temporibus, facere voluptates exercitationem eveniet, repellat dolores inventore fugiat harum similique recusandae illum dicta ad doloribus alias tenetur. Est, vero.
+          A rendelés leadásával a honlap használója tudomásul veszi, hogy a Vénu Kft (8699 Somogyvámos Fő u. 38.) adatkezelő által a jegy.krisnavolgy.hu felhasználói adatbázisában tárolt alábbi személyes adataim átadásra kerülnek az OTP Mobil Kft., mint adatfeldolgozó részére. <br>
+          Az adatkezelő által továbbított adatok köre az alábbi: a vásárló email címe .<br>
+          Az adatfeldolgozó által végzett adatfeldolgozási tevékenység jellege és célja a SimplePay Adatkezelési tájékoztatóban, az alábbi linken tekinthető meg: <a href="http://simplepay.hu/vasarlo-aff">http://simplepay.hu/vasarlo-aff</a>
         </p>
       </div>
     </div>

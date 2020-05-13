@@ -9,7 +9,7 @@
         </div>
         <h3>Vendégek száma</h3>
         <h4>Max {{slots}} fő erre az időpontra</h4>
-        <p class="callout alert" v-show="parseInt(adult) + parseInt(child) > parseInt(slots)">Erre az időpontra csak {{slots}} helyünk van!</p>
+        <p class="callout alert" v-show="overBooking">Erre az időpontra csak {{slots}} helyünk van!</p>
         <p class="callout alert" v-show="manError">Add meg a létszámot!</p>
         <div class="row">
             <font-awesome-icon icon="male" size="lg" class="column small-2"/>
@@ -125,7 +125,7 @@ export default {
         phone: null,
         phoneError: false,
         simpleForm :'',
-        slots: 50,
+        slots: 50,  // TODO hardcoded slots
         tomorrow: new Date(new Date(today).setDate(new Date(today).getDate() + 1)),
         tos: false,
         tosError: false,
@@ -133,7 +133,13 @@ export default {
   },
   computed : {
     amount() {
+        // TODO hardcoded prices
         return this.adult * 4000 + this.child * 3000
+    },
+    overBooking () {
+        const adult = this.adult ? this.adult : 0
+        const child = this.child ? this.child : 0
+        return parseInt(adult) + parseInt(child) > parseInt(this.slots);
     },
   },
   methods: {

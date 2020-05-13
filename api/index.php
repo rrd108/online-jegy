@@ -95,6 +95,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $simple->getHtmlForm();
         echo $simple->returnData['form'];
     }
+
+    if (isset($_REQUEST['ipn'])) {
+        $json = file_get_contents('php://input');
+        $simple = new SimplePayIpn;
+        $simple->addConfig($config);
+        if ($simple->isIpnSignatureCheck($json)) {
+            $simple->runIpnConfirm();
+        }
+        return;
+    }
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
@@ -157,17 +167,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $response->orderId = $result['o'];
         $response->simpleTransactionId = $result['t'];
         echo json_encode($response);
-        return;
-    }
-
-    // TODO check if ipn called via POST?
-    if (isset($_REQUEST['ipn'])) {
-        $json = file_get_contents('php://input');
-        $simple = new SimplePayIpn;
-        $simple->addConfig($config);
-        if ($simple->isIpnSignatureCheck($json)) {
-            $simple->runIpnConfirm();
-        }
         return;
     }
 }

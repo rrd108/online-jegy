@@ -129,6 +129,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $result = $simple->getRawNotification();
         }
 
+        $stmt = $pdo->prepare("UPDATE orders
+            SET transactionId = ?
+            WHERE id = ?");
+        $stmt->execute([$result['t'], $result['o']]);
+
         $events = [
             'SUCCESS' => 'Sikeres tranzakció',
             'FAIL' => 'Sikertelen tranzakció',

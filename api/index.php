@@ -7,7 +7,7 @@ $development = true;
 
 require('./secrets.php');
 require('./simplepay/config.php');
-require('./simplepay/SimplePayment.class.php');
+require('./simplepay/SimplePayV21.php');
 
 $pdo = new PDO('mysql:host=localhost;dbname=' . $secrets['mysqlTable'], $secrets['mysqlUser'], $secrets['mysqlPass']);
 $adultPrice = 4000;
@@ -17,8 +17,7 @@ $maxSlots = 50;
 if ($development) {
     ini_set('display_errors', 1);
     error_reporting(E_ALL);
-    $config['BACK_REF'] = 'localhost:8080';
-	$config['TIMEOUT_URL'] = 'localhost:8080&timeout=1';
+    $config['URL'] = 'http://localhost:8080';
 }
 
 header('Access-Control-Allow-Origin: *');
@@ -68,50 +67,34 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $stmt->execute();
 
         // create simple form
-        $simple = new SimpleLiveUpdate($config, 'HUF');
-        $simple->logFunc(
-            'SimpleObjectCreation',
-            ['version' => '0.0.1'],
-            $orderId
-        );
-        $simple->addProduct([
-            'name' => 'online jegy rendelés',
-            'code' => $data->date,
-            'info' => 'Felnőtt: ' . $data->adult . ', gyerek: ' . $data->child,
-            'price' => $amount,
-            'qty' => 1,
-            'vat' => 0, // no VAT $order_data['prices_include_tax']
-        ]);
-        $simple->setField('BILL_FNAME', $data->name);
-        $simple->setField('BILL_LNAME', $data->name);
-        $simple->setField('BILL_EMAIL', $data->email); // must be valid address
-        $simple->setField('BILL_PHONE', $data->phone);
-        $simple->setField('BILL_ADDRESS', 'Sehol u 0');
-        $simple->setField('BILL_CITY', 'Budapest');
-        $simple->setField('BILL_STATE', 'Bp');
-        $simple->setField('BILL_ZIPCODE', 1234);
-        $simple->setField('BILL_COUNTRYCODE', 'HU');
+        $simple = new SimplePayStart;
+        $simple->addConfig($config);
 
-        $simple->setField('DELIVERY_COUNTRYCODE', 'HU');
-        $simple->setField('DELIVERY_FNAME', $data->name);
-        $simple->setField('DELIVERY_LNAME', $data->name);
-        $simple->setField('DELIVERY_ADDRESS', 'Sehol u 0');
-        $simple->setField('DELIVERY_PHONE', $data->phone);
-        $simple->setField('DELIVERY_ZIPCODE', 1234);
-        $simple->setField('DELIVERY_CITY', 'Budapest');
-        $simple->setField('DELIVERY_STATE', 'Bp');
+        $timeoutInSec = 600;
+        $simple->addData('timeout ', date("c", time() + $timeoutInSec));
 
-        $simple->setField('ORDER_REF', $orderId);
-        $simple->setField('ORDER_SHIPPING', 0);
+        $simple->addData('currency', 'HUF');
+        $simple->addData('total', $amount);
+        $simple->addData('orderRef', $orderId);
+        $simple->addData('customerEmail', $data->email);
+        $simple->addData('language', 'HU');
 
-        $simple->setField('DISCOUNT', 0);
+        $simple->addData('methods', ['CARD']);
+        $simple->addData('url', $config['URL']);
 
-        $simple->setField('BACK_REF', $config['BACK_REF']);
-        $simple->setField('TIMEOUT_URL', $config['TIMEOUT_URL']);
-        $simple->setField('LANGUAGE', 'HU');
-        $simple->setField('CURRENCY', 'HUF');
+        $simple->addGroupData('invoice', 'name', $data->name);
+        $simple->addGroupData('invoice', 'company', '');
+        $simple->addGroupData('invoice', 'country', 'hu');
+        $simple->addGroupData('invoice', 'state', 'Budapest');
+        $simple->addGroupData('invoice', 'city', 'Budapest');
+        $simple->addGroupData('invoice', 'zip', '1111');
+        $simple->addGroupData('invoice', 'address', '-');
+        $simple->addGroupData('invoice', 'address2', '');
+        $simple->addGroupData('invoice', 'phone', $data->phone);
 
-        echo $simple->createHtmlForm('SimplePayForm', 'button', 'Ugrás a fizető oldalra');
+        $simple->runStart();
+        $simple->getHtmlForm();
+        echo $simple->returnData['form'];
     }
 }
 
@@ -126,6 +109,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $result = $stmt->fetchAll();
         echo json_encode($result);
     }
+
     if (isset($_GET['slots'])) {
         $stmt = $pdo->prepare("SELECT (SUM(adult) + SUM(child)) AS visitors
             FROM orders
@@ -134,80 +118,44 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $result = $stmt->fetch();
         echo $maxSlots - $result['visitors'];
     }
-    if (isset($_REQUEST['timeout'])) {
-        $orderCurrency = $_REQUEST['order_currency'];
-        $timeOut = new SimpleLiveUpdate($config, $orderCurrency);
 
-        $timeOut->formData['ORDER_REF'] = $_REQUEST['order_ref'];
+    if (isset($_REQUEST['r']) && isset($_REQUEST['s'])) {
+        $simple = new SimplePayBack;
+        $simple->addConfig($config);
+
+        $result = [];
+        if ($simple->isBackSignatureCheck($_REQUEST['r'], $_REQUEST['s'])) {
+            $result = $simple->getRawNotification();
+        }
+
+        $events = [
+            'SUCCESS' => 'Sikeres tranzakció',
+            'FAIL' => 'Sikertelen tranzakció',
+            'TIMEOUT' => 'Időtúllépés, nem lett a megadott ideig elindítva a fizetés',
+            'CANCEL' => 'Megszakított fizetés'
+        ];
 
         $response = new stdClass;
 
-        if (isset($_REQUEST['redirect'])) {
-            $response->error = 'Megszakítottad a tranzakciót, fizetés nem történt';
-            $log['TRANSACTION'] = 'ABORT';
-        } else {
-            $response->error = 'A tranzakcióhoz szükséges idő limit lejárt, fizetés nem történt';
-            $log['TRANSACTION'] = 'TIMEOUT';
+        if ($result['e'] != 'SUCCESS') {
+            $response->error = 'Kérjük, ellenőrizze a tranzakció során megadott adatok helyességét! Amennyiben minden adatot helyesen adott meg, a visszautasítás okának kivizsgálása érdekében kérjük, szíveskedjen kapcsolatba lépni kártyakibocsátó bankjával.';
         }
 
-        $log['ORDER_ID'] = (isset($_REQUEST['order_ref'])) ? $_REQUEST['order_ref'] : 'N/A';
-        $log['CURRENCY'] = (isset($_REQUEST['order_currency'])) ? $_REQUEST['order_currency'] : 'N/A';
-        $log['REDIRECT'] = (isset($_REQUEST['redirect'])) ? $_REQUEST['redirect'] : '0';
-        $timeOut->logFunc("Timeout", $log, $log['ORDER_ID']);
-        $timeOut->errorLogger();
-
-        $response->simpleTransactionId = '-';
-        $response->orderId = $log['ORDER_ID'];
-        $response->date = '-';
-
+        $response->status = $events[$result['e']];
+        $response->orderId = $result['o'];
+        $response->simpleTransactionId = $result['t'];
         echo json_encode($response);
         return;
     }
-    if (isset($_REQUEST['ctrl'])) {
-        $orderCurrency = $_REQUEST['order_currency'];
-        $backref = new SimpleBackRef($config, $orderCurrency);
 
-        $backref->order_ref = $_REQUEST['order_ref'];
-
-        $response = new stdClass;
-
-        //some error before the user even redirected to SimplePay
-        if (!empty($_REQUEST['err'])) {
-            $backStatus = $backref->backStatusArray;
-            $backref->logFunc("BackRef", $_REQUEST, $backref->order_ref);
-            $response->error = $_REQUEST['err'];
-        }
-
-        //card authorization failed
-        if (empty($_REQUEST['err']) && !$backref->checkResponse()) {
-            $backStatus = $backref->backStatusArray;
-            $response->error = 'Checksum error';
-        }
-
-        //success on card authorization
-        if (empty($_REQUEST['err']) && $backref->checkResponse()) {
-            $backStatus = $backref->backStatusArray;
-            $response->status = $backStatus['ORDER_STATUS'];
-        }
-
-        $backref->errorLogger();
-
-        $response->simpleTransactionId = $backStatus['PAYREFNO'];
-        $response->orderId = $backStatus['REFNOEXT'];
-        $response->date= $backStatus['BACKREF_DATE'];
-
-        echo json_encode($response);
-        return;
-    }
     // TODO check if ipn called via POST?
     if (isset($_REQUEST['ipn'])) {
-        $orderCurrency = $_REQUEST['CURRENCY'];
-        $ipn = new SimpleIpn($config, $orderCurrency);
-        if ($ipn->validateReceived()) {
-            $ipn->confirmReceived();
-            // TODO update status of the order
+        $json = file_get_contents('php://input');
+        $simple = new SimplePayIpn;
+        $simple->addConfig($config);
+        if ($simple->isIpnSignatureCheck($json)) {
+            $simple->runIpnConfirm();
         }
-        $ipn->errorLogger();
         return;
     }
 }

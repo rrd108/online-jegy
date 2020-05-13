@@ -45,7 +45,7 @@
         <p class="callout alert" v-show="tosError">A rendelési feltételek elfogadása nélkül nem tudsz tovább lépni!</p>
         <div class="row align-center">
             <input type="checkbox" v-model="tos" id="tos" @change="tosError = false">
-            <label for="tos">Elfogadom a szolgáltatási feltételeket</label>
+            <label for="tos">Elfogadom az általános szolgáltatási feltételeket</label>
         </div>
         <div class="row align-center">
             <input type="checkbox" v-model="newsletter" id="newsletter">

@@ -90,6 +90,7 @@
             <img src="../assets/simple.png" />
         </div>
         <div class="row align-center">
+            <img src="../assets/ajax-loader.gif" v-show="!simpleForm">
             <span v-html="simpleForm"></span>
         </div>
     </section>

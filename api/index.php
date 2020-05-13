@@ -109,6 +109,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $result = $stmt->fetchAll();
         echo json_encode($result);
     }
+
     if (isset($_GET['slots'])) {
         $stmt = $pdo->prepare("SELECT (SUM(adult) + SUM(child)) AS visitors
             FROM orders
@@ -117,6 +118,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $result = $stmt->fetch();
         echo $maxSlots - $result['visitors'];
     }
+
     if (isset($_REQUEST['timeout'])) {
         $orderCurrency = $_REQUEST['order_currency'];
         $timeOut = new SimpleLiveUpdate($config, $orderCurrency);
@@ -146,42 +148,36 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         echo json_encode($response);
         return;
     }
-    if (isset($_REQUEST['ctrl'])) {
-        $orderCurrency = $_REQUEST['order_currency'];
-        $backref = new SimpleBackRef($config, $orderCurrency);
 
-        $backref->order_ref = $_REQUEST['order_ref'];
+    if (isset($_REQUEST['r']) && isset($_REQUEST['s'])) {
+        $trx = new SimplePayBack;
+        $trx->addConfig($config);
+
+        $result = [];
+        if ($trx->isBackSignatureCheck($_REQUEST['r'], $_REQUEST['s'])) {
+            $result = $trx->getRawNotification();
+        }
+
+        $events = [
+            'SUCCESS' => 'Sikeres tranzakció',
+            'FAIL' => 'Sikertelen tranzakció',
+            'TIMEOUT' => 'Időtúllépés, nem lett a megadott ideig elindítva a fizetés',
+            'CANCEL' => 'Megszakított fizetés'
+        ];
 
         $response = new stdClass;
 
-        //some error before the user even redirected to SimplePay
-        if (!empty($_REQUEST['err'])) {
-            $backStatus = $backref->backStatusArray;
-            $backref->logFunc("BackRef", $_REQUEST, $backref->order_ref);
-            $response->error = $_REQUEST['err'];
+        if ($result['e'] != 'SUCCESS') {
+            $response->error = 'Kérjük, ellenőrizze a tranzakció során megadott adatok helyességét! Amennyiben minden adatot helyesen adott meg, a visszautasítás okának kivizsgálása érdekében kérjük, szíveskedjen kapcsolatba lépni kártyakibocsátó bankjával.';
         }
 
-        //card authorization failed
-        if (empty($_REQUEST['err']) && !$backref->checkResponse()) {
-            $backStatus = $backref->backStatusArray;
-            $response->error = 'Checksum error';
-        }
-
-        //success on card authorization
-        if (empty($_REQUEST['err']) && $backref->checkResponse()) {
-            $backStatus = $backref->backStatusArray;
-            $response->status = $backStatus['ORDER_STATUS'];
-        }
-
-        $backref->errorLogger();
-
-        $response->simpleTransactionId = $backStatus['PAYREFNO'];
-        $response->orderId = $backStatus['REFNOEXT'];
-        $response->date= $backStatus['BACKREF_DATE'];
-
+        $response->status = $events[$result['e']];
+        $response->orderId = $result['o'];
+        $response->simpleTransactionId = $result['t'];
         echo json_encode($response);
         return;
     }
+
     // TODO check if ipn called via POST?
     if (isset($_REQUEST['ipn'])) {
         $orderCurrency = $_REQUEST['CURRENCY'];

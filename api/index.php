@@ -121,7 +121,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     }
 
     if (isset($_GET['slots'])) {
-        $stmt = $pdo->prepare("SELECT (SUM(adult) + SUM(child)) AS visitors
+        $stmt = $pdo->prepare("SELECT IFNULL(SUM(adult),0) + IFNULL(SUM(child),0) AS visitors
             FROM orders
             WHERE date = ?");
         $stmt->execute([$_GET['slots']]);

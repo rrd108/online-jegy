@@ -87,7 +87,7 @@
             <p class="column small-10"><strong>{{amount | toNumFormat}} Ft</strong></p>
         </div>
         <div class="row">
-            <img src="../assets/simple.png" />
+            <a href="http://simplepartner.hu/PaymentService/Fizetesi_tajekoztato.pdf"><img src="../assets/simple.jpg" /></a>
         </div>
         <div class="row align-center">
             <img src="../assets/ajax-loader.gif" v-show="!simpleForm">

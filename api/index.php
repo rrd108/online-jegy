@@ -155,6 +155,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         if ($result['e'] != 'SUCCESS') {
             $response->error = 'Kérjük, ellenőrizze a tranzakció során megadott adatok helyességét! Amennyiben minden adatot helyesen adott meg, a visszautasítás okának kivizsgálása érdekében kérjük, szíveskedjen kapcsolatba lépni kártyakibocsátó bankjával.';
         }
+        if ($result['e'] == 'CANCEL') {
+            $response->error = true;
+        }
 
         if ($result['e'] == 'SUCCESS') {
             $stmt = $pdo->prepare("UPDATE orders

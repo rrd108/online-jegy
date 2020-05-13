@@ -3,7 +3,7 @@
       <div v-if="response.status" class="callout" :class="response.error ? 'alert' : 'info'">
           {{response.status}}
       </div>
-      <div v-if="response.error" class="callout info">
+      <div v-if="response.error.length > 5" class="callout info">
           {{response.error}}
       </div>
       <div class="row">
@@ -14,7 +14,7 @@
               <strong>{{response.orderId}}</strong>
           </div>
       </div>
-      <div class="row callout warning" v-show="!response.error">
+      <div class="row callout warning" v-show="response.error.length > 5">
           A rendelési azonosítóval tudsz majd belépni a recepción, kérjük hozd magaddal!
       </div>
       <div class="row">

@@ -119,43 +119,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         echo $maxSlots - $result['visitors'];
     }
 
-    if (isset($_REQUEST['timeout'])) {
-        $orderCurrency = $_REQUEST['order_currency'];
-        $timeOut = new SimpleLiveUpdate($config, $orderCurrency);
-
-        $timeOut->formData['ORDER_REF'] = $_REQUEST['order_ref'];
-
-        $response = new stdClass;
-
-        if (isset($_REQUEST['redirect'])) {
-            $response->error = 'Megszakítottad a tranzakciót, fizetés nem történt';
-            $log['TRANSACTION'] = 'ABORT';
-        } else {
-            $response->error = 'A tranzakcióhoz szükséges idő limit lejárt, fizetés nem történt';
-            $log['TRANSACTION'] = 'TIMEOUT';
-        }
-
-        $log['ORDER_ID'] = (isset($_REQUEST['order_ref'])) ? $_REQUEST['order_ref'] : 'N/A';
-        $log['CURRENCY'] = (isset($_REQUEST['order_currency'])) ? $_REQUEST['order_currency'] : 'N/A';
-        $log['REDIRECT'] = (isset($_REQUEST['redirect'])) ? $_REQUEST['redirect'] : '0';
-        $timeOut->logFunc("Timeout", $log, $log['ORDER_ID']);
-        $timeOut->errorLogger();
-
-        $response->simpleTransactionId = '-';
-        $response->orderId = $log['ORDER_ID'];
-        $response->date = '-';
-
-        echo json_encode($response);
-        return;
-    }
-
     if (isset($_REQUEST['r']) && isset($_REQUEST['s'])) {
-        $trx = new SimplePayBack;
-        $trx->addConfig($config);
+        $simple = new SimplePayBack;
+        $simple->addConfig($config);
 
         $result = [];
-        if ($trx->isBackSignatureCheck($_REQUEST['r'], $_REQUEST['s'])) {
-            $result = $trx->getRawNotification();
+        if ($simple->isBackSignatureCheck($_REQUEST['r'], $_REQUEST['s'])) {
+            $result = $simple->getRawNotification();
         }
 
         $events = [
@@ -180,13 +150,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
     // TODO check if ipn called via POST?
     if (isset($_REQUEST['ipn'])) {
-        $orderCurrency = $_REQUEST['CURRENCY'];
-        $ipn = new SimpleIpn($config, $orderCurrency);
-        if ($ipn->validateReceived()) {
-            $ipn->confirmReceived();
-            // TODO update status of the order
+        $json = file_get_contents('php://input');
+        $simple = new SimplePayIpn;
+        $simple->addConfig($config);
+        if ($simple->isIpnSignatureCheck($json)) {
+            $simple->runIpnConfirm();
         }
-        $ipn->errorLogger();
         return;
     }
 }

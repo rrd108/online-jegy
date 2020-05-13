@@ -59,22 +59,6 @@
     <section v-show="summary">
         <h3>Összegzés</h3>
         <div class="row">
-            <font-awesome-icon icon="clock" size="lg" class="column small-2"/>
-            <p class="column small-10">{{date ? date.toLocaleString().slice(0, -3) : ''}}</p>
-        </div>
-        <div class="row">
-            <font-awesome-icon icon="male" size="lg" class="column small-2"/>
-            <p class="column small-10">{{adult}} felnőtt</p>
-        </div>
-        <div class="row">
-            <font-awesome-icon icon="child" size="lg" class="column small-2"/>
-            <p class="column small-10">{{child}} gyerek/nyugdíjas</p>
-        </div>
-        <div class="row">
-            <font-awesome-icon icon="money-bill" size="lg" class="column small-2"/>
-            <p class="column small-10">{{amount | toNumFormat}} Ft</p>
-        </div>
-        <div class="row">
             <font-awesome-icon icon="user" size="lg" class="column small-2"/>
             <p class="column small-10">{{name}}</p>
         </div>
@@ -83,8 +67,27 @@
             <p class="column small-10">{{email}}</p>
         </div>
         <div class="row">
-            <img src="../assets/simple.png" />
+            <font-awesome-icon icon="phone" size="lg" class="column small-2"/>
             <p class="column small-10">{{phone}}</p>
+        </div>
+        <div class="row">
+            <font-awesome-icon icon="clock" size="lg" class="column small-2"/>
+            <p class="column small-10">{{date ? date.toLocaleString().slice(0, -3) : ''}}</p>
+        </div>
+        <div class="row" v-show="adult">
+            <font-awesome-icon icon="male" size="lg" class="column small-2"/>
+            <p class="column small-10">{{adult}} felnőtt</p>
+        </div>
+        <div class="row" v-show="child">
+            <font-awesome-icon icon="child" size="lg" class="column small-2"/>
+            <p class="column small-10">{{child}} gyerek/nyugdíjas</p>
+        </div>
+        <div class="row">
+            <font-awesome-icon icon="money-bill" size="lg" class="column small-2"/>
+            <p class="column small-10"><strong>{{amount | toNumFormat}} Ft</strong></p>
+        </div>
+        <div class="row">
+            <img src="../assets/simple.png" />
         </div>
         <div class="row align-center">
             <span v-html="simpleForm"></span>

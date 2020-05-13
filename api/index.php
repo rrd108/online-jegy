@@ -147,6 +147,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $response->error = 'Kérjük, ellenőrizze a tranzakció során megadott adatok helyességét! Amennyiben minden adatot helyesen adott meg, a visszautasítás okának kivizsgálása érdekében kérjük, szíveskedjen kapcsolatba lépni kártyakibocsátó bankjával.';
         }
 
+        if ($result['e'] == 'SUCCESS') {
+            $stmt = $pdo->prepare("UPDATE orders
+                SET payed = 1
+                WHERE id = ?");
+            $stmt->execute([$result['o']]);
+        }
+
         $response->status = $events[$result['e']];
         $response->orderId = $result['o'];
         $response->simpleTransactionId = $result['t'];

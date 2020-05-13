@@ -92,6 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $simple->addGroupData('invoice', 'address2', '');
         $simple->addGroupData('invoice', 'phone', $data->phone);
 
+        $simple->formDetails['elementText'] = 'Bankkártyás fizetés';
         $simple->runStart();
         $simple->getHtmlForm();
         echo $simple->returnData['form'];

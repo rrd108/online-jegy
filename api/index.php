@@ -1,8 +1,6 @@
 <?php
 use PDO;
 
-$development = true;
-
 // TODO do not responde to api calls without authentication
 
 require('./secrets.php');
@@ -101,13 +99,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     if (isset($_GET['checkins'])) {
-        $stmt = $pdo->prepare("SELECT date, (SUM(adult) + SUM(child)) AS visitors
+        // TODO payed and not payed should be different
+        $stmt = $pdo->prepare("SELECT date AS id, date AS startDate, CONCAT(DATE_FORMAT(date, '%H'), '-', (IFNULL(SUM(adult),0) + IFNULL(SUM(child),0)), ' fő') AS title
             FROM orders
             WHERE date >= ?
             GROUP BY date
             ORDER BY date");
         $stmt->execute([date('Y-m-01')]);
-        $result = $stmt->fetchAll();
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
         echo json_encode($result);
     }
 

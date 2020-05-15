@@ -120,6 +120,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         echo json_encode($result);
     }
 
+    if (isset($_GET['visitors'])) {
+        // TODO payed and not payed should be different
+        $stmt = $pdo->prepare("SELECT *
+            FROM orders
+            WHERE date = ?");
+        $stmt->execute([$_GET['visitors']]);
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        echo json_encode($result);
+    }
+
     if (isset($_GET['slots'])) {
         $stmt = $pdo->prepare("SELECT IFNULL(SUM(adult),0) + IFNULL(SUM(child),0) AS visitors
             FROM orders
@@ -129,6 +139,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         echo $maxSlots - $result['visitors'];
     }
 
+    // simplepay back
     if (isset($_REQUEST['r']) && isset($_REQUEST['s'])) {
         $simple = new SimplePayBack;
         $simple->addConfig($config);

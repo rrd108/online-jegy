@@ -190,6 +190,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 SET payed = 1
                 WHERE id = ?");
             $stmt->execute([$result['o']]);
+
+            $stmt = $pdo->prepare("SELECT email
+                FROM orders
+                WHERE id = ?");
+            $stmt->execute([$result['o']]);
+            $result = $stmt->fetch();
+
+            require('./payment-success.php');
+            $massage = str_replace('{{orderId}}', $result['o'], $message);
+            $message = wordwrap($message, 70, "\r\n");
+            $headers[] = 'From: jegy@krisnavolgy.hu';
+            $headers[] = 'Bcc: rrd@1108.cc';
+            mail($result['email'], 'Krisna-völgy jegy rendelés', $message, implode("\r\n", $headers));
         }
 
         $response->status = $events[$result['e']];

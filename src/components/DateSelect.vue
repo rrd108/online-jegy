@@ -5,7 +5,7 @@
         <p class="callout alert" v-show="dateError">Válassz időpontot!</p>
         <div class="row">
             <font-awesome-icon icon="clock" size="lg" class="column small-2"/>
-            <date-picker @close="checkAvailableSlots" v-model="date" :default-value="afterTomorrow.setHours(11, 0, 0, 0)" type="datetime" format="YYYY-MM-DD HH:mm" placeholder="Dátum" :editable="false" :show-minute="false" :show-second="false" :time-picker-options="{start: '11:00', step:'3:00' , end: '14:00', format: 'HH:mm' }" :disabled-date="isDisabledDate" class="column small-10" />
+            <date-picker @close="checkAvailableSlots" v-model="date" :default-value="afterTomorrow.setHours(11, 0, 0, 0)" type="datetime" format="YYYY-MM-DD HH:mm" placeholder="Dátum" :editable="false" :show-minute="false" :show-second="false" :time-picker-options="{start: '11:00', step:'4:00' , end: '15:00', format: 'HH:mm' }" :disabled-date="isDisabledDate" class="column small-10" />
         </div>
         <h3>Vendégek száma</h3>
         <h4>Max {{slots}} fő erre az időpontra</h4>

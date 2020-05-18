@@ -1,18 +1,27 @@
 <template>
   <div class="row" id="admin">
-    <calendar-view
-      :startingDayOfWeek="1"
-      :show-date="showDate"
-      :events="checkins"
-      @click-event="clickEvent"
-			class="small-6 theme-default">
-			<calendar-view-header
-				slot="header"
-				slot-scope="t"
-				:header-props="t.headerProps"
-				@input="setShowDate" />
-		</calendar-view>
-    <aside class="small-6">
+    <form @submit.prevent="login" v-if="!token">
+      <fieldset>
+        <div class="input email required">
+          <label for="email">Email</label>
+          <input type="email" v-model="email" required="required" id="email" />
+        </div>
+        <div class="input password required">
+          <label for="password">Jelszó</label>
+          <input
+            type="password"
+            v-model="password"
+            required="required"
+            id="password"
+          />
+        </div>
+      </fieldset>
+      <div class="row align-center">
+        <button class="button" type="submit">Belép</button>
+      </div>
+    </form>
+
+    <aside v-if="token" class="small-12 large-6">
       <h2>Vendégek</h2>
       <h3>{{timeSlot}}</h3>
       <ul>
@@ -27,6 +36,19 @@
         </li>
       </ul>
     </aside>
+    <calendar-view
+      v-if="token"
+      :startingDayOfWeek="1"
+      :show-date="showDate"
+      :events="checkins"
+      @click-event="clickEvent"
+      class="small-12 large-6 theme-default">
+      <calendar-view-header
+        slot="header"
+        slot-scope="t"
+        :header-props="t.headerProps"
+        @input="setShowDate" />
+    </calendar-view>
   </div>
 </template>
 

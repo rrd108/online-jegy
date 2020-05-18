@@ -13,7 +13,10 @@
     <div class="row">
       <div class="column-small-12" v-show="showInfo">
         <h1><font-awesome-icon icon="info-circle" size="lg" class="column small-2 info" /> Jegy információk</h1>
+        <h2>Jegy rendelés</h2>
+        <p>Jegyet rendelni és ezzelk együtt bejelentkezni úgy tudsz, hogy kiválasztod a látogatásod dátumát, és idejét, megadod a személyes adataidat, majd a "Megrendelés" gombra kattintás után bankkártyával kifizeted a jegy összegét.</p>
         <h2>Általános szerződési feltételek</h2>
+        <p>A kifizetett jegyet visszaváltani nem lehet és csak a kiválasztott időpontban használható fel. Legalább 10 perccel a kiválasztott időpont előtt meg kell a Krisna-völgyi recepción jelenni, mert csak ekkor lehet belépni és a vendégvezetővel együtt sétálni.</p>
         <h2>Adattovábbítási nyilatkozat</h2>
         <p>
           A rendelés leadásával a honlap használója tudomásul veszi, hogy a Vénu Kft (8699 Somogyvámos Fő u. 38.) adatkezelő által a jegy.krisnavolgy.hu felhasználói adatbázisában tárolt alábbi személyes adataim átadásra kerülnek az OTP Mobil Kft., mint adatfeldolgozó részére. <br>

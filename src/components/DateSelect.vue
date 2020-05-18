@@ -179,8 +179,8 @@ export default {
         return specialDates.indexOf(d.toISOString().split('T')[0]) != -1
     },
     getFormattedDate(date) {
-        // TODO handling leading zeros
-        return date.getFullYear() + '-0' + (parseInt(date.getMonth())+1) + '-' + date.getDate() + ' ' + date.getHours() + ':0' + date.getMinutes() + ':00'
+        const timezoneOffset = date.getTimezoneOffset() * 60000
+        return (new Date(date - timezoneOffset)).toISOString().slice(0, 17).replace('T', ' ') + '00'
     },
     order() {
         // TODO email validation

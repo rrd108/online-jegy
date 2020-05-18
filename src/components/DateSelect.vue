@@ -225,7 +225,8 @@ export default {
             name: this.name,
             email: this.email,
             phone: this.phone,
-            newsletter: this.newsletter ? 1 : 0
+            newsletter: this.newsletter ? 1 : 0,
+            referrer: document.referrer
         })
         .then(response => {
             this.simpleForm = response.data

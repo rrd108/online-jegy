@@ -54,7 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 
-        $stmt = $pdo->prepare("INSERT INTO orders (id, date, adult, child, name, email, phone, newsletter, amount) VALUES (?,?,?,?,?,?,?,?,?)");
+        $stmt = $pdo->prepare("INSERT INTO orders (id, date, adult, child, name, email, phone, newsletter, amount, referrer) VALUES (?,?,?,?,?,?,?,?,?,?)");
         $stmt->bindValue(1, $orderId);
         $stmt->bindValue(2, $data->date);
         $stmt->bindValue(3, $data->adult);
@@ -64,6 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $stmt->bindValue(7, $data->phone);
         $stmt->bindValue(8, $data->newsletter);
         $stmt->bindValue(9, $amount);
+        $stmt->bindValue(10, $data->referrer);
         $stmt->execute();
 
         // create simple form

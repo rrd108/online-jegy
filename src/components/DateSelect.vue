@@ -14,12 +14,12 @@
         <div class="row">
             <font-awesome-icon icon="male" size="lg" class="column small-2"/>
             <input type="number" @blur="manError = false" min="0" v-model="adult" class="column small-2">
-            <span class="column small-8">felnőtt 4.000 Ft/fő</span>
+            <span class="column small-8">felnőtt {{prices.adult | toNumFormat}} Ft/fő</span>
         </div>
         <div class="row">
             <font-awesome-icon icon="child" size="lg" class="column small-2"/>
             <input type="number" @blur="manError = false" min="0" v-model="child" class="column small-2">
-            <span class="column small-8">gyerek/nyugdíjas 3.000 Ft/fő</span>
+            <span class="column small-8">gyerek/nyugdíjas {{prices.child | toNumFormat}} Ft/fő</span>
         </div>
         <h3>Elérhetőségeid</h3>
         <p class="callout alert" v-show="nameError">Add meg a neved!</p>
@@ -134,8 +134,7 @@ export default {
   },
   computed : {
     amount() {
-        // TODO hardcoded prices
-        return this.adult * 4000 + this.child * 3000
+        return this.adult * this.prices.adult + this.child * this.prices.child
     },
     overBooking () {
         const adult = this.adult ? this.adult : 0
@@ -143,6 +142,11 @@ export default {
         return parseInt(adult) + parseInt(child) > parseInt(this.slots);
     },
   },
+    created() {
+        axios.get(process.env.VUE_APP_API_URL + '?prices')
+            .then(response => this.prices = response.data)
+            .catch(error => console.log(error))
+    },
   methods: {
     checkAvailableSlots() {
         this.dateError = false

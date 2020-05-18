@@ -8,9 +8,11 @@ require('./simplepay/config.php');
 require('./simplepay/SimplePayV21.php');
 
 $pdo = new PDO('mysql:host=localhost;dbname=' . $secrets['mysqlTable'], $secrets['mysqlUser'], $secrets['mysqlPass']);
-$adultPrice = 4000;
-$childPrice = 3000;
-$maxSlots = 50;
+
+$prices = [
+    'adult' => 3290,
+    'child' => 2290
+];
 
 if ($development) {
     ini_set('display_errors', 1);
@@ -46,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $orderId = uniqid();
         $data = json_decode($data);
 
-        $amount = $adultPrice * $data->adult + $childPrice * $data->child;
+        $amount = $prices['adult'] * $data->adult + $prices['child'] * $data->child;
 
         // save order to the database
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -108,6 +110,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+    if (isset($_GET['prices'])) {
+        echo json_encode($prices);
+    }
+
     if (isset($_GET['checkins'])) {
         // TODO payed and not payed should be different
         $stmt = $pdo->prepare("SELECT date AS id, date AS startDate, CONCAT(DATE_FORMAT(date, '%H'), '-', (IFNULL(SUM(adult),0) + IFNULL(SUM(child),0)), ' fő') AS title

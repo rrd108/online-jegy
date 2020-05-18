@@ -18,7 +18,6 @@ import DateSelect from "./components/DateSelect"
 import PaymentInfo from "./components/PaymentInfo"
 
 export default {
-  // TODO prices hardcoded in vue and in php
   name: 'App',
   components: {
     AdminPage,

@@ -51,9 +51,12 @@ export default {
   data() {
     return {
       checkins: [],
-      timeSlot: '',
+      email : '',
       events: [],
+      password : '',
       showDate: new Date(),
+      timeSlot: '',
+      token : '',
     }
   },
   methods: {
@@ -62,6 +65,14 @@ export default {
       this.timeSlot = event.id
       axios.get(process.env.VUE_APP_API_URL + '?visitors=' + event.id)
         .then(response => this.events = response.data)
+        .catch(error => console.log(error))
+    },
+    login() {
+      axios.post(process.env.VUE_APP_API_TOKEN_URL, {
+          email: this.email,
+          password: this.password,
+        })
+        .then(response => this.token = response.data)
         .catch(error => console.log(error))
     },
     setShowDate(d) {

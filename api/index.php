@@ -1,8 +1,9 @@
 <?php
 use PDO;
 
-// TODO do not responde to api calls without authentication
+// TODO do not responde to api calls without authentication check if we have a valid token
 
+require('./headers.php');
 require('./secrets.php');
 require('./simplepay/config.php');
 require('./simplepay/SimplePayV21.php');
@@ -23,11 +24,6 @@ if ($development) {
     error_reporting(E_ALL);
     $config['URL'] = 'http://localhost:8080';
 }
-
-header('Access-Control-Allow-Origin: *');
-header('Content-Type: application/json');
-header('Access-Control-Allow-Headers: *');
-header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $data = file_get_contents('php://input');

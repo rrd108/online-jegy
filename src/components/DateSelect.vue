@@ -128,6 +128,7 @@ export default {
         prices : {},
         simpleForm :'',
         slots: 0,
+        specialDays : [],
         tomorrow: new Date(new Date(today).setDate(new Date(today).getDate() + 1)),
         tos: false,
         tosError: false,
@@ -143,15 +144,19 @@ export default {
         return parseInt(adult) + parseInt(child) > parseInt(this.slots);
     },
   },
-    created() {
-        axios.get(process.env.VUE_APP_API_URL + '?prices')
-            .then(response => this.prices = response.data)
-            .catch(error => console.log(error))
+  created() {
+      axios.get(process.env.VUE_APP_API_URL + '?prices')
+          .then(response => this.prices = response.data)
+          .catch(error => console.log(error))
 
-        axios.get(process.env.VUE_APP_API_URL + '?maxSlots')
-            .then(response => this.slots = response.data)
-            .catch(error => console.log(error))
-    },
+      axios.get(process.env.VUE_APP_API_URL + '?maxSlots')
+          .then(response => this.slots = response.data)
+          .catch(error => console.log(error))
+
+      axios.get(process.env.VUE_APP_API_URL + '?specialDays')
+          .then(response => this.specialDays = response.data)
+          .catch(error => console.log(error))
+  },
   methods: {
     checkAvailableSlots() {
         this.dateError = false
@@ -172,11 +177,9 @@ export default {
         return date.getTime() == this.tomorrow.getTime()
     },
     isSpecialDate(date) {
-        // TODO get specialDays from the API
-        const specialDates = ['2020-05-20', '2020-05-21', '2020-05-24']
         // we should add 1 day to get it work as expected
         const d = new Date(date.setDate(date.getDate() + 1))
-        return specialDates.indexOf(d.toISOString().split('T')[0]) != -1
+        return this.specialDays.indexOf(d.toISOString().split('T')[0]) != -1
     },
     getFormattedDate(date) {
         const timezoneOffset = date.getTimezoneOffset() * 60000

@@ -7,14 +7,16 @@ require('./secrets.php');
 require('./simplepay/config.php');
 require('./simplepay/SimplePayV21.php');
 
-$pdo = new PDO('mysql:host=localhost;dbname=' . $secrets['mysqlTable'], $secrets['mysqlUser'], $secrets['mysqlPass']);
-
 $prices = [
     'adult' => 3290,
     'child' => 2290
 ];
 
 $maxSlots = 30;
+
+$specialDays = ['2020-05-21', '2020-05-24', '2020-05-28'];
+
+$pdo = new PDO('mysql:host=localhost;dbname=' . $secrets['mysqlTable'], $secrets['mysqlUser'], $secrets['mysqlPass']);
 
 if ($development) {
     ini_set('display_errors', 1);
@@ -118,6 +120,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
     if (isset($_GET['maxSlots'])) {
         echo $maxSlots;
+    }
+
+    if (isset($_GET['specialDays'])) {
+        echo json_encode($specialDays);
     }
 
     if (isset($_GET['checkins'])) {

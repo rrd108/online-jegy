@@ -198,10 +198,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $result = $stmt->fetch();
 
             require('./payment-success.php');
-            $massage = str_replace('{{orderId}}', $result['o'], $message);
+            $message = str_replace('{{orderId}}', $result['o'], $message);
             $message = wordwrap($message, 70, "\r\n");
             $headers[] = 'From: jegy@krisnavolgy.hu';
             $headers[] = 'Bcc: rrd@1108.cc';
+            $headers[] = 'MIME-Version: 1.0';
+            $headers[] = 'Content-Type: text/html; charset=UTF-8';
             mail($result['email'], 'Krisna-völgy jegy rendelés', $message, implode("\r\n", $headers));
         }
 

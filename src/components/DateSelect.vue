@@ -125,8 +125,9 @@ export default {
         summary: false,
         phone: null,
         phoneError: false,
+        prices : {},
         simpleForm :'',
-        slots: 50,  // TODO hardcoded slots
+        slots: 0,
         tomorrow: new Date(new Date(today).setDate(new Date(today).getDate() + 1)),
         tos: false,
         tosError: false,
@@ -145,6 +146,10 @@ export default {
     created() {
         axios.get(process.env.VUE_APP_API_URL + '?prices')
             .then(response => this.prices = response.data)
+            .catch(error => console.log(error))
+
+        axios.get(process.env.VUE_APP_API_URL + '?maxSlots')
+            .then(response => this.slots = response.data)
             .catch(error => console.log(error))
     },
   methods: {

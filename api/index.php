@@ -14,6 +14,8 @@ $prices = [
     'child' => 2290
 ];
 
+$maxSlots = 30;
+
 if ($development) {
     ini_set('display_errors', 1);
     error_reporting(E_ALL);
@@ -112,6 +114,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     if (isset($_GET['prices'])) {
         echo json_encode($prices);
+    }
+
+    if (isset($_GET['maxSlots'])) {
+        echo $maxSlots;
     }
 
     if (isset($_GET['checkins'])) {

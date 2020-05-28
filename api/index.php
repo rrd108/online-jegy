@@ -111,6 +111,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+    if (isset($_GET['search'])) {
+        $stmt = $pdo->prepare("SELECT *
+            FROM orders
+            WHERE id LIKE ?
+            OR name LIKE ?
+            OR email LIKE ?");
+        $stmt->execute(['%'.$_GET['search'].'%', '%'.$_GET['search'].'%', '%'.$_GET['search'].'%']);
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        echo json_encode($result);
+    }
+
     if (isset($_GET['prices'])) {
         echo json_encode($prices);
     }

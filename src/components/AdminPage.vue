@@ -23,10 +23,12 @@
 
     <aside v-if="token" class="small-12 large-6">
       <h2>Vendégek</h2>
+      <input type="search" v-model="searchTerm" @input="search" placeholder="Keresés azonosító / név / email">
       <h3>{{timeSlot}}</h3>
       <ul>
-        <li v-for="visitor in events" :key="visitor.id">
+        <li v-for="visitor in visitors" :key="visitor.id">
           {{visitor.id}}
+          {{visitor.date}}
           {{visitor.name}}
           {{visitor.email}} <br>
           {{visitor.adult}} F,
@@ -74,8 +76,9 @@ export default {
     return {
       checkins: [],
       email : '',
-      events: [],
+      visitors: [],
       password : '',
+      searchTerm: '',
       showDate: new Date(),
       timeSlot: '',
       token : '',
@@ -86,7 +89,7 @@ export default {
       // event.id : 2020-05-17 14:00:00
       this.timeSlot = event.id
       axios.get(process.env.VUE_APP_API_URL + '?visitors=' + event.id)
-        .then(response => this.events = response.data)
+        .then(response => this.visitors = response.data)
         .catch(error => console.log(error))
     },
     login() {
@@ -96,6 +99,15 @@ export default {
         })
         .then(response => this.token = response.data)
         .catch(error => console.log(error))
+    },
+    search() {
+      this.timeSlot = ''
+      this.visitors = []
+      if (this.searchTerm.length > 2) {
+      axios.get(process.env.VUE_APP_API_URL + '?search=' + this.searchTerm)
+        .then(response => this.visitors = response.data)
+        .catch(error => console.log(error))
+      }
     },
     setShowDate(d) {
       this.showDate = d;

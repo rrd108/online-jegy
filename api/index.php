@@ -191,20 +191,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 WHERE id = ?");
             $stmt->execute([$result['o']]);
 
-            $stmt = $pdo->prepare("SELECT email
+            $stmt = $pdo->prepare("SELECT *
                 FROM orders
                 WHERE id = ?");
             $stmt->execute([$result['o']]);
-            $result = $stmt->fetch();
+            $order = $stmt->fetch();
 
             require('./payment-success.php');
             $message = str_replace('{{orderId}}', $result['o'], $message);
+            $message = str_replace('{{tourTime}}', $order['date'], $message);
+            $message = str_replace('{{adult}}', $order['adult'], $message);
+            $message = str_replace('{{child}}', $order['child'], $message);
             $message = wordwrap($message, 70, "\r\n");
             $headers[] = 'From: jegy@krisnavolgy.hu';
             $headers[] = 'Bcc: rrd@1108.cc';
             $headers[] = 'MIME-Version: 1.0';
             $headers[] = 'Content-Type: text/html; charset=UTF-8';
-            mail($result['email'], 'Krisna-völgy jegy rendelés', $message, implode("\r\n", $headers));
+            mail($order['email'], 'Krisna-völgy jegy rendelés', $message, implode("\r\n", $headers));
         }
 
         $response->status = $events[$result['e']];

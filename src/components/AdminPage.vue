@@ -26,15 +26,15 @@
       <input type="search" v-model="searchTerm" @input="search" placeholder="Keresés azonosító / név / email">
       <h3>{{timeSlot}}</h3>
       <ul>
-        <li v-for="visitor in visitors" :key="visitor.id">
+        <li v-for="visitor in visitors" :key="visitor.id" :class="[visitor.payed == 1 ? 'payed' : 'unpayed']">
+          <font-awesome-icon icon="check-circle" size="xs" />
           {{visitor.id}}
-          {{visitor.date}}
+          <span v-show="!timeSlot">{{visitor.date}}</span>
           {{visitor.name}}
           {{visitor.email}} <br>
           {{visitor.adult}} F,
           {{visitor.child}} GY,
-          {{visitor.amount}} Ft
-          {{visitor.payed}}
+          {{visitor.amount | toNumFormat}} Ft
         </li>
       </ul>
     </aside>
@@ -119,5 +119,14 @@ export default {
 <style scoped>
 #admin {
   height: 75vh;
+}
+ul {
+  list-style-type: none;
+}
+.payed {
+  color: green;
+}
+.unpayed {
+  color: gray;
 }
 </style>

@@ -15,7 +15,7 @@ $prices = [
 
 $maxSlots = 30;
 
-$specialDays = ['2020-05-21', '2020-05-24', '2020-05-28'];
+$specialDays = [];
 
 $pdo = new PDO('mysql:host=localhost;dbname=' . $secrets['mysqlTable'], $secrets['mysqlUser'], $secrets['mysqlPass']);
 

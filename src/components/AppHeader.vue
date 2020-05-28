@@ -13,9 +13,9 @@
     <div class="row">
       <div class="column-small-12" v-show="showInfo">
         <h1><font-awesome-icon icon="info-circle" size="lg" class="column small-2 info" /> Információk</h1>
-        <h2>Jegy rendelés</h2>
+        <h2>Túra jegy rendelés</h2>
         <p>Jegyet rendelni és ezzel együtt bejelentkezni úgy tudsz, hogy kiválasztod a látogatásod
-          dátumát és idejét, megadod a személyes adataidat, majd a &quot;Megrendelés&quot; gombra kattintás
+          dátumát <strong>(jelenleg csak szerdánként)</strong> és idejét <strong>(jelenleg csak de 11 órát)</strong>, megadod a személyes adataidat, majd a &quot;Megrendelés&quot; gombra kattintás
           után bankkártyával kifizeted a jegy összegét.</p>
         <h2>Általános szerződési feltételek</h2>
         <p>A kifizetett jegyet visszaváltani nem lehet és csak a kiválasztott időpontban használható fel.

@@ -1,11 +1,11 @@
 <template>
   <div class="column">
     <section v-show="!summary">
-        <h3>Látogatás dátuma</h3>
+        <h3>Túra időpont</h3>
         <p class="callout alert" v-show="dateError">Válassz időpontot!</p>
         <div class="row">
             <font-awesome-icon icon="clock" size="lg" class="column small-2"/>
-            <date-picker @close="checkAvailableSlots" v-model="date" :default-value="afterTomorrow.setHours(11, 0, 0, 0)" type="datetime" format="YYYY-MM-DD HH:mm" placeholder="Dátum" :editable="false" :show-minute="false" :show-second="false" :time-picker-options="{start: '11:00', step:'1:00' , end: '11:00', format: 'HH:mm' }" :disabled-date="isDisabledDate" class="column small-10" />
+            <date-picker @close="checkAvailableSlots" v-model="date" :default-value="nextTourDay.setHours(11, 0, 0, 0)" type="datetime" format="YYYY-MM-DD HH:mm" placeholder="Dátum" :editable="false" :show-minute="false" :show-second="false" :time-picker-options="{start: '11:00', step:'1:00' , end: '11:00', format: 'HH:mm' }" :disabled-date="isDisabledDate" class="column small-10" />
         </div>
         <h3>Vendégek száma</h3>
         <h4>Max {{slots}} fő erre az időpontra</h4>
@@ -112,7 +112,7 @@ export default {
   data() {
     return {
         adult: null,
-        afterTomorrow: new Date(new Date(today).setDate(new Date(today).getDate() + 2)),
+        nextTourDay: new Date(new Date(today).setDate(new Date(today).getDate() + (3 + 7 - today.getDay()) % 7)),
         child: null,
         date: null,
         dateError: false,

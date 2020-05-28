@@ -9,8 +9,8 @@ require('./simplepay/config.php');
 require('./simplepay/SimplePayV21.php');
 
 $prices = [
-    'adult' => 3290,
-    'child' => 2290
+    'adult' => 4290,
+    'child' => 3290
 ];
 
 $maxSlots = 30;

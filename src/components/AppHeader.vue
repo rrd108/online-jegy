@@ -17,6 +17,10 @@
         <p>Jegyet rendelni és ezzel együtt bejelentkezni úgy tudsz, hogy kiválasztod a látogatásod
           dátumát <strong>(jelenleg csak szerdánként)</strong> és idejét <strong>(jelenleg csak de 11 órát)</strong>, megadod a személyes adataidat, majd a &quot;Megrendelés&quot; gombra kattintás
           után bankkártyával kifizeted a jegy összegét.</p>
+        <h2>A túra tartalma</h2>
+        <p>A Túra az Elefántos recepciótól indul, a sétány úton a templom épületéig, ahol a Szentély
+        megtekintése után egy vegetáriánus/vegán ebéd vár. Ezután lehetőség van egy
+        kis kötetlen időtöltésre, ajándékbolt megtekintésérre, vagy ha szívesen beszélgetnél csak úgy. A pihenő után meglátogatjuk a Bio kertészetet és a Tehenészetet, majd az Iskola épületét.</p>
         <h2>Általános szerződési feltételek</h2>
         <p>A kifizetett jegyet visszaváltani nem lehet és csak a kiválasztott időpontban használható fel.
           Kérünk pontosan érkezz a recepcióra, legalább 10 perccel a kiválasztott időpont előtt, hogy

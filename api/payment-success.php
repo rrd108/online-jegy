@@ -20,5 +20,8 @@ $message = '<html>
   <p>A kifizetett jegyet visszaváltani nem lehet és csak a kiválasztott időpontban használható fel.
     Kérünk pontosan érkezz a recepcióra, legalább 10 perccel a kiválasztott időpont előtt, hogy
     időben tudjunk indulni a Túrára.</p>
+  <p>Nemsokára találkozunk!</p>
+  <p>Minden jót és Gauranga!</p>
+  <p><strong>Kundalata Devi Dasi</strong></p>
 </body>
 </html>';

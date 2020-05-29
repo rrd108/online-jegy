@@ -211,8 +211,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             require('./payment-success.php');
             $message = str_replace('{{orderId}}', $result['o'], $message);
             $message = str_replace('{{tourTime}}', $order['date'], $message);
-            $message = str_replace('{{adult}}', $order['adult'], $message);
-            $message = str_replace('{{child}}', $order['child'], $message);
+            $message = str_replace('{{adult}}', $order['adult'] ?: 0, $message);
+            $message = str_replace('{{child}}', $order['child'] ?: 0, $message);
             $message = wordwrap($message, 70, "\r\n");
             $headers[] = 'From: jegy@krisnavolgy.hu';
             $headers[] = 'Bcc: jegy@krisnavolgy.hu';

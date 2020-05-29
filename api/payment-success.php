@@ -8,7 +8,7 @@ $message = '<html>
   <h1>Köszönjük, hogy jegyet vásároltál a Tematikus Túrára!</h1>
   <p>A rendelési azonosítód: <strong>{{orderId}}</strong></p>
   <p>A túra ideje: <strong>{{tourTime}}</strong></p>
-  <p>Létszám: <strong>{{adult}} felnőtt</strong> és <strong>{{child}} gyerek</strong></p>
+  <p>Létszám: <strong>{{adult}} felnőtt</strong> és <strong>{{child}} gyerek / nyugdíjas</strong></p>
   <p><strong>Belépés a rendelési számod azonosításával történik, kérlek nyomtasd ezt ki, vagy mutasd fel telefonodon.</strong></p>
   <h1>Útvonal</h1>
   <p>A Túra az Elefántos recepciótól indul, a sétány úton a templom épületéig, ahol a

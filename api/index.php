@@ -215,6 +215,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $message = str_replace('{{child}}', $order['child'], $message);
             $message = wordwrap($message, 70, "\r\n");
             $headers[] = 'From: jegy@krisnavolgy.hu';
+            $headers[] = 'Bcc: jegy@krisnavolgy.hu';
             $headers[] = 'MIME-Version: 1.0';
             $headers[] = 'Content-Type: text/html; charset=UTF-8';
             mail($order['email'], 'Krisna-völgy túra jegy rendelés', $message, implode("\r\n", $headers));

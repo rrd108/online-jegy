@@ -219,6 +219,8 @@ export default {
             return false
         }
 
+        window.fbq('track', 'AddToCart');
+
         this.summary = true
 
         axios.post(process.env.VUE_APP_API_URL, {

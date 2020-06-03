@@ -41,10 +41,11 @@ export default {
     },
     created() {
         axios.get(process.env.VUE_APP_API_URL + '?' + this.urlParams)
-            .then(response => this.response = response.data)
-            .catch(error => {
-                console.log(error)
-            })
+            .then(response => {
+                this.response = response.data
+                window.fbq('track', 'Purchase', {value: response.data.amount, currency: 'HUF'});
+                })
+            .catch(error => console.log(error))
     },
 }
 </script>

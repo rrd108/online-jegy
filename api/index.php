@@ -224,6 +224,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $response->status = $events[$result['e']];
         $response->orderId = $result['o'];
         $response->simpleTransactionId = $result['t'];
+        $response->amount = $order['amount'];
         echo json_encode($response);
         return;
     }

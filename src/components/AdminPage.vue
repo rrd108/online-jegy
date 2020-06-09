@@ -26,7 +26,7 @@
       <input type="search" v-model="searchTerm" @input="search" placeholder="Keresés azonosító / név / email">
       <h3>{{timeSlot}}</h3>
       <ul>
-        <li v-for="visitor in visitors" :key="visitor.id" :class="[visitor.payed == 1 ? 'payed' : 'unpayed']">
+        <li @click="useTicket(visitor)" v-for="visitor in visitors" :key="visitor.id" :class="[visitor.payed == 1 ? 'payed' : 'unpayed', visitor.used == 1 ? 'used' : '']">
           <font-awesome-icon icon="check-circle" size="xs" />
           {{visitor.id}}
           <span v-show="!timeSlot">{{visitor.date}}</span>
@@ -56,6 +56,7 @@
 
 <script>
 import axios from 'axios'
+import swal from 'sweetalert'
 import { CalendarView, CalendarViewHeader } from "vue-simple-calendar"
 // https://github.com/richardtallent/vue-simple-calendar
 
@@ -112,6 +113,26 @@ export default {
     setShowDate(d) {
       this.showDate = d;
     },
+    useTicket(visitor) {
+      if (visitor.payed == 1) {
+        swal({
+          title: 'Jegy érvényesítés ' + visitor.name,
+          text: 'Ezt a jegyet használjuk most fel? ' + visitor.id,
+          icon: 'warning',
+          buttons: true,
+          dangerMode: true,
+        })
+        .then((ticket) => {
+          if (ticket) {
+            axios.post(process.env.VUE_APP_API_URL, {
+              used: visitor.id
+            })
+            .then(() => visitor.used = Math.abs(visitor.used - 1))
+            .catch(error => console.log(error))
+          }
+        })
+      }
+    }
 	},
 }
 </script>
@@ -125,8 +146,16 @@ ul {
 }
 .payed {
   color: green;
+  cursor: pointer;
+}
+.payed:hover {
+  color: #fff;
+  background: #258DAD;
 }
 .unpayed {
   color: gray;
+}
+.used {
+  text-decoration: line-through;
 }
 </style>

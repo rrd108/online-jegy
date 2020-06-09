@@ -108,6 +108,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
         return;
     }
+
+    if (isset(json_decode($data)->used)) {
+        $used = json_decode($data)->used;
+        $stmt = $pdo->prepare("UPDATE orders
+            SET used = NOT used
+            WHERE id = ?");
+        echo $stmt->execute([$used]);
+        return;
+    }
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {

@@ -189,7 +189,6 @@ export default {
         return (new Date(date - timezoneOffset)).toISOString().slice(0, 17).replace('T', ' ') + '00'
     },
     order() {
-        // TODO email validation
         let errors = 0
         if (!this.date) {
             this.dateError = true
@@ -204,6 +203,10 @@ export default {
             errors++
         }
         if (!this.email) {
+            this.emailError = true
+            errors++
+        }
+        if (! /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(this.email)) {
             this.emailError = true
             errors++
         }

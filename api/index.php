@@ -209,6 +209,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $order = $stmt->fetch();
 
             require('./payment-success.php');
+            $message = str_replace('{{name}}', $order['name'], $message);
             $message = str_replace('{{orderId}}', $result['o'], $message);
             $message = str_replace('{{tourTime}}', $order['date'], $message);
             $message = str_replace('{{adult}}', $order['adult'] ?: 0, $message);

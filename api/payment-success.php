@@ -5,7 +5,8 @@ $message = '<html>
   <title>Sikeres jegyvásárlás</title>
 </head>
 <body>
-  <h1>Köszönjük, hogy jegyet vásároltál a Tematikus Túrára!</h1>
+  <h1>Kedves {{name}}!</h1>
+  <h2>Köszönjük, hogy jegyet vásároltál a Tematikus Túrára!</h2>
   <p>A rendelési azonosítód: <strong>{{orderId}}</strong></p>
   <p>A túra ideje: <strong>{{tourTime}}</strong></p>
   <p>Létszám: <strong>{{adult}} felnőtt</strong> és <strong>{{child}} gyerek / nyugdíjas</strong></p>

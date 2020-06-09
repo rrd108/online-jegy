@@ -28,7 +28,7 @@ export default {
   data() {
     return {
       url : window.location.pathname,
-      urlParams: window.location.href.split('?')[1],
+      urlParams: (window.location.href.split('?')[1] && window.location.href.split('?')[1].search('fbclid') !== 0) ? window.location.href.split('?')[1] : null,
     }
   },
 }

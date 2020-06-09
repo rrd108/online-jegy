@@ -86,8 +86,8 @@
             <font-awesome-icon icon="money-bill" size="lg" class="column small-2"/>
             <p class="column small-10"><strong>{{amount | toNumFormat}} Ft</strong></p>
         </div>
-        <div class="row">
-            <a href="http://simplepartner.hu/PaymentService/Fizetesi_tajekoztato.pdf"><img src="../assets/simple.jpg" /></a>
+        <div class="row align-center">
+            <a href="http://simplepartner.hu/PaymentService/Fizetesi_tajekoztato.pdf" class="simplelogo column small-12 large-6"><img src="../assets/simple.jpg" /></a>
         </div>
         <div class="row align-center">
             <img src="../assets/ajax-loader.gif" v-show="!simpleForm">
@@ -269,5 +269,8 @@ span >>> button {
     text-align: center;
     cursor: pointer;
     color: #fefefe;
+}
+.simplelogo {
+    margin: 1rem;
 }
 </style>

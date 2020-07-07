@@ -129,7 +129,7 @@ export default {
         simpleForm :'',
         slots: 0,
         specialDays : [],
-        tomorrow: new Date(new Date(today).setDate(new Date(today).getDate() + 1)),
+        //tomorrow: new Date(new Date(today).setDate(new Date(today).getDate() + 1)),
         tos: false,
         tosError: false,
     }
@@ -165,7 +165,7 @@ export default {
             .catch(error => console.log(error))
     },
     isDisabledDate(date) {
-        return this.isPast(date) || this.isToday(date) || this.isTomorrow(date) || this.isNotTourDay(date) || this.isSpecialDate(date)
+        return this.isPast(date) || this.isToday(date) ||/* this.isTomorrow(date) ||*/ this.isNotTourDay(date) || this.isSpecialDate(date)
     },
     isNotTourDay(date) {
         return date.getDay() != 3
@@ -176,9 +176,9 @@ export default {
     isToday(date) {
         return date.getTime() == today.getTime()
     },
-    isTomorrow(date) {
+    /*isTomorrow(date) {
         return date.getTime() == this.tomorrow.getTime()
-    },
+    },*/
     isSpecialDate(date) {
         // we should add 1 day to get it work as expected
         const d = new Date(date.setDate(date.getDate() + 1))

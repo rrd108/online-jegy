@@ -30,14 +30,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // $response = new stdClass;
 
     if (isset(json_decode($data)->newsletter)) {
+        $mailchimpData = [
+        'status' => 'subscribed',
+        'email_address' => json_decode($data)->email,
+        'marketing_permissions' =>[
+            [
+                'marketing_permission_id' => 'bb56c8bbd1',
+                'text' => 'Elfogadom',
+                'enabled' => true
+                ]
+            ]
+        ];
+        $mailchimpData = json_encode($mailchimpData);
+        //$mailchimpData ='email_address=' . json_decode($data)->email . '&status=subscribed';
         $ch = curl_init($secrets['mailchimpUrl']);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $mailchimpData);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
             'Content-Type: application/json',
             'Authorization: Basic '.base64_encode('user:' . $secrets['mailchimpApiKey']),
-            'Content-Length: ' . strlen($data)
+            'Content-Length: ' . strlen($mailchimpData)
             ],
         );
         $result = curl_exec($ch);

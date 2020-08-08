@@ -26,8 +26,9 @@
       <input type="search" v-model="searchTerm" @input="search" placeholder="Keresés azonosító / név / email">
       <h3>{{timeSlot}}</h3>
       <ul>
-        <li @click="useTicket(visitor)" v-for="visitor in visitors" :key="visitor.id" :class="[visitor.payed == 1 ? 'payed' : 'unpayed', visitor.used == 1 ? 'used' : '']">
+        <li @click="useTicket(visitor)" v-for="visitor in visitors" :key="visitor.id" :class="[visitor.payed == 1 ? 'payed' : 'unpayed', visitor.used == 1 ? 'used' : '']" :title="[visitor.payed == 1 ? 'payed' : 'unpayed', visitor.used == 1 ? 'used' : '']">
           <font-awesome-icon icon="check-circle" size="xs" />
+          <font-awesome-icon icon="trash" size="xs" v-show="visitor.payed != 1" @click="removeBooking(visitor)" />
           {{visitor.id}}
           <span v-show="!timeSlot">{{visitor.date}}</span>
           {{visitor.name}}
@@ -100,6 +101,24 @@ export default {
         })
         .then(response => this.token = response.data)
         .catch(error => console.log(error))
+    },
+    removeBooking(visitor) {
+      swal({
+          title: 'Foglalás törlése ' + visitor.name,
+          text: 'Ezt a foglalást töröljük? ' + visitor.id,
+          icon: 'warning',
+          buttons: true,
+          dangerMode: true,
+        })
+        .then((ticket) => {
+          if (ticket) {
+            axios.delete(process.env.VUE_APP_API_URL, {
+              data: {delete: visitor.id}
+            })
+            .then(response => this.visitors = this.visitors.filter(visitor => visitor.id != response.data.delete))
+            .catch(error => console.log(error))
+          }
+        })
     },
     search() {
       this.timeSlot = ''

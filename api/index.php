@@ -252,3 +252,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         return;
     }
 }
+
+if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
+    $data = file_get_contents('php://input');
+    $stmt = $pdo->prepare("DELETE FROM orders
+                WHERE id = ?
+                AND payed = 0
+                AND used = 0");
+    $stmt->execute([json_decode($data)->delete]);
+    echo $data;
+    return;
+}

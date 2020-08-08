@@ -28,7 +28,8 @@
       <ul>
         <li @click="useTicket(visitor)" v-for="visitor in visitors" :key="visitor.id" :class="[visitor.payed == 1 ? 'payed' : 'unpayed', visitor.used == 1 ? 'used' : '']" :title="[visitor.payed == 1 ? 'payed' : 'unpayed', visitor.used == 1 ? 'used' : '']">
           <font-awesome-icon icon="check-circle" size="xs" />
-          <font-awesome-icon icon="trash" size="xs" v-show="visitor.payed != 1" @click="removeBooking(visitor)" />
+          <font-awesome-icon icon="trash" size="xs" v-show="visitor.payed != 1" @click="removeBooking(visitor)" title="Foglalás törlése" class="action" />
+          <font-awesome-icon icon="money-bill" size="xs" v-show="visitor.payed != 1" @click="setPayed(visitor)" class="action" title="Fizetvére állítom" />
           {{visitor.id}}
           <span v-show="!timeSlot">{{visitor.date}}</span>
           {{visitor.name}}
@@ -129,6 +130,24 @@ export default {
         .catch(error => console.log(error))
       }
     },
+    setPayed(visitor) {
+      swal({
+          title: 'Foglalás fizetett ' + visitor.name,
+          text: 'Ezt a foglalást állítsuk kifizetettre? ' + visitor.id,
+          icon: 'warning',
+          buttons: true,
+          dangerMode: true,
+        })
+        .then((ticket) => {
+          if (ticket) {
+            axios.patch(process.env.VUE_APP_API_URL, {
+              setPayed: visitor.id
+            })
+            .then(response => this.visitors = this.visitors.map(visitor => visitor.id == response.data.setPayed ? { ...visitor, ...{payed: 1}} : visitor))
+            .catch(error => console.log(error))
+          }
+        })
+    },
     setShowDate(d) {
       this.showDate = d;
     },
@@ -176,5 +195,11 @@ ul {
 }
 .used {
   text-decoration: line-through;
+}
+.action {
+  cursor: pointer;
+}
+.action:hover {
+  color: #258DAD;
 }
 </style>

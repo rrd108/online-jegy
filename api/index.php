@@ -263,3 +263,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
     echo $data;
     return;
 }
+
+if ($_SERVER['REQUEST_METHOD'] == 'PATCH') {
+    $data = file_get_contents('php://input');
+    $stmt = $pdo->prepare("UPDATE orders
+                SET payed = 1,
+                transactionId = 'manual'
+                WHERE id = ?");
+    $stmt->execute([json_decode($data)->setPayed]);
+    echo $data;
+    return;
+}

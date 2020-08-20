@@ -110,6 +110,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $simple->runStart();
         $simple->getHtmlForm();
         echo $simple->returnData['form'];
+        return;
     }
 
     if (isset($_REQUEST['ipn'])) {

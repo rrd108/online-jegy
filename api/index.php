@@ -189,7 +189,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             WHERE date = ?");
         $stmt->execute([$_GET['slots']]);
         $result = $stmt->fetch();
-        echo $maxSlots['tematic'] - $result['visitors'];
+        echo $maxSlots[$_GET['type']] - $result['visitors'];
     }
 
     // simplepay back

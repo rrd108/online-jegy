@@ -4,7 +4,7 @@
         <h3>Túra típus</h3>
         <div class="row">
             <font-awesome-icon icon="fire" size="lg" class="column small-2"/>
-            <select class="column small-10" v-model="type">
+            <select class="column small-10" v-model="type" @change="checkAvailableSlots">
                 <option value="tematic" selected>Tematikus</option>
                 <option value="herbs">Gyógynövény</option>
             </select>
@@ -193,9 +193,19 @@ export default {
   },
   methods: {
     checkAvailableSlots() {
+        if (this.type == 'herbs') {
+            this.date = new Date(Date.parse('2020-09-13 09:00'))
+        }
         this.dateError = false
-        axios.get(process.env.VUE_APP_API_URL + '?slots=' + this.getFormattedDate(this.date))
-            .then(response => this.slots = response.data)
+        axios.get(process.env.VUE_APP_API_URL + '?type=' + this.type + '&slots=' + this.getFormattedDate(this.date))
+            .then(response => {
+                if (this.type == 'herbs') {
+                    this.herbSlots = response.data
+                }
+                if (this.type == 'tematic') {
+                    this.slots = response.data
+                }
+                })
             .catch(error => console.log(error))
     },
     isDisabledDate(date) {
@@ -225,13 +235,8 @@ export default {
     order() {
         let errors = 0
         if (!this.date) {
-            if (this.type == 'tematic') {
-                this.dateError = true
-                errors++
-            }
-            if (this.type == 'herbs') {
-                this.date = new Date(Date.parse('2020-09-13 09:00'))
-            }
+            this.dateError = true
+            errors++
         }
         if (this.adult < 0 || this.chlid < 0 || this.adult + this.child <= 0) {
             this.manError = true

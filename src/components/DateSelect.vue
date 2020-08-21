@@ -5,7 +5,7 @@
         <div class="row">
             <font-awesome-icon icon="fire" size="lg" class="column small-2"/>
             <select class="column small-10" v-model="type" @change="checkAvailableSlots">
-                <option value="tematic" selected>Tematikus</option>
+                <option value="tematic">Tematikus</option>
                 <option value="herbs">Gyógynövény</option>
             </select>
         </div>
@@ -158,7 +158,7 @@ export default {
         //tomorrow: new Date(new Date(today).setDate(new Date(today).getDate() + 1)),
         tos: false,
         tosError: false,
-        type: 'tematic'
+        type: 'tematic', // window.location.href.search('herbs') > 0 ? 'herbs' : 'tematic'
     }
   },
   computed : {

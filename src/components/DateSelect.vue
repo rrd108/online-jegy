@@ -1,26 +1,51 @@
 <template>
   <div class="column">
     <section v-show="!summary">
+        <h3>Túra típus</h3>
+        <div class="row">
+            <font-awesome-icon icon="fire" size="lg" class="column small-2"/>
+            <select class="column small-10" v-model="type" @change="checkAvailableSlots">
+                <option value="tematic">Tematikus</option>
+                <option value="herbs">Gyógynövény</option>
+            </select>
+        </div>
+
         <h3>Túra időpont</h3>
         <p class="callout alert" v-show="dateError">Válassz időpontot!</p>
         <div class="row">
             <font-awesome-icon icon="clock" size="lg" class="column small-2"/>
-            <date-picker @close="checkAvailableSlots" v-model="date" :default-value="nextTourDay.setHours(11, 0, 0, 0)" type="datetime" format="YYYY-MM-DD HH:mm" placeholder="Dátum" :editable="false" :show-minute="false" :show-second="false" :time-picker-options="{start: '11:00', step:'1:00' , end: '11:00', format: 'HH:mm' }" :disabled-date="isDisabledDate" class="column small-10" />
+            <date-picker v-show="type=='tematic'" @close="checkAvailableSlots" v-model="date" :default-value="nextTourDay.setHours(11, 0, 0, 0)" type="datetime" format="YYYY-MM-DD HH:mm" placeholder="Dátum" :editable="false" :show-minute="false" :show-second="false" :time-picker-options="{start: '11:00', step:'1:00' , end: '11:00', format: 'HH:mm' }" :disabled-date="isDisabledDate" class="column small-10" />
+
+            <p v-show="type=='herbs'" class="column small-10">2020. szeptember 13. 09:00</p>
         </div>
+
         <h3>Vendégek száma</h3>
-        <h4>Max {{slots}} fő erre az időpontra</h4>
-        <p class="callout alert" v-show="overBooking">Erre az időpontra csak {{slots}} helyünk van!</p>
-        <p class="callout alert" v-show="manError">Add meg a létszámot!</p>
-        <div class="row">
-            <font-awesome-icon icon="male" size="lg" class="column small-2"/>
-            <input type="number" @blur="manError = false" min="0" v-model="adult" class="column small-2">
-            <span class="column small-8">felnőtt {{prices.adult | toNumFormat}} Ft/fő</span>
+        <div v-if="type=='tematic'">
+            <h4>Max {{slots}} fő erre az időpontra</h4>
+            <p class="callout alert" v-show="overBooking">Erre az időpontra csak {{slots}} helyünk van!</p>
+            <p class="callout alert" v-show="manError">Add meg a létszámot!</p>
+            <div class="row">
+                <font-awesome-icon icon="male" size="lg" class="column small-2"/>
+                <input type="number" @blur="manError = false" min="0" v-model="adult" class="column small-2">
+                <span class="column small-8">felnőtt {{prices.adult | toNumFormat}} Ft/fő</span>
+            </div>
+            <div class="row">
+                <font-awesome-icon icon="child" size="lg" class="column small-2"/>
+                <input type="number" @blur="manError = false" min="0" v-model="child" class="column small-2">
+                <span class="column small-8">gyerek/nyugdíjas {{prices.child | toNumFormat}} Ft/fő</span>
+            </div>
         </div>
-        <div class="row">
-            <font-awesome-icon icon="child" size="lg" class="column small-2"/>
-            <input type="number" @blur="manError = false" min="0" v-model="child" class="column small-2">
-            <span class="column small-8">gyerek/nyugdíjas {{prices.child | toNumFormat}} Ft/fő</span>
+        <div v-if="type=='herbs'">
+            <h4>Max {{herbSlots}} fő erre az időpontra</h4>
+            <p class="callout alert" v-show="overBooking">Erre az időpontra csak {{herbSlots}} helyünk van!</p>
+            <p class="callout alert" v-show="manError">Add meg a létszámot!</p>
+            <div class="row">
+                <font-awesome-icon icon="male" size="lg" class="column small-2"/>
+                <input type="number" @blur="manError = false" min="0" v-model="adult" class="column small-2">
+                <span class="column small-8">felnőtt {{prices.herbs | toNumFormat}} Ft/fő</span>
+            </div>
         </div>
+
         <h3>Elérhetőségeid</h3>
         <p class="callout alert" v-show="nameError">Add meg a neved!</p>
         <div class="row">
@@ -118,6 +143,7 @@ export default {
         dateError: false,
         email: null,
         emailError: false,
+        herbSlots: 0,
         manError: false,
         name: null,
         nameError: false,
@@ -132,16 +158,21 @@ export default {
         //tomorrow: new Date(new Date(today).setDate(new Date(today).getDate() + 1)),
         tos: false,
         tosError: false,
+        type: 'tematic', // window.location.href.search('herbs') > 0 ? 'herbs' : 'tematic'
     }
   },
   computed : {
     amount() {
-        return this.adult * this.prices.adult + this.child * this.prices.child
+        if (this.type == 'tematic') {
+            return this.adult * this.prices.adult + this.child * this.prices.child
+        }
+        return this.adult * this.prices.herbs
     },
     overBooking () {
+        const slots = (this.type == 'tematic') ? this.slots : this.herbSlots
         const adult = this.adult ? this.adult : 0
         const child = this.child ? this.child : 0
-        return parseInt(adult) + parseInt(child) > parseInt(this.slots);
+        return parseInt(adult) + parseInt(child) > parseInt(slots)
     },
   },
   created() {
@@ -150,7 +181,10 @@ export default {
           .catch(error => console.log(error))
 
       axios.get(process.env.VUE_APP_API_URL + '?maxSlots')
-          .then(response => this.slots = response.data)
+          .then(response => {
+              this.slots = response.data.tematic
+              this.herbSlots = response.data.herbs
+              })
           .catch(error => console.log(error))
 
       axios.get(process.env.VUE_APP_API_URL + '?specialDays')
@@ -159,9 +193,19 @@ export default {
   },
   methods: {
     checkAvailableSlots() {
+        if (this.type == 'herbs') {
+            this.date = new Date(Date.parse('2020-09-13 09:00'))
+        }
         this.dateError = false
-        axios.get(process.env.VUE_APP_API_URL + '?slots=' + this.getFormattedDate(this.date))
-            .then(response => this.slots = response.data)
+        axios.get(process.env.VUE_APP_API_URL + '?type=' + this.type + '&slots=' + this.getFormattedDate(this.date))
+            .then(response => {
+                if (this.type == 'herbs') {
+                    this.herbSlots = response.data
+                }
+                if (this.type == 'tematic') {
+                    this.slots = response.data
+                }
+                })
             .catch(error => console.log(error))
     },
     isDisabledDate(date) {
@@ -234,7 +278,8 @@ export default {
             email: this.email,
             phone: this.phone,
             newsletter: this.newsletter ? 1 : 0,
-            referrer: document.referrer
+            referrer: document.referrer,
+            type: this.type
         })
         .then(response => {
             this.simpleForm = response.data

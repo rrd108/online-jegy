@@ -10,10 +10,14 @@ require('./simplepay/SimplePayV21.php');
 
 $prices = [
     'adult' => 4290,
-    'child' => 3290
+    'child' => 3290,
+    'herbs' => 12000
 ];
 
-$maxSlots = 30;
+$maxSlots = [
+    'tematic' => 30,
+    'herbs' => 15
+];
 
 $specialDays = [];
 
@@ -61,7 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $orderId = uniqid();
         $data = json_decode($data);
 
-        $amount = $prices['adult'] * $data->adult + $prices['child'] * $data->child;
+        $amount = ($data->type == 'tematic') ? $prices['adult'] * $data->adult + $prices['child'] * $data->child : $prices['herbs'] * $data->adult;
 
         // save order to the database
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -150,7 +154,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     }
 
     if (isset($_GET['maxSlots'])) {
-        echo $maxSlots;
+        echo json_encode($maxSlots);
     }
 
     if (isset($_GET['specialDays'])) {
@@ -185,7 +189,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             WHERE date = ?");
         $stmt->execute([$_GET['slots']]);
         $result = $stmt->fetch();
-        echo $maxSlots - $result['visitors'];
+        echo $maxSlots[$_GET['type']] - $result['visitors'];
     }
 
     // simplepay back
@@ -248,7 +252,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $response->status = $events[$result['e']];
         $response->orderId = $result['o'];
         $response->simpleTransactionId = $result['t'];
-        $response->amount = $order['amount'];
+        $response->amount = isset($order['amount']) ? $order['amount'] : 0;
         echo json_encode($response);
         return;
     }

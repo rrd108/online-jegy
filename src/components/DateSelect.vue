@@ -137,7 +137,7 @@ export default {
   data() {
     return {
         adult: null,
-        nextTourDay: new Date(new Date(today).setDate(new Date(today).getDate() + (3 + 7 - today.getDay()) % 7)),
+        nextTourDay: new Date(new Date(today).setDate(new Date(today).getDate() + (6 + 7 - today.getDay()) % 7)),
         child: null,
         date: null,
         dateError: false,

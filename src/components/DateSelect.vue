@@ -322,3 +322,8 @@ span >>> button {
     margin: 1rem;
 }
 </style>
+<style>
+.mx-date-row .cell:not(.disabled) {
+  color: green;
+}
+</style>

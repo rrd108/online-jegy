@@ -6,7 +6,7 @@
             <font-awesome-icon icon="fire" size="lg" class="column small-2"/>
             <select class="column small-10" v-model="type" @change="checkAvailableSlots">
                 <option value="tematic">Tematikus</option>
-                <option value="herbs">Gyógynövény</option>
+                <!--option value="herbs">Gyógynövény</!--option-->
             </select>
         </div>
 

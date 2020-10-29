@@ -212,7 +212,7 @@ export default {
         return this.isPast(date) || this.isToday(date) ||/* this.isTomorrow(date) ||*/ this.isNotTourDay(date) || this.isSpecialDate(date)
     },
     isNotTourDay(date) {
-        return date.getDay() != 3
+        return date.getDay() != 6       // Saturdays
     },
     isPast(date) {
         return date < today

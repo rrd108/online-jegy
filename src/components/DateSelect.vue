@@ -16,7 +16,7 @@
             <font-awesome-icon icon="clock" size="lg" class="column small-2"/>
             <date-picker v-show="type=='tematic'" @close="checkAvailableSlots" v-model="date" :default-value="nextTourDay.setHours(11, 0, 0, 0)" type="datetime" format="YYYY-MM-DD HH:mm" placeholder="Dátum" :editable="false" :show-minute="false" :show-second="false" :time-picker-options="{start: '11:00', step:'1:00' , end: '11:00', format: 'HH:mm' }" :disabled-date="isDisabledDate" class="column small-10" />
 
-            <p v-show="type=='herbs'" class="column small-10">2020. szeptember 13. 09:00</p>
+            <p v-show="type=='herbs'" class="column small-10">2020. október 11. 09:00</p>
         </div>
 
         <h3>Vendégek száma</h3>
@@ -194,7 +194,7 @@ export default {
   methods: {
     checkAvailableSlots() {
         if (this.type == 'herbs') {
-            this.date = new Date(Date.parse('2020-09-13 09:00'))
+            this.date = new Date(Date.parse('2020-10-11 09:00'))
         }
         this.dateError = false
         axios.get(process.env.VUE_APP_API_URL + '?type=' + this.type + '&slots=' + this.getFormattedDate(this.date))

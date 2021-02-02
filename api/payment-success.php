@@ -11,16 +11,13 @@ $message = '<html>
   <p>A túra ideje: <strong>{{tourTime}}</strong></p>
   <p>Létszám: <strong>{{adult}} felnőtt</strong> és <strong>{{child}} gyerek / nyugdíjas</strong></p>
   <p><strong>Belépés a rendelési számod azonosításával történik, kérlek nyomtasd ezt ki, vagy mutasd fel telefonodon.</strong></p>
+
   <h1>Útvonal</h1>
-  <p>A Túra az Elefántos recepciótól indul, a sétány úton a templom épületéig, ahol a
-    Szentély megtekintése után egy vegetáriánus/vegán ebéd vár. Ezután lehetőség
-    van egy kis kötetlen időtöltésre, ajándékbolt megtekintésérre, vagy ha szívesen
-    beszélgetnél csak úgy. A pihenő után meglátogatjuk a Bio kertészetet és a
-    Tehenészetet, majd az Iskola épületét.</p>
+  <p>A spirituális zarándoklat programra a templom épületében várunk szombaton, 11 órakor. Amikor megérkezel Krisna-völgy recepciójához autóval, két lehetőséged van. Vagy az elefántok előtti parkolóban hagyod az autódat és besétálsz a templomig Krisna-völgy térkövezett főútján, a parkok, dísztavak mentén egyenesen haladva, ez 20 perc gyaloglást jelent. Vagy behajtasz egyenesen a templomépület előtti Gauranga térig autóval. Februárban benti helyszíneinken várunk limitált létszámú programjainkkal: szentélylátogatással, egy gondolatébresztő, interaktív előadással, ajándékbolt látogatási lehetőséggel és egy elvitelre csomagolt, tradicionális indiai ebéddel. Az országos egészségvédelmi intézkedések szerint a templomépületben a program során orrot-szájat eltakaró maszk viselése szükséges. Kézfertőtlenítési lehetőséget és toalettet a templom épületében biztosítunk. A külső helyszínek a program előtt és után egyénileg látogathatóak.</p>
+
   <h1>Fontos infók</h1>
-  <p>A kifizetett jegyet visszaváltani nem lehet és csak a kiválasztott időpontban használható fel.
-    Kérünk pontosan érkezz a recepcióra, legalább 10 perccel a kiválasztott időpont előtt, hogy
-    időben tudjunk indulni a Túrára.</p>
+  <p>A kiválasztott jegyek nem válthatóak vissza és csak a kiválasztott időpontban használhatóak fel. Kérjük pontosan érkezz a találkozási ponthoz, a templomépület elé, hogy időben tudjunk kezdeni. </p>
+
   <p>Nemsokára találkozunk!</p>
   <p>Minden jót és Gauranga!</p>
   <p><strong>Kundalata Devi Dasi</strong></p>

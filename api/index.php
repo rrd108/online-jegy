@@ -9,8 +9,8 @@ require('./simplepay/config.php');
 require('./simplepay/SimplePayV21.php');
 
 $prices = [
-    'adult' => 4290,
-    'child' => 3290,
+    'adult' => 5840,
+    'child' => 4840,
     'herbs' => 12000
 ];
 

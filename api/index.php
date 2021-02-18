@@ -15,7 +15,7 @@ $prices = [
 ];
 
 $maxSlots = [
-    'tematic' => 10,
+    'tematic' => 30,
     'herbs' => 15
 ];
 

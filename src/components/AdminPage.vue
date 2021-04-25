@@ -22,23 +22,69 @@
     </form>
 
     <aside v-if="token" class="small-12 large-6">
-      <h2>Vendégek</h2>
-      <input type="search" v-model="searchTerm" @input="search" placeholder="Keresés azonosító / név / email">
-      <h3>{{timeSlot}}</h3>
-      <ul>
-        <li @click="useTicket(visitor)" v-for="visitor in visitors" :key="visitor.id" :class="[visitor.payed == 1 ? 'payed' : 'unpayed', visitor.used == 1 ? 'used' : '']" :title="[visitor.payed == 1 ? 'payed' : 'unpayed', visitor.used == 1 ? 'used' : '']">
-          <font-awesome-icon icon="check-circle" size="xs" />
-          <font-awesome-icon icon="trash" size="xs" v-show="visitor.payed != 1" @click="removeBooking(visitor)" title="Foglalás törlése" class="action" />
-          <font-awesome-icon icon="money-bill" size="xs" v-show="visitor.payed != 1" @click="setPayed(visitor)" class="action" title="Fizetvére állítom" />
-          {{visitor.id}}
-          <span v-show="!timeSlot">{{visitor.date}}</span>
-          {{visitor.name}}
-          {{visitor.email}} <br>
-          {{visitor.adult}} F,
-          {{visitor.child}} GY,
-          {{visitor.amount | toNumFormat}} Ft
-        </li>
-      </ul>
+      <nav>
+        <a @click="view = 'guests'">Vendégek</a> |
+        <a @click="view = 'closed'">Zárt napok</a> |
+        <!--a @click="view = 'prices'">Árak</!--a-->
+      </nav>
+
+      <div v-show="view == 'closed'">
+        <h2>Zárt napok</h2>
+        <input type="date" @change="addSpecialDay" v-model="newSpecialDay" />
+        <transition-group tag="ul" name="list">
+          <li v-for="day in sortedSpecialDays" :key="day">{{ day }}</li>
+        </transition-group>
+      </div>
+
+      <div v-show="view == 'guests'">
+        <h2>Vendégek</h2>
+        <input
+          type="search"
+          v-model="searchTerm"
+          @input="search"
+          placeholder="Keresés azonosító / név / email"
+        />
+        <h3>{{ timeSlot }}</h3>
+        <ul>
+          <li
+            @click="useTicket(visitor)"
+            v-for="visitor in visitors"
+            :key="visitor.id"
+            :class="[
+              visitor.payed == 1 ? 'payed' : 'unpayed',
+              visitor.used == 1 ? 'used' : '',
+            ]"
+            :title="[
+              visitor.payed == 1 ? 'payed' : 'unpayed',
+              visitor.used == 1 ? 'used' : '',
+            ]"
+          >
+            <font-awesome-icon icon="check-circle" size="xs" />
+            <font-awesome-icon
+              icon="trash"
+              size="xs"
+              v-show="visitor.payed != 1"
+              @click="removeBooking(visitor)"
+              title="Foglalás törlése"
+              class="action"
+            />
+            <font-awesome-icon
+              icon="money-bill"
+              size="xs"
+              v-show="visitor.payed != 1"
+              @click="setPayed(visitor)"
+              class="action"
+              title="Fizetvére állítom"
+            />
+            {{ visitor.id }}
+            <span v-show="!timeSlot">{{ visitor.date }}</span>
+            {{ visitor.name }}
+            {{ visitor.email }} <br />
+            {{ visitor.adult }} F, {{ visitor.child }} GY,
+            {{ visitor.amount | toNumFormat }} Ft
+          </li>
+        </ul>
+      </div>
     </aside>
     <calendar-view
       v-if="token"
@@ -46,132 +92,176 @@
       :show-date="showDate"
       :events="checkins"
       @click-event="clickEvent"
-      class="small-12 large-6 theme-default">
+      class="small-12 large-6 theme-default"
+    >
       <calendar-view-header
         slot="header"
         slot-scope="t"
         :header-props="t.headerProps"
-        @input="setShowDate" />
+        @input="setShowDate"
+      />
     </calendar-view>
   </div>
 </template>
 
 <script>
-import axios from 'axios'
-import swal from 'sweetalert'
+import axios from "axios"
+import swal from "sweetalert"
 import { CalendarView, CalendarViewHeader } from "vue-simple-calendar"
 // https://github.com/richardtallent/vue-simple-calendar
 
 require("vue-simple-calendar/static/css/default.css")
 
 export default {
-  name: 'AdminPage',
-  components : {
+  name: "AdminPage",
+  components: {
     CalendarView,
     CalendarViewHeader,
   },
   created() {
-    axios.get(process.env.VUE_APP_API_URL + '?checkins')
-      .then(response => this.checkins = response.data)
-      .catch(error => console.log(error))
+    axios
+      .get(process.env.VUE_APP_API_URL + "?checkins")
+      .then((response) => (this.checkins = response.data))
+      .catch((error) => console.log(error))
+
+    axios
+      .get(process.env.VUE_APP_API_URL + "?specialDays")
+      .then((response) => (this.specialDays = response.data))
+      .catch((error) => console.log(error))
   },
   data() {
     return {
       checkins: [],
-      email : '',
+      email: "",
+      newSpecialDay: null,
       visitors: [],
-      password : '',
-      searchTerm: '',
+      password: "",
+      searchTerm: "",
       showDate: new Date(),
-      timeSlot: '',
-      token : '',
+      specialDays: [],
+      timeSlot: "",
+      token: "",
+      view: "guests",
     }
   },
+  computed: {
+    sortedSpecialDays() {
+      let specialDays = this.specialDays
+      return specialDays.sort((a, b) => (a < b ? 1 : -1))
+    },
+  },
   methods: {
+    addSpecialDay() {
+      axios
+        .patch(process.env.VUE_APP_API_URL, {
+          newSpecialDay: this.newSpecialDay,
+        })
+        .then((response) => {
+          console.log(response.data)
+          this.specialDays.push(response.data.newSpecialDay)
+          this.newSpecialDay = null
+        })
+        .catch((error) => console.log(error))
+    },
     clickEvent(event) {
       // event.id : 2020-05-17 14:00:00
       this.timeSlot = event.id
-      axios.get(process.env.VUE_APP_API_URL + '?visitors=' + event.id)
-        .then(response => this.visitors = response.data)
-        .catch(error => console.log(error))
+      axios
+        .get(process.env.VUE_APP_API_URL + "?visitors=" + event.id)
+        .then((response) => (this.visitors = response.data))
+        .catch((error) => console.log(error))
     },
     login() {
-      axios.post(process.env.VUE_APP_API_TOKEN_URL, {
+      axios
+        .post(process.env.VUE_APP_API_TOKEN_URL, {
           email: this.email,
           password: this.password,
         })
-        .then(response => this.token = response.data)
-        .catch(error => console.log(error))
+        .then((response) => (this.token = response.data))
+        .catch((error) => console.log(error))
     },
     removeBooking(visitor) {
       swal({
-          title: 'Foglalás törlése ' + visitor.name,
-          text: 'Ezt a foglalást töröljük? ' + visitor.id,
-          icon: 'warning',
-          buttons: true,
-          dangerMode: true,
-        })
-        .then((ticket) => {
-          if (ticket) {
-            axios.delete(process.env.VUE_APP_API_URL, {
-              data: {delete: visitor.id}
+        title: "Foglalás törlése " + visitor.name,
+        text: "Ezt a foglalást töröljük? " + visitor.id,
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+      }).then((ticket) => {
+        if (ticket) {
+          axios
+            .delete(process.env.VUE_APP_API_URL, {
+              data: { delete: visitor.id },
             })
-            .then(response => this.visitors = this.visitors.filter(visitor => visitor.id != response.data.delete))
-            .catch(error => console.log(error))
-          }
-        })
+            .then(
+              (response) =>
+                (this.visitors = this.visitors.filter(
+                  (visitor) => visitor.id != response.data.delete
+                ))
+            )
+            .catch((error) => console.log(error))
+        }
+      })
     },
     search() {
-      this.timeSlot = ''
+      this.timeSlot = ""
       this.visitors = []
       if (this.searchTerm.length > 2) {
-      axios.get(process.env.VUE_APP_API_URL + '?search=' + this.searchTerm)
-        .then(response => this.visitors = response.data)
-        .catch(error => console.log(error))
+        axios
+          .get(process.env.VUE_APP_API_URL + "?search=" + this.searchTerm)
+          .then((response) => (this.visitors = response.data))
+          .catch((error) => console.log(error))
       }
     },
     setPayed(visitor) {
       swal({
-          title: 'Foglalás fizetett ' + visitor.name,
-          text: 'Ezt a foglalást állítsuk kifizetettre? ' + visitor.id,
-          icon: 'warning',
-          buttons: true,
-          dangerMode: true,
-        })
-        .then((ticket) => {
-          if (ticket) {
-            axios.patch(process.env.VUE_APP_API_URL, {
-              setPayed: visitor.id
+        title: "Foglalás fizetett " + visitor.name,
+        text: "Ezt a foglalást állítsuk kifizetettre? " + visitor.id,
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+      }).then((ticket) => {
+        if (ticket) {
+          axios
+            .patch(process.env.VUE_APP_API_URL, {
+              setPayed: visitor.id,
             })
-            .then(response => this.visitors = this.visitors.map(visitor => visitor.id == response.data.setPayed ? { ...visitor, ...{payed: 1}} : visitor))
-            .catch(error => console.log(error))
-          }
-        })
+            .then(
+              (response) =>
+                (this.visitors = this.visitors.map((visitor) =>
+                  visitor.id == response.data.setPayed
+                    ? { ...visitor, ...{ payed: 1 } }
+                    : visitor
+                ))
+            )
+            .catch((error) => console.log(error))
+        }
+      })
     },
     setShowDate(d) {
-      this.showDate = d;
+      this.showDate = d
     },
     useTicket(visitor) {
       if (visitor.payed == 1) {
         swal({
-          title: 'Jegy érvényesítés ' + visitor.name,
-          text: 'Ezt a jegyet használjuk most fel? ' + visitor.id,
-          icon: 'warning',
+          title: "Jegy érvényesítés " + visitor.name,
+          text: "Ezt a jegyet használjuk most fel? " + visitor.id,
+          icon: "warning",
           buttons: true,
           dangerMode: true,
-        })
-        .then((ticket) => {
+        }).then((ticket) => {
           if (ticket) {
-            axios.post(process.env.VUE_APP_API_URL, {
-              used: visitor.id
-            })
-            .then(() => visitor.used = Math.abs(visitor.used - 1))
-            .catch(error => console.log(error))
+            axios
+              .post(process.env.VUE_APP_API_URL, {
+                used: visitor.id,
+              })
+              .then(() => (visitor.used = Math.abs(visitor.used - 1)))
+              .catch((error) => console.log(error))
           }
         })
       }
-    }
-	},
+    },
+  },
 }
 </script>
 
@@ -179,6 +269,7 @@ export default {
 #admin {
   height: 75vh;
 }
+
 ul {
   list-style-type: none;
 }
@@ -188,7 +279,7 @@ ul {
 }
 .payed:hover {
   color: #fff;
-  background: #258DAD;
+  background: #258dad;
 }
 .unpayed {
   color: gray;
@@ -200,6 +291,14 @@ ul {
   cursor: pointer;
 }
 .action:hover {
-  color: #258DAD;
+  color: #258dad;
+}
+
+.list-enter-active, .list-leave-active {
+  transition: all 1s;
+}
+.list-enter, .list-leave-to {
+  opacity: 0;
+  transform: translateY(30px);
 }
 </style>

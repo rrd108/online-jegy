@@ -19,9 +19,11 @@ $maxSlots = [
     'herbs' => 15
 ];
 
-$specialDays = [
-    '2020-10-24'
-];
+// no programs on these days
+$fileSpecialDays = './specialDays';
+$handle = fopen($fileSpecialDays, "r");
+$specialDays = explode("\n", fread($handle, filesize($fileSpecialDays)));
+fclose($handle);
 
 $pdo = new PDO('mysql:host=localhost;dbname=' . $secrets['mysqlTable'], $secrets['mysqlUser'], $secrets['mysqlPass']);
 
@@ -274,11 +276,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
 
 if ($_SERVER['REQUEST_METHOD'] == 'PATCH') {
     $data = file_get_contents('php://input');
-    $stmt = $pdo->prepare("UPDATE orders
-                SET payed = 1,
-                transactionId = 'manual'
-                WHERE id = ?");
-    $stmt->execute([json_decode($data)->setPayed]);
+
+    if (isset(json_decode($data)->setPayed)) {
+        $stmt = $pdo->prepare("UPDATE orders
+                    SET payed = 1,
+                    transactionId = 'manual'
+                    WHERE id = ?");
+        $stmt->execute([json_decode($data)->setPayed]);
+    }
+
+    if (isset(json_decode($data)->newSpecialDay)) {
+        $handle = fopen($fileSpecialDays, "a");
+        fwrite($handle, "\n" . json_decode($data)->newSpecialDay);
+        fclose($handle);
+    }
+
     echo $data;
     return;
 }

@@ -78,8 +78,8 @@
             />
             {{ visitor.id }}
             <span v-show="!timeSlot">{{ visitor.date }}</span>
-            {{ visitor.name }}
-            {{ visitor.email }} <br />
+            {{ visitor.name }} <br />
+            {{ visitor.email }} {{ visitor.phone }} <br />
             {{ visitor.adult }} F, {{ visitor.child }} GY,
             {{ visitor.amount | toNumFormat }} Ft
           </li>

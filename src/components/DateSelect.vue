@@ -6,6 +6,7 @@
             <font-awesome-icon icon="fire" size="lg" class="column small-2"/>
             <select class="column small-10" v-model="type" @change="checkAvailableSlots">
                 <option value="tematic">Spirituális zarándoklat</option>
+                <option value="tematic-extra">Extra Spirituális zarándoklat csomag</option>
                 <!--option value="herbs">Gyógynövény</!--option-->
             </select>
         </div>
@@ -177,6 +178,7 @@ export default {
     },
   },
   created() {
+      this.type = 'tematic'     //it is needed if the user come the page from elvonulas with the browser back button
       axios.get(process.env.VUE_APP_API_URL + '?prices')
           .then(response => this.prices = response.data)
           .catch(error => console.log(error))
@@ -197,6 +199,8 @@ export default {
         // if (this.type == 'herbs') {
         //     this.date = new Date(Date.parse('2020-10-11 09:00'))
         // }
+        if (this.type == 'tematic-extra') {
+            window.location.href = 'https://elvonulas.krisnavolgy.hu/tematikus/'
         }
         this.dateError = false
         axios.get(process.env.VUE_APP_API_URL + '?type=' + this.type + '&slots=' + this.getFormattedDate(this.date))

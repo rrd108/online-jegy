@@ -172,7 +172,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             WHERE date >= ?
             GROUP BY date
             ORDER BY date");
-        $stmt->execute([date('Y-m-01')]);
+        $stmt->execute([date('Y-m-d', strtotime('first day of last month'))]);
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
         echo json_encode($result);
     }

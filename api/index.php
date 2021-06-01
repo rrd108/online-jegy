@@ -291,6 +291,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'PATCH') {
         fclose($handle);
     }
 
+    if (isset(json_decode($data)->newDate)) {
+        $stmt = $pdo->prepare("UPDATE orders
+                    SET date = ?
+                    WHERE id = ?");
+        $stmt->execute([json_decode($data)->newDate ,json_decode($data)->booking]);
+        $data = json_decode($data);
+        $data->changedRecords = $stmt->rowCount();
+        $data = json_encode($data);
+    }
+
     echo $data;
     return;
 }

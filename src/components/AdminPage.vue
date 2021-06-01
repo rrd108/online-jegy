@@ -47,7 +47,6 @@
         <h3>{{ timeSlot }}</h3>
         <ul>
           <li
-            @click="useTicket(visitor)"
             v-for="visitor in visitors"
             :key="visitor.id"
             :class="[
@@ -59,7 +58,20 @@
               visitor.used == 1 ? 'used' : '',
             ]"
           >
-            <font-awesome-icon icon="check-circle" size="xs" />
+            <font-awesome-icon
+              icon="check-circle"
+              size="xs"
+              @click="useTicket(visitor)"
+            />
+
+            <font-awesome-icon
+              icon="pen"
+              size="xs"
+              @click="editTicket(visitor)"
+              title="Foglalás szerkesztése"
+              class="action"
+            />
+
             <font-awesome-icon
               icon="trash"
               size="xs"
@@ -68,6 +80,7 @@
               title="Foglalás törlése"
               class="action"
             />
+
             <font-awesome-icon
               icon="money-bill"
               size="xs"
@@ -169,6 +182,84 @@ export default {
       axios
         .get(process.env.VUE_APP_API_URL + "?visitors=" + event.id)
         .then((response) => (this.visitors = response.data))
+        .catch((error) => console.log(error))
+    },
+    editTicket(visitor) {
+      swal({
+        title: "Foglalás módosítása " + visitor.name,
+        text: "Add meg az új dátumot (éééé-hh-nn óó) formátumban",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+        content: "input",
+      })
+        .then((newDate) => {
+          if (newDate != visitor.date.substr(0, 13)) {
+            newDate = newDate + ":00:00"
+            axios
+              .patch(process.env.VUE_APP_API_URL, {
+                newDate,
+                booking: visitor.id,
+              })
+              .then((response) => {
+                if (response.data.changedRecords === 1) {
+                  const visitorsChanged =
+                    parseInt(visitor.adult || 0) + parseInt(visitor.child || 0)
+
+                  // remove current booking from the list
+                  this.visitors = this.visitors.filter(
+                    (v) => v.id != visitor.id
+                  )
+
+                  // change old chekin title in the calendar
+                  const oldCheckin = this.checkins.find(
+                    (checkin) => checkin.id == this.timeSlot
+                  )
+                  const oldCheckinVisitorsNumber = parseInt(
+                    oldCheckin.title.substr(
+                      3,
+                      oldCheckin.title.indexOf(" ") - 3
+                    )
+                  )
+                  if (oldCheckinVisitorsNumber - visitorsChanged) {
+                    oldCheckin.title = oldCheckin.title.replace(
+                      `${oldCheckinVisitorsNumber} fő`,
+                      `${oldCheckinVisitorsNumber - visitorsChanged} fő`
+                    )
+                  } else {
+                    oldCheckin.title = " "
+                  }
+
+                  const newCheckin = this.checkins.find(
+                    (checkin) => checkin.startDate == newDate
+                  )
+                  if (!newCheckin) {
+                    // add new checkin to the calendar
+                    this.checkins.push({
+                      id: newDate,
+                      startDate: newDate,
+                      title: `${newDate.substr(11, 2)}-${visitorsChanged} fő`,
+                    })
+                  }
+                  if (newCheckin) {
+                    // update new checkin title
+                    const newCheckinVisitorsNumber = parseInt(
+                      newCheckin.title.substr(
+                        3,
+                        newCheckin.title.indexOf(" ") - 3
+                      )
+                    )
+                    newCheckin.title = newCheckin.title.replace(
+                      `${newCheckinVisitorsNumber} fő`,
+                      `${newCheckinVisitorsNumber + visitorsChanged} fő`
+                    )
+                  }
+                } else {
+                  console.error(response.data)
+                }
+              })
+          }
+        })
         .catch((error) => console.log(error))
     },
     login() {
@@ -275,11 +366,11 @@ ul {
 }
 .payed {
   color: green;
-  cursor: pointer;
 }
-.payed:hover {
+.fa-check-circle:hover {
   color: #fff;
   background: #258dad;
+  cursor: pointer;
 }
 .unpayed {
   color: gray;
@@ -294,10 +385,12 @@ ul {
   color: #258dad;
 }
 
-.list-enter-active, .list-leave-active {
+.list-enter-active,
+.list-leave-active {
   transition: all 1s;
 }
-.list-enter, .list-leave-to {
+.list-enter,
+.list-leave-to {
   opacity: 0;
   transform: translateY(30px);
 }

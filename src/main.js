@@ -1,12 +1,12 @@
 import Vue from 'vue'
 import App from './App.vue'
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faAt, faClock, faChild, faCheckCircle, faFire, faInfoCircle, faMale, faMoneyBill, faPhone, faUser, faTrash } from '@fortawesome/free-solid-svg-icons'
+import { faAt, faClock, faChild, faCheckCircle, faFire, faInfoCircle, faMale, faMoneyBill, faPen, faPhone, faUser, faTrash } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 Vue.config.productionTip = false
 
-library.add(faAt, faClock, faChild, faCheckCircle, faFire, faInfoCircle, faMale, faMoneyBill, faPhone, faUser, faTrash)
+library.add(faAt, faClock, faChild, faCheckCircle, faFire, faInfoCircle, faMale, faMoneyBill, faPen, faPhone, faUser, faTrash)
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 

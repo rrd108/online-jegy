@@ -21,7 +21,6 @@ body {
   color: #574634;
   min-height: 100vh;
   font-size: 1.4rem;
-  margin: 0 2vh;
 }
 
 #nav {

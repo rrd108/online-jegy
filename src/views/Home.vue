@@ -1,5 +1,5 @@
 <template>
-  <div class="column">
+  <div>
     <section v-show="!summary">
       <h3>Túra típus</h3>
       <div class="row">
@@ -196,10 +196,12 @@
         <span v-html="simpleForm"></span>
       </div>
     </section>
+    <AppFooter />
   </div>
 </template>
 
 <script>
+import AppFooter from '@/components/AppFooter'
 import DatePicker from "vue2-datepicker"
 import "vue2-datepicker/index.css"
 import "vue2-datepicker/locale/hu"
@@ -210,7 +212,7 @@ today.setHours(0, 0, 0, 0)
 
 export default {
   name: "Home",
-  components: { DatePicker },
+  components: { AppFooter, DatePicker },
   data() {
     return {
       adult: null,

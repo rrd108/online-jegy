@@ -1,13 +1,41 @@
 import Vue from 'vue'
 import App from './App.vue'
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faAt, faClock, faChild, faCheckCircle, faFire, faInfoCircle, faMale, faMoneyBill, faPen, faPhone, faUser, faTrash } from '@fortawesome/free-solid-svg-icons'
+import {
+  faAt,
+  faBars,
+  faClock,
+  faChild,
+  faCheckCircle,
+  faFire,
+  faInfoCircle,
+  faMale,
+  faMoneyBill,
+  faPen,
+  faPhone,
+  faUser,
+  faTrash,
+} from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import router from './router'
 
 Vue.config.productionTip = false
 
-library.add(faAt, faClock, faChild, faCheckCircle, faFire, faInfoCircle, faMale, faMoneyBill, faPen, faPhone, faUser, faTrash)
+library.add(
+  faAt,
+  faBars,
+  faClock,
+  faChild,
+  faCheckCircle,
+  faFire,
+  faInfoCircle,
+  faMale,
+  faMoneyBill,
+  faPen,
+  faPhone,
+  faUser,
+  faTrash
+)
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
@@ -18,7 +46,7 @@ Vue.filter('toNumFormat', function(
   thousands_sep
 ) {
   let n = value,
-  c = isNaN((decimals = Math.abs(decimals))) ? 2 : decimals
+    c = isNaN((decimals = Math.abs(decimals))) ? 2 : decimals
   let d = dec_point == undefined ? ',' : dec_point
   let t = thousands_sep == undefined ? ' ' : thousands_sep,
     s = n < 0 ? '-' : ''
@@ -39,5 +67,5 @@ Vue.filter('toNumFormat', function(
 
 new Vue({
   router,
-  render: h => h(App)
+  render: h => h(App),
 }).$mount('#app')

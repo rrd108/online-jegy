@@ -10,10 +10,10 @@
 
 <style>
 @import url("https://fonts.googleapis.com/css?family=Quicksand:500");
-@import url("./assets/foundation.min.css");
 
 body {
   background: url("./assets/background.png") #efdfd2 !important;
+  margin: 0;
 }
 
 #app {
@@ -21,7 +21,6 @@ body {
   color: #574634;
   min-height: 100vh;
   font-size: 1.4rem;
-  margin: 0 2vh;
 }
 
 #nav {

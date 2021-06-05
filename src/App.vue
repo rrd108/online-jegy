@@ -1,38 +1,12 @@
 <template>
   <div id="app">
-    <AppHeader />
-    <main class="row align-center">
-      <AdminPage v-if="url == '/admin'" />
-      <article v-if="url != '/admin'">
-        <DateSelect v-if="!urlParams" />
-        <PaymentInfo v-if="urlParams" :urlParams="urlParams" />
-      </article>
-    </main>
+    <div id="nav">
+      <router-link to="/">Home</router-link> |
+      <router-link to="/about">About</router-link>
+    </div>
+    <router-view/>
   </div>
 </template>
-
-<script>
-import AdminPage from "./components/AdminPage"
-import AppHeader from "./components/AppHeader"
-import DateSelect from "./components/DateSelect"
-import PaymentInfo from "./components/PaymentInfo"
-
-export default {
-  name: 'App',
-  components: {
-    AdminPage,
-    AppHeader,
-    DateSelect,
-    PaymentInfo
-  },
-  data() {
-    return {
-      url : window.location.pathname,
-      urlParams: (window.location.href.split('?')[1] && window.location.href.split('?')[1].search('fbclid') !== 0) ? window.location.href.split('?')[1] : null,
-    }
-  },
-}
-</script>
 
 <style>
 @import url("https://fonts.googleapis.com/css?family=Quicksand:500");
@@ -50,12 +24,16 @@ body {
   margin: 0 2vh;
 }
 
-#app h1, #app h2, #app h3 {
-  font-family: "Quicksand", sans-serif;
-  font-weight: bold;
+#nav {
+  padding: 30px;
 }
 
-#app input {
-  font-size: 1.5rem;
+#nav a {
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+#nav a.router-link-exact-active {
+  color: #42b983;
 }
 </style>

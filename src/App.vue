@@ -1,26 +1,31 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
+    <router-view />
   </div>
 </template>
 
+<script>
+export default {
+  name: 'App',
+  created() {
+    this.$store.dispatch('getCategories')
+  },
+}
+</script>
+
+
 <style>
-@import url("https://fonts.googleapis.com/css?family=Quicksand:500");
+@import url('https://fonts.googleapis.com/css?family=Quicksand:500');
 
 body {
-  background: url("./assets/background.png") #efdfd2 !important;
+  background-color: #efdfd2;
   margin: 0;
 }
 
 #app {
-  font-family: "Quicksand", sans-serif;
+  font-family: 'Quicksand', sans-serif;
   color: #574634;
   min-height: 100vh;
-  font-size: 1.4rem;
 }
 
 #nav {

@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import store from './store'
 import App from './App.vue'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import {
@@ -7,6 +8,7 @@ import {
   faClock,
   faChild,
   faCheckCircle,
+  faChevronCircleDown,
   faFire,
   faInfoCircle,
   faMale,
@@ -27,6 +29,7 @@ library.add(
   faClock,
   faChild,
   faCheckCircle,
+  faChevronCircleDown,
   faFire,
   faInfoCircle,
   faMale,
@@ -67,5 +70,6 @@ Vue.filter('toNumFormat', function(
 
 new Vue({
   router,
+  store,
   render: h => h(App),
 }).$mount('#app')

@@ -18,7 +18,7 @@ footer {
   background-color: #fff;
   box-sizing: border-box;
   width: 100%;
-  height: 4rem;
+  height: 10vh;
   display: flex;
   justify-content: space-between;
   align-items: center;

@@ -3,6 +3,7 @@ import App from './App.vue'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faAt, faClock, faChild, faCheckCircle, faFire, faInfoCircle, faMale, faMoneyBill, faPen, faPhone, faUser, faTrash } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import router from './router'
 
 Vue.config.productionTip = false
 
@@ -37,5 +38,6 @@ Vue.filter('toNumFormat', function(
 })
 
 new Vue({
-  render: h => h(App),
+  router,
+  render: h => h(App)
 }).$mount('#app')

@@ -1,12 +1,22 @@
 <template>
-  <div
-    class="card"
-    :class="[{ right: !(category.position % 2) }, `p${category.position}`]"
-  >
-    <div class="card-content">
-      <h1>{{ category.name }}</h1>
-      <p>{{ subCategoryNames(category.id) }}</p>
-      <font-awesome-icon icon="chevron-circle-down" />
+  <div>
+    <div
+      class="card"
+      :class="[
+        { right: !(category.position % 2) },
+        `p${category.position}`,
+        { active: $store.state.open == category.id },
+      ]"
+      @click="$store.commit('setOpen', category.id)"
+    >
+      <div class="card-content">
+        <h1>{{ category.name }}</h1>
+        <p>{{ subCategoryNames(category.id) }}</p>
+        <font-awesome-icon icon="chevron-circle-down" />
+      </div>
+    </div>
+    <div class="subcategory" v-show="$store.state.open == category.id">
+      <h2>5422</h2>
     </div>
   </div>
 </template>

@@ -8,9 +8,11 @@ import axios from 'axios'
 export default new Vuex.Store({
   state: {
     categories: [],
+    open: 0,
   },
   mutations: {
     setCategories: (state, categories) => state.categories = categories,
+    setOpen: (state, open) => state.open = open
   },
   actions: {
     getCategories: ({ commit }) => {

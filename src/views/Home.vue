@@ -18,7 +18,9 @@ export default {
   components: { AppFooter, Card },
   computed: {
     mainCategories() {
-      return this.$store.state.categories.filter((category) => category.parent == 0)
+      return this.$store.state.categories.filter(
+        (category) => category.parent == 0
+      )
     },
   },
 }
@@ -27,8 +29,9 @@ export default {
 <style scoped>
 main {
   display: flex;
-  align-items: flex-end;
-  height: 90vh;
+  min-height: 90vh;
+  box-sizing: border-box;
+  padding: 1.5rem 0 10vh 0; /* 10vh is coming from Footer.vue TODO use sass variables */
 }
 div {
   display: flex;
@@ -36,6 +39,6 @@ div {
   width: 100%;
 }
 section {
-  margin: 1rem;
+  margin: 1rem 1rem 2rem 1rem;
 }
 </style>

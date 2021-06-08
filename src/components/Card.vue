@@ -16,7 +16,17 @@
       </div>
     </div>
     <div class="subcategory" v-show="$store.state.open == category.id">
-      <h2>5422</h2>
+      <section
+        v-for="subCategory in $store.state.categories.filter(
+          (subCategory) => subCategory.parent == category.id
+        )"
+        :key="subCategory.id"
+        :class="`sp${subCategory.position}`"
+      >
+        <h2>{{ subCategory.name }}</h2>
+        <h3>{{ subCategory.description }}</h3>
+        <p>{{$store.state.products.filter(product => product.category_id == subCategory.id)}}</p>
+      </section>
     </div>
   </div>
 </template>
@@ -40,7 +50,7 @@ export default {
 .card {
   background-color: #614f28;
   color: #fff;
-  height: 9rem;
+  height: 8.25rem;
   border-radius: 0.5em;
   margin-bottom: 0.25em;
   box-shadow: 0 0.25em 0.25em #483a1d66;
@@ -59,6 +69,8 @@ export default {
 }
 .card::before {
   top: -2rem;
+  right: -1rem;
+  left: -1rem;
   background-position: -5rem 0;
 }
 .p1.card::before {
@@ -82,7 +94,6 @@ export default {
   background-position: -4rem -4rem;
 }
 .card-content {
-  z-index: 1;
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -91,15 +102,54 @@ export default {
 h1 {
   font-size: 3rem;
   margin: 0.2em 0 0 0;
+  z-index: 1;
 }
 p {
   font-size: 1rem;
   margin: 0.5em 0;
+  z-index: 1;
 }
 svg {
-  font-size: 3.4rem;
+  font-size: 3rem;
   position: absolute;
-  bottom: -0.9rem;
+  bottom: -1rem;
   filter: drop-shadow(0 0.1em 0.1em #483a1d66);
+}
+
+.subcategory {
+  background-color: #fff;
+  padding: 1rem;
+  border-radius: .5em;
+}
+.subcategory section {
+  color: #fff;
+  border-radius: 0.5em;
+  text-align: center;
+  box-shadow: 0 0.25em 0.25em #483a1d66;
+  position: relative;
+  padding: .5rem;
+  margin-bottom: 1rem;
+}
+.subcategory section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url('../assets/cicmo.svg');
+  background-repeat: no-repeat;
+  background-position: -2rem -2rem;
+  background-size: 5rem;
+  opacity: 0.35;
+}
+.sp1 {
+  background-color: #366135;
+}
+.sp2 {
+  background-color: #213846;
+}
+.sp3 {
+  background-color: #e1867b;
 }
 </style>

@@ -42,7 +42,7 @@ import AddToCartButton from '@/components/AddToCartButton.vue'
 export default {
   name: 'Card',
   props: ['category'],
-  components: {AddToCartButton},
+  components: { AddToCartButton },
   methods: {
     products(subCategory) {
       return this.$store.state.products.filter(
@@ -126,8 +126,10 @@ svg {
 
 .subcategory {
   background-color: #fff;
-  padding: 1rem;
+  padding: 2.5rem 1rem 1rem 1rem;
   border-radius: 0.5em;
+  margin-top: -1rem;
+  box-shadow: 0 0.25em 0.25em #483a1d66;
 }
 .subcategory section {
   color: #fff;
@@ -141,10 +143,7 @@ svg {
 .subcategory section::before {
   content: '';
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0;
   background-image: url('../assets/cicmo.svg');
   background-repeat: no-repeat;
   background-position: -2rem -2rem;
@@ -162,7 +161,7 @@ svg {
 }
 
 h2 {
-  margin: .4em 0;
+  margin: 0.4em 0;
   font-size: 1.7rem;
 }
 h3 {

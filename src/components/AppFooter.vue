@@ -23,6 +23,7 @@ footer {
   background-color: #fff;
   box-sizing: border-box;
   width: 100%;
+  z-index: 1;
 }
 div {
   display: flex;

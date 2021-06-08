@@ -60,17 +60,12 @@ export default {
 .card::after {
   content: '';
   position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
+  inset: 0;
   background-repeat: no-repeat;
   border-radius: 0.5em;
 }
 .card::before {
   top: -2rem;
-  right: -1rem;
-  left: -1rem;
   background-position: -5rem 0;
 }
 .p1.card::before {

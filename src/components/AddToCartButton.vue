@@ -60,7 +60,6 @@ div, a {
   margin-right: 1rem;
 }
 .product-button {
-  color: #315230;
   font-size: 1.7rem;
   background-color: #fff;
   border-radius: 50%;
@@ -71,6 +70,16 @@ div, a {
   align-items: center;
   transition: transform 350ms ease;
 }
+.sp1 .product-button{
+  color: #366135;
+}
+.sp2 .product-button{
+  color: #213846;
+}
+.sp3 .product-button{
+  color: #e1867b;
+}
+
 .product:active .product-button{
   transform: rotate(-45deg);
 }

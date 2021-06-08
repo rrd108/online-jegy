@@ -15,6 +15,7 @@ import {
   faMoneyBill,
   faPen,
   faPhone,
+  faShoppingCart,
   faUser,
   faTrash,
 } from '@fortawesome/free-solid-svg-icons'
@@ -36,6 +37,7 @@ library.add(
   faMoneyBill,
   faPen,
   faPhone,
+  faShoppingCart,
   faUser,
   faTrash
 )

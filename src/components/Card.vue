@@ -25,17 +25,30 @@
       >
         <h2>{{ subCategory.name }}</h2>
         <h3>{{ subCategory.description }}</h3>
-        <p>{{$store.state.products.filter(product => product.category_id == subCategory.id)}}</p>
+        <ul>
+          <li v-for="product in products(subCategory)" :key="product.id">
+            {{ product.name }}
+            <add-to-cart-button :product="product" />
+          </li>
+        </ul>
       </section>
     </div>
   </div>
 </template>
 
 <script>
+import AddToCartButton from '@/components/AddToCartButton.vue'
+
 export default {
   name: 'Card',
   props: ['category'],
+  components: {AddToCartButton},
   methods: {
+    products(subCategory) {
+      return this.$store.state.products.filter(
+        (product) => product.category_id == subCategory.id
+      )
+    },
     subCategoryNames(id) {
       return this.$store.state.categories
         .filter((subCategory) => subCategory.parent == id)
@@ -114,7 +127,7 @@ svg {
 .subcategory {
   background-color: #fff;
   padding: 1rem;
-  border-radius: .5em;
+  border-radius: 0.5em;
 }
 .subcategory section {
   color: #fff;
@@ -122,7 +135,7 @@ svg {
   text-align: center;
   box-shadow: 0 0.25em 0.25em #483a1d66;
   position: relative;
-  padding: .5rem;
+  padding: 0.5rem;
   margin-bottom: 1rem;
 }
 .subcategory section::before {
@@ -146,5 +159,25 @@ svg {
 }
 .sp3 {
   background-color: #e1867b;
+}
+
+h2 {
+  margin: .4em 0;
+  font-size: 1.7rem;
+}
+h3 {
+  margin: 1em 0;
+  font-size: 1rem;
+  font-weight: 100;
+}
+
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  font-size: 1.7rem;
+  text-align: left;
 }
 </style>

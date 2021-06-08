@@ -8,6 +8,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     echo json_encode($result);
   }
 
+  if (isset($_GET['products'])) {
+    $stmt = $pdo->prepare("SELECT * FROM products ORDER BY price");
+    $stmt->execute();
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    echo json_encode($result);
+  }
+
   if (isset($_GET['search'])) {
     $stmt = $pdo->prepare("SELECT *
     FROM orders

@@ -9,10 +9,12 @@ export default new Vuex.Store({
   state: {
     categories: [],
     open: 0,
+    products: []
   },
   mutations: {
-    setCategories: (state, categories) => state.categories = categories,
-    setOpen: (state, open) => state.open = open
+    setCategories: (state, categories) => (state.categories = categories),
+    setOpen: (state, open) => (state.open = open),
+    setProducts: (state, products) => (state.products = products),
   },
   actions: {
     getCategories: ({ commit }) => {
@@ -21,6 +23,12 @@ export default new Vuex.Store({
         .then(response => commit('setCategories', response.data))
         .catch(err => console.error(err))
     },
+    getProducts: ({ commit }) => {
+      axios
+        .get(`${process.env.VUE_APP_API_URL}?products`)
+        .then(response => commit('setProducts', response.data))
+        .catch(err => console.error(err))
+    }
   },
   modules: {}
 })

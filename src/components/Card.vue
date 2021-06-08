@@ -15,24 +15,26 @@
         <font-awesome-icon icon="chevron-circle-down" />
       </div>
     </div>
-    <div class="subcategory" v-show="$store.state.open == category.id">
-      <section
-        v-for="subCategory in $store.state.categories.filter(
-          (subCategory) => subCategory.parent == category.id
-        )"
-        :key="subCategory.id"
-        :class="`sp${subCategory.position}`"
-      >
-        <h2>{{ subCategory.name }}</h2>
-        <h3>{{ subCategory.description }}</h3>
-        <ul>
-          <li v-for="product in products(subCategory)" :key="product.id">
-            {{ product.name }}
-            <add-to-cart-button :product="product" />
-          </li>
-        </ul>
-      </section>
-    </div>
+    <transition name="slide">
+      <div class="subcategory" v-show="$store.state.open == category.id">
+        <section
+          v-for="subCategory in $store.state.categories.filter(
+            (subCategory) => subCategory.parent == category.id
+          )"
+          :key="subCategory.id"
+          :class="`sp${subCategory.position}`"
+        >
+          <h2>{{ subCategory.name }}</h2>
+          <h3>{{ subCategory.description }}</h3>
+          <ul>
+            <li v-for="product in products(subCategory)" :key="product.id">
+              {{ product.name }}
+              <add-to-cart-button :product="product" />
+            </li>
+          </ul>
+        </section>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -178,5 +180,14 @@ ul {
   flex-direction: column;
   font-size: 1.7rem;
   text-align: left;
+}
+
+.slide-enter-active, .slide-leave-active {
+  transition: transform 500ms;
+  transform-origin: top;
+  z-index: -1;
+}
+.slide-enter, .slide-leave-to {
+  transform: scaleY(0);
 }
 </style>

@@ -1,13 +1,18 @@
 <template>
   <footer>
-    <img src="../assets/logo.svg" alt="logo">
-    <font-awesome-icon icon="bars" />
+    <div>
+      <img src="../assets/logo.svg" alt="logo" />
+      <font-awesome-icon icon="bars" />
+    </div>
+    <Cart />
   </footer>
 </template>
 
 <script>
+import Cart from '@/components/Cart'
 export default {
-
+  name: 'AppFooter',
+  components: { Cart },
 }
 </script>
 
@@ -18,10 +23,12 @@ footer {
   background-color: #fff;
   box-sizing: border-box;
   width: 100%;
-  height: 10vh;
+}
+div {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  height: 10vh;
   padding: 0 1rem;
 }
 img {

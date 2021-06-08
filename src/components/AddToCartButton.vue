@@ -1,6 +1,6 @@
 <template>
   <div>
-    <a class="product">
+    <a class="product" @click.prevent="addToCart(product)">
       <span class="product-price"> {{ formatNumber(product.price) }}</span>
       <span class="product-button">
         <font-awesome-icon icon="shopping-cart" />
@@ -14,6 +14,9 @@ export default {
   name: 'AddToCartButton',
   props: ['product'],
   methods: {
+    addToCart(product) {
+      this.$store.commit('addToCart', product)
+    },
     formatNumber(value) {
       return new Intl.NumberFormat('hu-HU', {
         style: 'currency',
@@ -40,7 +43,7 @@ div, a {
   position: relative;
   z-index: 0;
   width: 12rem;
-  transition: width 350ms ease-in-out;
+  transition: width 250ms ease;
 }
 
 .product::before {
@@ -66,5 +69,9 @@ div, a {
   display: flex;
   justify-content: center;
   align-items: center;
+  transition: transform 350ms ease;
+}
+.product:active .product-button{
+  transform: rotate(-45deg);
 }
 </style>

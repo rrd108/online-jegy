@@ -148,8 +148,8 @@ svg {
   inset: 0;
   background-image: url('../assets/cicmo.svg');
   background-repeat: no-repeat;
-  background-position: -2rem -2rem;
-  background-size: 5rem;
+  background-position: -4rem -4rem;
+  background-size: 10rem;
   opacity: 0.35;
 }
 .sp1 {
@@ -183,11 +183,12 @@ ul {
 }
 
 .slide-enter-active, .slide-leave-active {
-  transition: transform 500ms;
+  transition: all 750ms;
   transform-origin: top;
   z-index: -1;
 }
 .slide-enter, .slide-leave-to {
   transform: scaleY(0);
+  opacity: 0;
 }
 </style>

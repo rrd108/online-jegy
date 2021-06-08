@@ -7,11 +7,13 @@ import axios from 'axios'
 
 export default new Vuex.Store({
   state: {
+    cart: [],
     categories: [],
     open: 0,
     products: []
   },
   mutations: {
+    addToCart : (state, product) => state.cart.push(product),
     setCategories: (state, categories) => (state.categories = categories),
     setOpen: (state, open) => (state.open = open),
     setProducts: (state, products) => (state.products = products),

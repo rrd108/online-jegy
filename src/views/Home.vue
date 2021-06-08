@@ -12,16 +12,13 @@
 <script>
 import AppFooter from '@/components/AppFooter'
 import Card from '@/components/Card'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'Home',
   components: { AppFooter, Card },
   computed: {
-    mainCategories() {
-      return this.$store.state.categories.filter(
-        (category) => category.parent == 0
-      )
-    },
+    ...mapGetters(['mainCategories'])
   },
 }
 </script>

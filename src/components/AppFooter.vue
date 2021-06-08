@@ -1,8 +1,10 @@
 <template>
-  <footer>
+  <footer @click="l">
     <div>
       <img src="../assets/logo.svg" alt="logo" />
-      <font-awesome-icon icon="bars" />
+      <span @click="$store.commit('menuToggle')">
+        <font-awesome-icon icon="bars" />
+      </span>
     </div>
     <Cart />
   </footer>
@@ -10,9 +12,15 @@
 
 <script>
 import Cart from '@/components/Cart'
+
 export default {
   name: 'AppFooter',
   components: { Cart },
+  methods: {
+    l(event) {
+      console.log(event.target)
+    },
+  },
 }
 </script>
 

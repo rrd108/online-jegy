@@ -173,9 +173,6 @@ h3 {
 }
 
 ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
   display: flex;
   flex-direction: column;
   font-size: 1.7rem;

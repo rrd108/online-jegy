@@ -361,9 +361,6 @@ export default {
   height: 75vh;
 }
 
-ul {
-  list-style-type: none;
-}
 .payed {
   color: green;
 }

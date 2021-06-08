@@ -4,7 +4,7 @@
       <font-awesome-icon icon="shopping-cart" />
       <transition name="pop">
         <span v-show="$store.state.cart.length" :key="$store.state.cart.length">
-          {{$store.state.cart.length}}
+          {{ $store.state.cart.length }}
         </span>
       </transition>
     </div>
@@ -21,9 +21,7 @@ export default {
 #cart {
   position: absolute;
   bottom: 3vh;
-  width: 100vw;
-  display: flex;
-  justify-content: center;
+  left: calc(50% - 0.5rem);
   padding: 0;
 }
 #cart-icon {

@@ -17,7 +17,7 @@ export default new Vuex.Store({
   mutations: {
     addToCart: (state, product) => {
       state.cart.push(product)
-      localStorage.setItem('cart', JSON.stringify(state.cart))
+      sessionStorage.setItem('cart', JSON.stringify(state.cart))
     },
     getSavedCart: (state, cart) => (state.cart = cart),
     showCartToggle: state => (state.showCart = !state.showCart),

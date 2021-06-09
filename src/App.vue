@@ -33,6 +33,13 @@ body {
   min-height: 100vh;
 }
 
+main {
+  display: flex;
+  min-height: 90vh;
+  box-sizing: border-box;
+  padding: 1.5rem 0 10vh 0; /* 10vh is coming from Footer.vue TODO use sass variables */
+}
+
 ul {
   list-style: none;
   margin: 0;

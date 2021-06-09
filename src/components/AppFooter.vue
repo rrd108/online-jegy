@@ -37,7 +37,7 @@ div {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 10vh;
+  min-height: 10vh;
   padding: 0 1rem;
 }
 img {

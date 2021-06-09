@@ -8,6 +8,9 @@
         </span>
       </transition>
     </div>
+    <div class="cart-content">
+      <h2>A kosarad</h2>
+    </div>
   </div>
 </template>
 

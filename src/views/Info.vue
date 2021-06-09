@@ -1,32 +1,8 @@
 <template>
-  <header>
-    <div class="row">
-      <div
-        class="column small-2 info"
-        @click="showInfo = showInfo ? false : true"
-      >
-        <font-awesome-icon
-          icon="info-circle"
-          size="lg"
-          title="Infók mutatása / rejtése"
-        />
-        <p>Info</p>
-      </div>
-      <h1 class="column small-7 text-center">Spirituális zarándoklat</h1>
-      <div class="column small-3">
-        <img src="../assets/logo.png" />
-      </div>
-    </div>
-    <div class="row">
-      <div class="column-small-12" v-show="showInfo">
-        <h1>
-          <font-awesome-icon
-            icon="info-circle"
-            size="lg"
-            class="column small-2 info"
-          />
-          Információk
-        </h1>
+  <div>
+    <main>
+      <div>
+        <h1>Spirituális zarándoklat</h1>
         <h2>Túra jegy rendelés</h2>
         <p>
           Jegyet rendelni és ezzel együtt bejelentkezni úgy tudsz, hogy
@@ -77,37 +53,25 @@
           >
         </p>
       </div>
-    </div>
-  </header>
+    </main>
+    <AppFooter />
+  </div>
 </template>
 
 <script>
-export default {
-  name: 'AppHeader',
+import AppFooter from '@/components/AppFooter'
 
-  data() {
-    return {
-      showInfo: false,
-    }
-  },
+export default {
+  name: 'Info',
+  components: { AppFooter },
 }
 </script>
 
 <style scoped>
-header {
-  padding-top: 2vh;
-}
-header .column {
-  padding-left: 0;
-  padding-right: 0;
+main div {
+  padding: 1rem;
 }
 h1 {
-  font-family: 'Quicksand', sans-serif;
-}
-.info {
-  cursor: pointer;
-}
-p {
-  margin: 0;
+  margin-top: 0;
 }
 </style>

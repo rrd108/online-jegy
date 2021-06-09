@@ -1,12 +1,13 @@
 <template>
   <transition name="bounce">
-    <aside v-show="$store.state.menuOpen">
+    <aside v-show="$store.state.menuOpen" @click="$store.commit('menuToggle')">
       <ul>
+        <li><router-link to="/">Főoldal</router-link></li>
         <li v-for="category in mainCategories" :key="category.id">
           {{ category.name }}
         </li>
         <li>Kosár</li>
-        <li>Infók</li>
+        <li><router-link to="/info">Infók</router-link></li>
       </ul>
     </aside>
   </transition>
@@ -40,7 +41,12 @@ aside {
   padding: 1em;
 }
 li {
-  margin: .5em 0;
+  margin: 0.5em 0;
+}
+
+a {
+  text-decoration: none;
+  color: #574634;
 }
 
 .bounce-enter,

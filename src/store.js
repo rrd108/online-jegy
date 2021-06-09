@@ -14,8 +14,10 @@ export default new Vuex.Store({
     products: []
   },
   mutations: {
-    addToCart: (state, product) => state.cart.push(product),
-    menuToggle: state => (state.menuOpen = !state.menuOpen),
+    addToCart: (state, product) => {
+      state.cart.push(product)
+      localStorage.setItem('cart', JSON.stringify(state.cart))
+    getSavedCart: (state, cart) => (state.cart = cart),
     setCategories: (state, categories) => (state.categories = categories),
     setOpen: (state, open) => (state.open = open),
     setProducts: (state, products) => (state.products = products)

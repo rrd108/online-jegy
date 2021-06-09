@@ -14,6 +14,9 @@ export default {
   created() {
     this.$store.dispatch('getCategories')
     this.$store.dispatch('getProducts')
+    if (localStorage.getItem('cart')) {
+      this.$store.commit('getSavedCart', JSON.parse(localStorage.getItem('cart')))
+    }
   },
 }
 </script>

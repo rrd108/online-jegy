@@ -1,7 +1,7 @@
 <template>
   <footer @click="l">
     <div>
-      <img src="../assets/logo.svg" alt="logo" />
+      <router-link to="/"><img src="../assets/logo.svg" alt="logo" /></router-link>
       <span @click="$store.commit('menuToggle')">
         <font-awesome-icon icon="bars" />
       </span>

@@ -9,14 +9,16 @@ export default new Vuex.Store({
   state: {
     cart: [],
     categories: [],
+    menuOpen: false,
     open: 0,
     products: []
   },
   mutations: {
-    addToCart : (state, product) => state.cart.push(product),
+    addToCart: (state, product) => state.cart.push(product),
+    menuToggle: state => (state.menuOpen = !state.menuOpen),
     setCategories: (state, categories) => (state.categories = categories),
     setOpen: (state, open) => (state.open = open),
-    setProducts: (state, products) => (state.products = products),
+    setProducts: (state, products) => (state.products = products)
   },
   actions: {
     getCategories: ({ commit }) => {
@@ -31,6 +33,10 @@ export default new Vuex.Store({
         .then(response => commit('setProducts', response.data))
         .catch(err => console.error(err))
     }
+  },
+  getters: {
+    mainCategories: state =>
+      state.categories.filter(category => category.parent == 0)
   },
   modules: {}
 })

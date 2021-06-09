@@ -1,38 +1,31 @@
 <template>
-  <main>
-    <div>
-      <section v-for="category in mainCategories" :key="category.id">
-        <Card :category="category" />
-      </section>
-    </div>
+  <div>
+    <main>
+      <div>
+        <section v-for="category in mainCategories" :key="category.id">
+          <Card :category="category" />
+        </section>
+      </div>
+    </main>
     <AppFooter />
-  </main>
+  </div>
 </template>
 
 <script>
 import AppFooter from '@/components/AppFooter'
 import Card from '@/components/Card'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'Home',
   components: { AppFooter, Card },
   computed: {
-    mainCategories() {
-      return this.$store.state.categories.filter(
-        (category) => category.parent == 0
-      )
-    },
+    ...mapGetters(['mainCategories']),
   },
 }
 </script>
 
 <style scoped>
-main {
-  display: flex;
-  min-height: 90vh;
-  box-sizing: border-box;
-  padding: 1.5rem 0 10vh 0; /* 10vh is coming from Footer.vue TODO use sass variables */
-}
 div {
   display: flex;
   flex-direction: column;

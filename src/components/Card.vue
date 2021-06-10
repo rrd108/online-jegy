@@ -2,15 +2,16 @@
   <div>
     <div
       class="card"
-      :class="[
-        { right: !(category.position % 2) },
-        `p${category.position}`,
-      ]"
+      :class="[{ right: !(category.position % 2) }, `p${category.position}`]"
     >
       <div class="card-content">
         <h1>{{ category.name }}</h1>
         <p>{{ subCategoryNames(category.id) }}</p>
-        <font-awesome-icon icon="chevron-circle-down" :class="{back: category.id == $route.params.id}"/>
+        <font-awesome-icon
+          icon="chevron-circle-down"
+          :class="{ back: category.id == $route.params.id }"
+          @click="navigate"
+        />
       </div>
     </div>
   </div>
@@ -21,6 +22,11 @@ export default {
   name: 'Card',
   props: ['category'],
   methods: {
+    navigate() {
+      if (this.category.id == this.$route.params.id) {
+        this.$router.push('/')
+      }
+    },
     subCategoryNames(id) {
       return this.$store.state.categories
         .filter((subCategory) => subCategory.parent == id)

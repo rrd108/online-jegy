@@ -23,6 +23,9 @@ export default {
 </script>
 
 <style scoped>
+nav {
+  margin-bottom: 1rem;
+}
 ul {
   display: flex;
   justify-content: space-evenly;

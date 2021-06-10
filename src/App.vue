@@ -1,6 +1,8 @@
 <template>
   <div id="app">
-    <router-view />
+    <transition name="fade" mode="out-in">
+      <router-view />
+    </transition>
     <Menu />
   </div>
 </template>
@@ -14,6 +16,12 @@ export default {
   created() {
     this.$store.dispatch('getCategories')
     this.$store.dispatch('getProducts')
+    if (sessionStorage.getItem('cart')) {
+      this.$store.commit(
+        'getSavedCart',
+        JSON.parse(sessionStorage.getItem('cart'))
+      )
+    }
   },
 }
 </script>
@@ -44,5 +52,21 @@ ul {
   list-style: none;
   margin: 0;
   padding: 0;
+}
+
+a {
+  text-decoration: none;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition-duration: 0.3s;
+  transition-property: opacity;
+  transition-timing-function: ease;
+}
+
+.fade-enter,
+.fade-leave-active {
+  opacity: 0
 }
 </style>

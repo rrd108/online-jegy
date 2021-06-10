@@ -1,13 +1,15 @@
 <template>
-  <footer @click="l">
-    <div>
-      <router-link to="/"><img src="../assets/logo.svg" alt="logo" /></router-link>
-      <span @click="$store.commit('menuToggle')">
-        <font-awesome-icon icon="bars" />
-      </span>
-    </div>
-    <Cart />
-  </footer>
+    <footer>
+      <div id="menu-icons">
+        <router-link to="/">
+          <img src="../assets/logo.svg" alt="logo" />
+        </router-link>
+        <span @click="$store.commit('showMenuToggle')">
+          <font-awesome-icon icon="bars" />
+        </span>
+      </div>
+      <Cart />
+    </footer>
 </template>
 
 <script>
@@ -16,11 +18,6 @@ import Cart from '@/components/Cart'
 export default {
   name: 'AppFooter',
   components: { Cart },
-  methods: {
-    l(event) {
-      console.log(event.target)
-    },
-  },
 }
 </script>
 
@@ -33,14 +30,15 @@ footer {
   width: 100%;
   z-index: 1;
 }
-div {
+
+#menu-icons {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  min-height: 10vh;
-  padding: 0 1rem;
+  margin: 0.5rem 1rem -0.5rem 1rem;
 }
 img {
   height: 2.5rem;
 }
+
 </style>

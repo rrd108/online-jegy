@@ -3,7 +3,9 @@
     <main>
       <div>
         <section v-for="category in mainCategories" :key="category.id">
-          <Card :category="category" />
+          <router-link :to="`/csoport/${category.id}`">
+            <Card :category="category" />
+          </router-link>
         </section>
       </div>
     </main>

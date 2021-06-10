@@ -1,12 +1,15 @@
 <template>
   <transition name="bounce">
-    <aside v-show="$store.state.menuOpen" @click="$store.commit('menuToggle')">
+    <aside
+      v-show="$store.state.showMenu"
+      @click="$store.commit('showMenuToggle')"
+    >
       <ul>
         <li><router-link to="/">Főoldal</router-link></li>
         <li v-for="category in mainCategories" :key="category.id">
           {{ category.name }}
         </li>
-        <li>Kosár</li>
+        <li @click="$store.commit('showCartToggle')">Kosár</li>
         <li><router-link to="/info">Infók</router-link></li>
       </ul>
     </aside>
@@ -30,12 +33,12 @@ aside {
   box-sizing: border-box;
   top: 0;
   right: 0;
-  width: 15rem;
+  width: 20rem;
+  transform: translateX(5rem);
   height: 93vh;
   z-index: 1;
   background: #fff;
   transform-origin: right bottom;
-  transition: transform 350ms ease;
   font-size: 2rem;
   font-weight: bold;
   padding: 1em;
@@ -45,20 +48,25 @@ li {
 }
 
 a {
-  text-decoration: none;
   color: #574634;
 }
 
-.bounce-enter,
-.bounce-leave-to {
-  transform: translateX(15rem);
+.bounce-enter-active {
+  animation: bounce 350ms ease;
 }
-.bounce-enter-to,
-.bounce-leave-leave {
-  transform: translateX(0);
-}
-.bounce-enter-active,
 .bounce-leave-active {
-  transition: transform 350ms ease;
+  animation: bounce 350ms ease reverse;
+}
+
+@keyframes bounce {
+  0% {
+    transform: translateX(15rem);
+  }
+  75% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(5rem);
+  }
 }
 </style>

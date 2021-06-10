@@ -12,7 +12,7 @@
       </transition>
     </div>
 
-    <transition name="todo-slide-up">
+    <transition name="expand">
       <div class="cart-content" v-show="$store.state.showCart">
         <h2>A kosarad</h2>
         <ul>
@@ -42,7 +42,6 @@ export default {
 #cart {
   display: flex;
   flex-direction: column;
-  transform: translateY(-2.5rem);
 }
 #cart-icon {
   position: relative;
@@ -50,6 +49,7 @@ export default {
   justify-content: center;
   align-items: center;
   color: #fff;
+  transform: translateY(-2.5rem);
 }
 #cart-icon::before {
   content: '';
@@ -94,4 +94,14 @@ span {
 .pop-leave-active {
   transition: transform 175ms ease;
 }
+
+.expand-enter-active, .expand-leave-active {
+  transition: all 350ms ease;
+  max-height: 100vh;  /* by this the cart expands nicely not just jumps up */
+}
+.expand-enter, .expand-leave-to {
+  max-height: 0;
+  opacity: 0;
+}
+
 </style>

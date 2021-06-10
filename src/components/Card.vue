@@ -179,13 +179,23 @@ ul {
   text-align: left;
 }
 
-.slide-enter-active, .slide-leave-active {
+.slide-enter-active,
+.slide-leave-active {
   transition: all 750ms;
   transform-origin: top;
   z-index: -1;
 }
-.slide-enter, .slide-leave-to {
+.slide-enter,
+.slide-leave-to {
   transform: scaleY(0);
   opacity: 0;
+}
+@keyframes slide {
+  0% {
+    transform: translateY(15rem);
+  }
+  100% {
+    transform: translateY(0);
+  }
 }
 </style>

@@ -6,7 +6,11 @@
         @click="$store.commit('showCartToggle')"
       />
       <transition name="pop">
-        <span v-show="$store.state.cart.length" :key="$store.state.cart.length">
+        <span
+          v-show="$store.state.cart.length"
+          :key="$store.state.cart.length"
+          id="cart-counter"
+        >
           {{ $store.state.cart.length }}
         </span>
       </transition>
@@ -15,18 +19,15 @@
     <transition name="expand">
       <div class="cart-content" v-show="$store.state.showCart">
         <h2><font-awesome-icon icon="shopping-cart" /> Kosár</h2>
+
         <ul>
           <li v-for="(product, i) in cart" :key="i + product.id">
             <font-awesome-icon icon="trash" />
-            {{
-              $store.state.categories.find(
-                (category) => category.id == product.category_id
-              ).name
-            }}
-            -
-            {{ product.name }}
-            {{ product.pcs }} x
-            {{ product.price }} Ft
+            <span>
+              {{ product.pcs }} db x -
+              {{ product.name }}
+            </span>
+            <span> {{ product.price | toNumFormat }} Ft </span>
           </li>
         </ul>
       </div>
@@ -35,19 +36,53 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
   name: 'Cart',
+  data() {
+    return {
+      mainCategoriesInCart: [],
+      categoriesInCart: [],
+    }
+  },
   computed: {
+    ...mapGetters(['mainCategories']),
     cart() {
       return this.$store.state.cart.reduce((reduced, current) => {
-        current.pcs = 1
         if (reduced[current.id]) {
           reduced[current.id]['pcs']++
         } else {
+          current.pcs = 1
+          current.category = this.$store.state.categories.find(
+            (category) => category.id == current.category_id
+          )
+          if (
+            !this.categoriesInCart.find((cat) => cat.id == current.category.id)
+          ) {
+            this.categoriesInCart.push(current.category)
+          }
+          current.mainCategory = this.$store.state.categories.find(
+            (category) => category.id == current.category.parent
+          )
+          if (
+            !this.mainCategoriesInCart.find(
+              (cat) => cat.id == current.mainCategory.id
+            )
+          ) {
+            this.mainCategoriesInCart.push(current.mainCategory)
+          }
           reduced[current.id] = current
         }
         return reduced
       }, {})
+    },
+  },
+  methods: {
+    productsInCategory(category) {
+      console.log(category)
+      console.log(this.cart)
+      //      return this.cart.filter(product => product.category_id == category.id)
     },
   },
 }
@@ -76,7 +111,7 @@ export default {
   height: 3rem;
   z-index: -1;
 }
-span {
+#cart-counter {
   position: absolute;
   left: calc(50% + 0.5rem);
   top: -1rem;
@@ -95,9 +130,18 @@ span {
 .cart-content {
   width: 100%;
   padding: 0 1rem 1rem 1rem;
+  box-sizing: border-box;
 }
 h2 {
   margin-top: 0;
+}
+li {
+  display: flex;
+  justify-content: space-between;
+  background-color: #e0cc9f;
+  border-radius: 0.5rem;
+  margin: 0.75em 0;
+  padding: 0.5em;
 }
 
 .pop-enter,

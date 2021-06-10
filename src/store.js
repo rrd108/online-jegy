@@ -9,7 +9,6 @@ export default new Vuex.Store({
   state: {
     cart: [],
     categories: [],
-    open: 0,
     products: [],
     showCart: false,
     showMenu: false
@@ -23,7 +22,6 @@ export default new Vuex.Store({
     showCartToggle: state => (state.showCart = !state.showCart),
     showMenuToggle: state => (state.showMenu = !state.showMenu),
     setCategories: (state, categories) => (state.categories = categories),
-    setOpen: (state, open) => (state.open = open),
     setProducts: (state, products) => (state.products = products)
   },
   actions: {

@@ -5,52 +5,22 @@
       :class="[
         { right: !(category.position % 2) },
         `p${category.position}`,
-        { active: $store.state.open == category.id },
       ]"
-      @click="$store.commit('setOpen', category.id)"
     >
       <div class="card-content">
         <h1>{{ category.name }}</h1>
         <p>{{ subCategoryNames(category.id) }}</p>
-        <font-awesome-icon icon="chevron-circle-down" />
+        <font-awesome-icon icon="chevron-circle-down" :class="{back: category.id == $route.params.id}"/>
       </div>
     </div>
-    <transition name="slide">
-      <div class="subcategory" v-show="$store.state.open == category.id">
-        <section
-          v-for="subCategory in $store.state.categories.filter(
-            (subCategory) => subCategory.parent == category.id
-          )"
-          :key="subCategory.id"
-          :class="`sp${subCategory.position}`"
-        >
-          <h2>{{ subCategory.name }}</h2>
-          <h3>{{ subCategory.description }}</h3>
-          <ul>
-            <li v-for="product in products(subCategory)" :key="product.id">
-              {{ product.name }}
-              <add-to-cart-button :product="product" />
-            </li>
-          </ul>
-        </section>
-      </div>
-    </transition>
   </div>
 </template>
 
 <script>
-import AddToCartButton from '@/components/AddToCartButton.vue'
-
 export default {
   name: 'Card',
   props: ['category'],
-  components: { AddToCartButton },
   methods: {
-    products(subCategory) {
-      return this.$store.state.products.filter(
-        (product) => product.category_id == subCategory.id
-      )
-    },
     subCategoryNames(id) {
       return this.$store.state.categories
         .filter((subCategory) => subCategory.parent == id)
@@ -125,77 +95,7 @@ svg {
   bottom: -1rem;
   filter: drop-shadow(0 0.1em 0.1em #483a1d66);
 }
-
-.subcategory {
-  background-color: #fff;
-  padding: 2.5rem 1rem 1rem 1rem;
-  border-radius: 0.5em;
-  margin-top: -1rem;
-  box-shadow: 0 0.25em 0.25em #483a1d66;
-}
-.subcategory section {
-  color: #fff;
-  border-radius: 0.5em;
-  text-align: center;
-  box-shadow: 0 0.25em 0.25em #483a1d66;
-  position: relative;
-  padding: 0.5rem;
-  margin-bottom: 1rem;
-}
-.subcategory section::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image: url('../assets/cicmo.svg');
-  background-repeat: no-repeat;
-  background-position: -4rem -4rem;
-  background-size: 10rem;
-  opacity: 0.35;
-}
-.sp1 {
-  background-color: #366135;
-}
-.sp2 {
-  background-color: #213846;
-}
-.sp3 {
-  background-color: #e1867b;
-}
-
-h2 {
-  margin: 0.4em 0;
-  font-size: 1.7rem;
-}
-h3 {
-  margin: 1em 0;
-  font-size: 1rem;
-  font-weight: 100;
-}
-
-ul {
-  display: flex;
-  flex-direction: column;
-  font-size: 1.7rem;
-  text-align: left;
-}
-
-.slide-enter-active,
-.slide-leave-active {
-  transition: all 750ms;
-  transform-origin: top;
-  z-index: -1;
-}
-.slide-enter,
-.slide-leave-to {
-  transform: scaleY(0);
-  opacity: 0;
-}
-@keyframes slide {
-  0% {
-    transform: translateY(15rem);
-  }
-  100% {
-    transform: translateY(0);
-  }
+.back {
+  transform: rotate(180deg);
 }
 </style>

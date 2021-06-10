@@ -48,7 +48,6 @@ li {
 }
 
 a {
-  text-decoration: none;
   color: #574634;
 }
 

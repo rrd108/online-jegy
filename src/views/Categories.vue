@@ -33,10 +33,12 @@ import Card from '@/components/Card'
 export default {
   name: 'Categories',
   components: { AddToCartButton, AppFooter, Card },
-  data() {
-    return {
-      category: this.$store.state.categories.find(category => category.id == this.$route.params.id)
-    }
+  computed: {
+    category() {
+      return this.$store.state.categories.find(
+        (category) => category.id == this.$route.params.id
+      )
+    },
   },
   methods: {
     products(subCategory) {

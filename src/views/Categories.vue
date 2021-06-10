@@ -1,5 +1,7 @@
 <template>
   <div class="content">
+    <CategoryNavigation :category="category" />
+
     <main>
       <Card :category="category" />
       <div class="subcategory">
@@ -21,6 +23,7 @@
         </section>
       </div>
     </main>
+
     <AppFooter />
   </div>
 </template>
@@ -29,10 +32,11 @@
 import AppFooter from '@/components/AppFooter'
 import AddToCartButton from '@/components/AddToCartButton.vue'
 import Card from '@/components/Card'
+import CategoryNavigation from '@/components/CategoryNavigation'
 
 export default {
   name: 'Categories',
-  components: { AddToCartButton, AppFooter, Card },
+  components: { AddToCartButton, AppFooter, Card, CategoryNavigation },
   computed: {
     category() {
       return this.$store.state.categories.find(

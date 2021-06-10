@@ -14,17 +14,19 @@
 
     <transition name="expand">
       <div class="cart-content" v-show="$store.state.showCart">
-        <h2>A kosarad</h2>
+        <h2><font-awesome-icon icon="shopping-cart" /> Kosár</h2>
         <ul>
-          <li v-for="(product, i) in $store.state.cart" :key="i + product.id">
+          <li v-for="(product, i) in cart" :key="i + product.id">
             <font-awesome-icon icon="trash" />
             {{
               $store.state.categories.find(
                 (category) => category.id == product.category_id
               ).name
             }}
+            -
             {{ product.name }}
-            {{ product.price }}
+            {{ product.pcs }} x
+            {{ product.price }} Ft
           </li>
         </ul>
       </div>
@@ -35,6 +37,19 @@
 <script>
 export default {
   name: 'Cart',
+  computed: {
+    cart() {
+      return this.$store.state.cart.reduce((reduced, current) => {
+        current.pcs = 1
+        if (reduced[current.id]) {
+          reduced[current.id]['pcs']++
+        } else {
+          reduced[current.id] = current
+        }
+        return reduced
+      }, {})
+    },
+  },
 }
 </script>
 
@@ -79,7 +94,10 @@ span {
 
 .cart-content {
   width: 100%;
-  padding: 1rem;
+  padding: 0 1rem 1rem 1rem;
+}
+h2 {
+  margin-top: 0;
 }
 
 .pop-enter,
@@ -95,13 +113,14 @@ span {
   transition: transform 175ms ease;
 }
 
-.expand-enter-active, .expand-leave-active {
+.expand-enter-active,
+.expand-leave-active {
   transition: all 350ms ease;
-  max-height: 100vh;  /* by this the cart expands nicely not just jumps up */
+  max-height: 100vh; /* by this the cart expands nicely not just jumps up */
 }
-.expand-enter, .expand-leave-to {
+.expand-enter,
+.expand-leave-to {
   max-height: 0;
   opacity: 0;
 }
-
 </style>

@@ -7,7 +7,7 @@
       <ul>
         <li><router-link to="/">Főoldal</router-link></li>
         <li v-for="category in mainCategories" :key="category.id">
-          {{ category.name }}
+          <router-link :to="`/csoport/${category.id}`">{{ category.name }}</router-link>
         </li>
         <li @click="$store.commit('showCartToggle')">Kosár</li>
         <li><router-link to="/info">Infók</router-link></li>

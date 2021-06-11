@@ -21,13 +21,23 @@
         <h2><font-awesome-icon icon="shopping-cart" /> Kosár</h2>
 
         <ul>
-          <li v-for="(product, i) in cart" :key="i + product.id">
+          <li v-for="(product, i) in cart" :key="i + product.id" class="items">
             <font-awesome-icon icon="trash" />
-            <span>
+            <span class="category">
+              {{ product.mainCategory.name }} /
+              {{ product.category.name }}
+            </span>
+            <span class="product">
               {{ product.pcs }} db x -
               {{ product.name }}
             </span>
-            <span> {{ product.price | toNumFormat }} Ft </span>
+            <span class="price">
+              {{ (product.pcs * product.price) | toNumFormat }} Ft
+            </span>
+          </li>
+          <li class="total">
+            <span>Összesen</span>
+            <span>{{ total | toNumFormat }} Ft</span>
           </li>
         </ul>
       </div>
@@ -36,53 +46,30 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-
 export default {
   name: 'Cart',
-  data() {
-    return {
-      mainCategoriesInCart: [],
-      categoriesInCart: [],
-    }
-  },
   computed: {
-    ...mapGetters(['mainCategories']),
     cart() {
-      return this.$store.state.cart.reduce((reduced, current) => {
-        if (reduced[current.id]) {
-          reduced[current.id]['pcs']++
-        } else {
-          current.pcs = 1
-          current.category = this.$store.state.categories.find(
-            (category) => category.id == current.category_id
-          )
-          if (
-            !this.categoriesInCart.find((cat) => cat.id == current.category.id)
-          ) {
-            this.categoriesInCart.push(current.category)
-          }
-          current.mainCategory = this.$store.state.categories.find(
-            (category) => category.id == current.category.parent
-          )
-          if (
-            !this.mainCategoriesInCart.find(
-              (cat) => cat.id == current.mainCategory.id
+      return Object.values(
+        this.$store.state.cart.reduce((reduced, current) => {
+          if (reduced[current.id]) {
+            reduced[current.id]['pcs']++
+          } else {
+            current.pcs = 1
+            current.category = this.$store.state.categories.find(
+              (category) => category.id == current.category_id
             )
-          ) {
-            this.mainCategoriesInCart.push(current.mainCategory)
+            current.mainCategory = this.$store.state.categories.find(
+              (category) => category.id == current.category.parent
+            )
+            reduced[current.id] = current
           }
-          reduced[current.id] = current
-        }
-        return reduced
-      }, {})
+          return reduced
+        }, {})
+      )
     },
-  },
-  methods: {
-    productsInCategory(category) {
-      console.log(category)
-      console.log(this.cart)
-      //      return this.cart.filter(product => product.category_id == category.id)
+    total() {
+      return this.cart.reduce((reducer, current) => reducer + current.price * current.pcs, 0)
     },
   },
 }
@@ -136,12 +123,33 @@ h2 {
   margin-top: 0;
 }
 li {
-  display: flex;
-  justify-content: space-between;
-  background-color: #e0cc9f;
   border-radius: 0.5rem;
   margin: 0.75em 0;
   padding: 0.5em;
+}
+.items {
+  display: grid;
+  grid-template-columns: 1fr 8fr 3fr;
+
+  background-color: #e0cc9f;
+}
+
+.category {
+  grid-column: 2/4;
+}
+.product {
+  grid-column: 2/2;
+}
+.price {
+  grid-column: 3/3;
+  text-align: right;
+}
+.total {
+  display: flex;
+  justify-content: space-between;
+  background-color: #483a1d;
+  color: #e0cc9f;
+  font-weight: bold;
 }
 
 .pop-enter,

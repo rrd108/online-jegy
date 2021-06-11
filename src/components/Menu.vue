@@ -5,6 +5,9 @@
       @click="$store.commit('showMenuToggle')"
     >
       <ul>
+        <li><router-link to="/">
+          <img src="../assets/logo.svg" alt="logo" />
+        </router-link></li>
         <li><router-link to="/">Főoldal</router-link></li>
         <li v-for="category in mainCategories" :key="category.id">
           <router-link :to="`/csoport/${category.id}`">{{ category.name }}</router-link>
@@ -45,6 +48,9 @@ aside {
 }
 li {
   margin: 0.5em 0;
+}
+img {
+  width: 8rem;
 }
 
 a {

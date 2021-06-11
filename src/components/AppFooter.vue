@@ -28,6 +28,7 @@ footer {
   background-color: #fff;
   box-sizing: border-box;
   width: 100%;
+  max-width: 60rem;
   z-index: 1;
 }
 

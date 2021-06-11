@@ -39,6 +39,8 @@ body {
   font-family: 'Quicksand', sans-serif;
   color: #574634;
   min-height: 100vh;
+  max-width: 60rem;
+  margin: 0 auto;
 }
 
 main {

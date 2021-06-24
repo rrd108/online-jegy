@@ -13,10 +13,11 @@ $message = '<html>
   <p><strong>Belépés a rendelési számod azonosításával történik, kérlek nyomtasd ezt ki, vagy mutasd fel telefonodon.</strong></p>
 
   <h1>Útvonal</h1>
-  <p>A spirituális zarándoklat programra Krisna-völgy főbejáratánál, az elefántok közelében található recepciónál várunk 11 órakor. Kérjük ahhoz, hogy időben indulhassunk, érkezz meg 10 perccel korábban. Krisna-völgy recepciójától indul exkluzív körsétánk, a program házi gazdájával: Loka Bandhu-val. Csodálatos díszparkok és dísztavak mentén sétálunk, miközben számtalan kulturális érdekességet ismerünk meg a Krisna-tudat gyakorlatával kapcsolatban.Vadregényes parkokkal szegélyezett utunkon kívülről megtekintjük a közösségi iskola épületeit, majd a dombot követően elérkezünk a tehénvédelmi központhoz. Onnan gyönyörű fasoron keresztül haladunk Krisna-völgy vegyszermentes kertészetéhez, végül megtekintjük Krisna-völgy lelki központját, az indiai szentélyt.</p>
+  <p>Az exkluzív, 3 órás, Spirituális Zarándoklat Túra Krisna-völgy recepciójáról indul (az elefántoknál) szerdán és szombaton, 11 órakor (javasolt érkezés: 10:50). Vendégvezetővel kísért programunk során, Krisna-völgy főbb látnivalóit bejárva – díszparkok, dísztavak, közösségi iskola épülete (kívülről), tehénvédelmi központ, vegyszermentes zöldségkertészetek, indiai szentély – beszélgetünk, mind a helyi látnivalókról mind az aktuálisan meghirdetett tematikus spirituális témáról. A program regisztrációs díja magában foglalja a Krisna-völgyi belépőjegyet és egy ajurvédikus ebédet is, mely Krisna-völgy szezonális, vegyszermentes terményeiből készül.</p>
 
   <h1>Fontos infók</h1>
-  <p>A kiválasztott jegyek nem válthatóak vissza és csak a kiválasztott időpontban használhatóak fel. Kérjük pontosan érkezz a találkozási ponthoz, a templomépület elé, hogy időben tudjunk kezdeni. </p>
+  <p>A kiválasztott jegyek nem válthatóak vissza és csak a kiválasztott időpontban használhatóak fel. A Krisna-völgyi kedvezménykártya ehhez a kiemelt programunkhoz nem biztosít kedvezményt.
+ </p>
 
   <p>Nemsokára találkozunk!</p>
   <p>Minden jót és Gauranga!</p>

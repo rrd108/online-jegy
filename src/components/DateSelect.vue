@@ -314,7 +314,7 @@ export default {
       )
     },
     isNotTourDay(date) {
-      return date.getDay() != 6 // Saturdays
+      return date.getDay() != 6 && date.getDay() != 3 // Saturdays or Wednesdays
     },
     isPast(date) {
       return date < today

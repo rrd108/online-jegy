@@ -9,10 +9,10 @@
           v-model="type"
           @change="checkAvailableSlots"
         >
-          <option value="tematic">Spirituális zarándoklat</option>
-          <option value="tematic-extra">
+          <option value="tematic">Barangolások Krisna-völgyben</option>
+          <!--option value="tematic-extra">
             Extra Spirituális zarándoklat csomag
-          </option>
+          </!--option-->
           <!--option value="herbs">Gyógynövény</!--option-->
         </select>
       </div>
@@ -167,7 +167,7 @@
       <div class="row">
         <font-awesome-icon icon="clock" size="lg" class="column small-2" />
         <p class="column small-10">
-          {{ date ? date.toLocaleString().slice(0, -3) : "" }}
+          {{ date ? date.toLocaleString().slice(0, -3) : '' }}
         </p>
       </div>
       <div class="row" v-show="adult">
@@ -200,243 +200,243 @@
 </template>
 
 <script>
-import DatePicker from "vue2-datepicker"
-import "vue2-datepicker/index.css"
-import "vue2-datepicker/locale/hu"
-import axios from "axios"
+  import DatePicker from 'vue2-datepicker'
+  import 'vue2-datepicker/index.css'
+  import 'vue2-datepicker/locale/hu'
+  import axios from 'axios'
 
-const today = new Date()
-today.setHours(0, 0, 0, 0)
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
 
-export default {
-  name: "DateSelect",
-  components: { DatePicker },
-  data() {
-    return {
-      adult: null,
-      nextTourDay: new Date(
-        new Date(today).setDate(
-          new Date(today).getDate() + ((6 + 7 - today.getDay()) % 7)
-        )
-      ),
-      child: null,
-      date: null,
-      dateError: false,
-      email: null,
-      emailError: false,
-      //herbSlots: 0,
-      manError: false,
-      name: null,
-      nameError: false,
-      newsletter: true,
-      summary: false,
-      phone: null,
-      phoneError: false,
-      prices: {},
-      simpleForm: "",
-      slots: 0,
-      specialDays: [],
-      //tomorrow: new Date(new Date(today).setDate(new Date(today).getDate() + 1)),
-      tos: false,
-      tosError: false,
-      type: "tematic", // window.location.href.search('herbs') > 0 ? 'herbs' : 'tematic'
-    }
-  },
-  computed: {
-    amount() {
-      //if (this.type == 'tematic') {
-      return this.adult * this.prices.adult + this.child * this.prices.child
-      //}
-      //return this.adult * this.prices.herbs
-    },
-    overBooking() {
-      //const slots = (this.type == 'tematic') ? this.slots : this.herbSlots
-      const slots = this.slots
-      const adult = this.adult ? this.adult : 0
-      const child = this.child ? this.child : 0
-      return parseInt(adult) + parseInt(child) > parseInt(slots)
-    },
-  },
-  created() {
-    this.type = "tematic" //it is needed if the user come the page from elvonulas with the browser back button
-    axios
-      .get(process.env.VUE_APP_API_URL + "?prices")
-      .then((response) => (this.prices = response.data))
-      .catch((error) => console.log(error))
-
-    axios
-      .get(process.env.VUE_APP_API_URL + "?maxSlots")
-      .then((response) => {
-        this.slots = response.data.tematic
-        //this.herbSlots = response.data.herbs
-      })
-      .catch((error) => console.log(error))
-
-    axios
-      .get(process.env.VUE_APP_API_URL + "?specialDays")
-      .then((response) => (this.specialDays = response.data))
-      .catch((error) => console.log(error))
-  },
-  methods: {
-    checkAvailableSlots() {
-      // if (this.type == 'herbs') {
-      //     this.date = new Date(Date.parse('2020-10-11 09:00'))
-      // }
-      if (this.type == "tematic-extra") {
-        window.location.href =
-          "https://elvonulas.krisnavolgy.hu/termek/spiritualis-zarandoklatok-extra/"
+  export default {
+    name: 'DateSelect',
+    components: { DatePicker },
+    data() {
+      return {
+        adult: null,
+        nextTourDay: new Date(
+          new Date(today).setDate(
+            new Date(today).getDate() + ((6 + 7 - today.getDay()) % 7)
+          )
+        ),
+        child: null,
+        date: null,
+        dateError: false,
+        email: null,
+        emailError: false,
+        //herbSlots: 0,
+        manError: false,
+        name: null,
+        nameError: false,
+        newsletter: true,
+        summary: false,
+        phone: null,
+        phoneError: false,
+        prices: {},
+        simpleForm: '',
+        slots: 0,
+        specialDays: [],
+        //tomorrow: new Date(new Date(today).setDate(new Date(today).getDate() + 1)),
+        tos: false,
+        tosError: false,
+        type: 'tematic', // window.location.href.search('herbs') > 0 ? 'herbs' : 'tematic'
       }
-      this.dateError = false
+    },
+    computed: {
+      amount() {
+        //if (this.type == 'tematic') {
+        return this.adult * this.prices.adult + this.child * this.prices.child
+        //}
+        //return this.adult * this.prices.herbs
+      },
+      overBooking() {
+        //const slots = (this.type == 'tematic') ? this.slots : this.herbSlots
+        const slots = this.slots
+        const adult = this.adult ? this.adult : 0
+        const child = this.child ? this.child : 0
+        return parseInt(adult) + parseInt(child) > parseInt(slots)
+      },
+    },
+    created() {
+      this.type = 'tematic' //it is needed if the user come the page from elvonulas with the browser back button
       axios
-        .get(
-          process.env.VUE_APP_API_URL +
-            "?type=" +
-            this.type +
-            "&slots=" +
-            this.getFormattedDate(this.date)
-        )
-        .then((response) => {
-          // if (this.type == 'herbs') {
-          //     this.herbSlots = response.data
-          // }
-          if (this.type == "tematic") {
-            this.slots = response.data
-          }
+        .get(process.env.VUE_APP_API_URL + '?prices')
+        .then(response => (this.prices = response.data))
+        .catch(error => console.log(error))
+
+      axios
+        .get(process.env.VUE_APP_API_URL + '?maxSlots')
+        .then(response => {
+          this.slots = response.data.tematic
+          //this.herbSlots = response.data.herbs
         })
-        .catch((error) => console.log(error))
+        .catch(error => console.log(error))
+
+      axios
+        .get(process.env.VUE_APP_API_URL + '?specialDays')
+        .then(response => (this.specialDays = response.data))
+        .catch(error => console.log(error))
     },
-    isDisabledDate(date) {
-      return (
-        this.isPast(date) ||
-        this.isToday(date) ||
-        /* this.isTomorrow(date) ||*/ this.isNotTourDay(date) ||
-        this.isSpecialDate(date)
-      )
-    },
-    isNotTourDay(date) {
-      return date.getDay() != 6 && date.getDay() != 3 // Saturdays or Wednesdays
-    },
-    isPast(date) {
-      return date < today
-    },
-    isToday(date) {
-      return date.getTime() == today.getTime()
-    },
-    /*isTomorrow(date) {
+    methods: {
+      checkAvailableSlots() {
+        // if (this.type == 'herbs') {
+        //     this.date = new Date(Date.parse('2020-10-11 09:00'))
+        // }
+        if (this.type == 'tematic-extra') {
+          window.location.href =
+            'https://elvonulas.krisnavolgy.hu/termek/spiritualis-zarandoklatok-extra/'
+        }
+        this.dateError = false
+        axios
+          .get(
+            process.env.VUE_APP_API_URL +
+              '?type=' +
+              this.type +
+              '&slots=' +
+              this.getFormattedDate(this.date)
+          )
+          .then(response => {
+            // if (this.type == 'herbs') {
+            //     this.herbSlots = response.data
+            // }
+            if (this.type == 'tematic') {
+              this.slots = response.data
+            }
+          })
+          .catch(error => console.log(error))
+      },
+      isDisabledDate(date) {
+        return (
+          this.isPast(date) ||
+          this.isToday(date) ||
+          /* this.isTomorrow(date) ||*/ this.isNotTourDay(date) ||
+          this.isSpecialDate(date)
+        )
+      },
+      isNotTourDay(date) {
+        return date.getDay() != 6 // && date.getDay() != 3 // Saturdays or Wednesdays
+      },
+      isPast(date) {
+        return date < today
+      },
+      isToday(date) {
+        return date.getTime() == today.getTime()
+      },
+      /*isTomorrow(date) {
         return date.getTime() == this.tomorrow.getTime()
     },*/
-    isSpecialDate(date) {
-      // we should add 1 day to get it work as expected
-      const d = new Date(date.setDate(date.getDate() + 1))
-      return this.specialDays.indexOf(d.toISOString().split("T")[0]) != -1
-    },
-    getFormattedDate(date) {
-      const timezoneOffset = date.getTimezoneOffset() * 60000
-      return (
-        new Date(date - timezoneOffset)
-          .toISOString()
-          .slice(0, 17)
-          .replace("T", " ") + "00"
-      )
-    },
-    order() {
-      let errors = 0
-      if (!this.date) {
-        this.dateError = true
-        errors++
-      }
-      if (this.adult < 0 || this.chlid < 0 || this.adult + this.child <= 0) {
-        this.manError = true
-        errors++
-      }
-      if (!this.name) {
-        this.nameError = true
-        errors++
-      }
-      if (!this.email) {
-        this.emailError = true
-        errors++
-      }
-      if (
-        !/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
-          this.email
+      isSpecialDate(date) {
+        // we should add 1 day to get it work as expected
+        const d = new Date(date.setDate(date.getDate() + 1))
+        return this.specialDays.indexOf(d.toISOString().split('T')[0]) != -1
+      },
+      getFormattedDate(date) {
+        const timezoneOffset = date.getTimezoneOffset() * 60000
+        return (
+          new Date(date - timezoneOffset)
+            .toISOString()
+            .slice(0, 17)
+            .replace('T', ' ') + '00'
         )
-      ) {
-        this.emailError = true
-        errors++
-      }
-      if (!this.phone) {
-        this.phoneError = true
-        errors++
-      }
-      if (!this.tos) {
-        this.tosError = true
-        errors++
-      }
-      if (errors) {
-        return false
-      }
+      },
+      order() {
+        let errors = 0
+        if (!this.date) {
+          this.dateError = true
+          errors++
+        }
+        if (this.adult < 0 || this.chlid < 0 || this.adult + this.child <= 0) {
+          this.manError = true
+          errors++
+        }
+        if (!this.name) {
+          this.nameError = true
+          errors++
+        }
+        if (!this.email) {
+          this.emailError = true
+          errors++
+        }
+        if (
+          !/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
+            this.email
+          )
+        ) {
+          this.emailError = true
+          errors++
+        }
+        if (!this.phone) {
+          this.phoneError = true
+          errors++
+        }
+        if (!this.tos) {
+          this.tosError = true
+          errors++
+        }
+        if (errors) {
+          return false
+        }
 
-      window.fbq("track", "AddToCart")
+        window.fbq('track', 'AddToCart')
 
-      this.summary = true
+        this.summary = true
 
-      axios
-        .post(process.env.VUE_APP_API_URL, {
-          date: this.getFormattedDate(this.date),
-          adult: this.adult,
-          child: this.child,
-          name: this.name,
-          email: this.email,
-          phone: this.phone,
-          newsletter: this.newsletter ? 1 : 0,
-          referrer: document.referrer,
-          type: this.type,
-        })
-        .then((response) => {
-          this.simpleForm = response.data
-        })
-        .catch((error) => {
-          console.log(error)
-        })
+        axios
+          .post(process.env.VUE_APP_API_URL, {
+            date: this.getFormattedDate(this.date),
+            adult: this.adult,
+            child: this.child,
+            name: this.name,
+            email: this.email,
+            phone: this.phone,
+            newsletter: this.newsletter ? 1 : 0,
+            referrer: document.referrer,
+            type: this.type,
+          })
+          .then(response => {
+            this.simpleForm = response.data
+          })
+          .catch(error => {
+            console.log(error)
+          })
+      },
     },
-  },
-}
+  }
 </script>
 
 <style scoped>
-h3 {
-  margin-top: 1.2rem;
-}
-span {
-  font-size: 1rem;
-}
-.button,
-span >>> button {
-  background-color: #574634;
-}
-span >>> button {
-  display: inline-block;
-  vertical-align: middle;
-  margin: 0 0 1rem 0;
-  padding: 0.85em 1em;
-  border: 1px solid transparent;
-  border-radius: 3px;
-  transition: background-color 0.25s ease-out, color 0.25s ease-out;
-  font-family: inherit;
-  font-size: 0.9rem;
-  -webkit-appearance: none;
-  line-height: 1;
-  text-align: center;
-  cursor: pointer;
-  color: #fefefe;
-}
-.simplelogo {
-  margin: 1rem;
-}
+  h3 {
+    margin-top: 1.2rem;
+  }
+  span {
+    font-size: 1rem;
+  }
+  .button,
+  span >>> button {
+    background-color: #574634;
+  }
+  span >>> button {
+    display: inline-block;
+    vertical-align: middle;
+    margin: 0 0 1rem 0;
+    padding: 0.85em 1em;
+    border: 1px solid transparent;
+    border-radius: 3px;
+    transition: background-color 0.25s ease-out, color 0.25s ease-out;
+    font-family: inherit;
+    font-size: 0.9rem;
+    -webkit-appearance: none;
+    line-height: 1;
+    text-align: center;
+    cursor: pointer;
+    color: #fefefe;
+  }
+  .simplelogo {
+    margin: 1rem;
+  }
 </style>
 <style>
-.mx-date-row .cell:not(.disabled) {
-  color: green;
-}
+  .mx-date-row .cell:not(.disabled) {
+    color: green;
+  }
 </style>

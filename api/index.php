@@ -1,4 +1,5 @@
 <?php
+
 use PDO;
 
 // TODO do not responde to api calls without authentication check if we have a valid token
@@ -9,8 +10,8 @@ require('./simplepay/config.php');
 require('./simplepay/SimplePayV21.php');
 
 $prices = [
-    'adult' => 5840,
-    'child' => 4840,
+    'adult' => 6190,
+    'child' => 5290,
     'herbs' => 12000
 ];
 
@@ -21,7 +22,7 @@ $maxSlots = [
 
 // no programs on these days
 $fileSpecialDays = './specialDays';
-$handle = fopen($fileSpecialDays, "r");
+$handle = fopen($fileSpecialDays, 'r');
 $specialDays = explode("\n", fread($handle, filesize($fileSpecialDays)));
 fclose($handle);
 
@@ -39,13 +40,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if (isset(json_decode($data)->newsletter)) {
         $mailchimpData = [
-        'status' => 'subscribed',
-        'email_address' => json_decode($data)->email,
-        'marketing_permissions' =>[
-            [
-                'marketing_permission_id' => 'bb56c8bbd1',
-                'text' => 'Elfogadom',
-                'enabled' => true
+            'status' => 'subscribed',
+            'email_address' => json_decode($data)->email,
+            'marketing_permissions' => [
+                [
+                    'marketing_permission_id' => 'bb56c8bbd1',
+                    'text' => 'Elfogadom',
+                    'enabled' => true
                 ]
             ]
         ];
@@ -55,10 +56,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
         curl_setopt($ch, CURLOPT_POSTFIELDS, $mailchimpData);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, [
-            'Content-Type: application/json',
-            'Authorization: Basic '.base64_encode('user:' . $secrets['mailchimpApiKey']),
-            'Content-Length: ' . strlen($mailchimpData)
+        curl_setopt(
+            $ch,
+            CURLOPT_HTTPHEADER,
+            [
+                'Content-Type: application/json',
+                'Authorization: Basic ' . base64_encode('user:' . $secrets['mailchimpApiKey']),
+                'Content-Length: ' . strlen($mailchimpData)
             ],
         );
         $result = curl_exec($ch);
@@ -148,7 +152,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             WHERE id LIKE ?
             OR name LIKE ?
             OR email LIKE ?");
-        $stmt->execute(['%'.$_GET['search'].'%', '%'.$_GET['search'].'%', '%'.$_GET['search'].'%']);
+        $stmt->execute(['%' . $_GET['search'] . '%', '%' . $_GET['search'] . '%', '%' . $_GET['search'] . '%']);
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
         echo json_encode($result);
     }
@@ -295,7 +299,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'PATCH') {
         $stmt = $pdo->prepare("UPDATE orders
                     SET date = ?
                     WHERE id = ?");
-        $stmt->execute([json_decode($data)->newDate ,json_decode($data)->booking]);
+        $stmt->execute([json_decode($data)->newDate, json_decode($data)->booking]);
         $data = json_decode($data);
         $data->changedRecords = $stmt->rowCount();
         $data = json_encode($data);

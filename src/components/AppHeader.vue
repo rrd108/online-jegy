@@ -5,7 +5,7 @@
         <font-awesome-icon icon="info-circle" size="lg" title="Infók mutatása / rejtése" />
         <p>Info</p>
       </div>
-      <h1 class="column small-7 text-center">Spirituális zarándoklat</h1>
+      <h1 class="column small-7 text-center">Barangolások Krisna-völgyben</h1>
       <div class="column small-3">
         <img src="../assets/logo.png" />
       </div>
@@ -17,7 +17,7 @@
         <p>Jegyet rendelni és ezzel együtt bejelentkezni úgy tudsz, hogy kiválasztod a látogatásod
           dátumát <strong>(jelenleg csak szerdánként és szombatonként)</strong> és idejét <strong>(jelenleg csak de 11 órát)</strong>, megadod a személyes adataidat, majd a &quot;Megrendelés&quot; gombra kattintás után bankkártyával kifizeted a jegy összegét.</p>
         <h2>A túra tartalma</h2>
-        <p>Az exkluzív, 3 órás, Spirituális Zarándoklat Túra Krisna-völgy recepciójáról indul (az elefántoknál) szerdán és szombaton, 11 órakor (javasolt érkezés: 10:50). Vendégvezetővel kísért programunk során, Krisna-völgy főbb látnivalóit bejárva – díszparkok, dísztavak, közösségi iskola épülete (kívülről), tehénvédelmi központ, vegyszermentes zöldségkertészetek, indiai szentély – beszélgetünk, mind a helyi látnivalókról mind az aktuálisan meghirdetett tematikus spirituális témáról. A program regisztrációs díja magában foglalja a Krisna-völgyi belépőjegyet és egy ajurvédikus ebédet is, mely Krisna-völgy szezonális, vegyszermentes terményeiből készül.</p>
+        <p>Az exkluzív, 3 órás, Barangolások Krisna-völgyben Túra Krisna-völgy recepciójáról indul (az elefántoknál) szerdán és szombaton, 11 órakor (javasolt érkezés: 10:50). Vendégvezetővel kísért programunk során, Krisna-völgy főbb látnivalóit bejárva – díszparkok, dísztavak, közösségi iskola épülete (kívülről), tehénvédelmi központ, vegyszermentes zöldségkertészetek, indiai szentély – beszélgetünk, mind a helyi látnivalókról mind az aktuálisan meghirdetett tematikus spirituális témáról. A program regisztrációs díja magában foglalja a Krisna-völgyi belépőjegyet és egy ajurvédikus ebédet is, mely Krisna-völgy szezonális, vegyszermentes terményeiből készül.</p>
         <h2>Adattovábbítási nyilatkozat</h2>
         <p>
           A rendelés leadásával a honlap használója tudomásul veszi, hogy a Vénu Kft (8699 Somogyvámos Fő u. 38.) adatkezelő által a jegy.krisnavolgy.hu felhasználói adatbázisában tárolt alábbi személyes adataim átadásra kerülnek az OTP Mobil Kft., mint adatfeldolgozó részére. <br>

@@ -129,7 +129,7 @@
       </div>
     </section>
 
-    <section v-show="summary">
+    <section v-show="summary" id="summary">
       <h3>Összegzés</h3>
       <div class="row">
         <font-awesome-icon icon="user" size="lg" class="column small-2" />
@@ -260,7 +260,10 @@
         this.dateError = false
         axios
           .get(`${process.env.VUE_APP_API_URL}?slots=${date.substring(0, 10)}`)
-          .then(response => (this.slots = this.product.slots - response.data))
+          .then(response => {
+            this.slots = this.product.slots - response.data
+            window.scrollBy(0, 150)
+          })
           .catch(error => console.log(error))
       },
       isDisabledDate(date) {
@@ -331,6 +334,7 @@
         window.fbq('track', 'AddToCart')
 
         this.summary = true
+        setTimeout(() => window.scrollBy(0, window.innerHeight - 150), 100)
 
         axios
           .post(process.env.VUE_APP_API_URL, {

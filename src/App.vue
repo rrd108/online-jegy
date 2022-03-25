@@ -42,6 +42,10 @@
   @import url('https://fonts.googleapis.com/css?family=Quicksand:500');
   @import url('./assets/foundation.min.css');
 
+  html {
+    scroll-behavior: smooth;
+  }
+
   body {
     background: url('./assets/background.png') #efdfd2 !important;
   }

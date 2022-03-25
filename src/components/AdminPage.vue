@@ -24,7 +24,7 @@
     <aside v-if="token" class="small-12 large-6">
       <nav>
         <a @click="view = 'guests'" class="button">Vendégek</a>
-        <a @click="view = 'closed'" class="button">Zárt napok</a>
+        <!--a @click="view = 'closed'" class="button">Zárt napok</!--a-->
         <a @click="view = 'products'" class="button">Barangolások</a>
         <a @click="view = 'days'" class="button">Napok</a>
       </nav>
@@ -32,13 +32,13 @@
       <Products v-show="view == 'products'" :products="products" />
       <Days v-show="view == 'days'" :products="products" />
 
-      <div v-show="view == 'closed'">
+      <!--div v-show="view == 'closed'">
         <h2>Zárt napok</h2>
         <input type="date" @change="addSpecialDay" v-model="newSpecialDay" />
         <transition-group tag="ul" name="list">
           <li v-for="day in sortedSpecialDays" :key="day">{{ day }}</li>
         </transition-group>
-      </div>
+      </!--div-->
 
       <div v-show="view == 'guests'">
         <h2>Vendégek</h2>

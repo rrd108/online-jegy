@@ -259,7 +259,11 @@
         )
         this.dateError = false
         axios
-          .get(`${process.env.VUE_APP_API_URL}?slots=${date.substring(0, 10)}`)
+          .get(
+            `${process.env.VUE_APP_API_URL}?slots=${this.getFormattedDate(
+              this.date
+            )}`
+          )
           .then(response => {
             this.slots = this.product.slots - response.data
             window.scrollBy(0, 150)

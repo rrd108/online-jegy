@@ -23,12 +23,14 @@
 
     <aside v-if="token" class="small-12 large-6">
       <nav>
-        <a @click="view = 'guests'">Vendégek</a> |
-        <a @click="view = 'closed'">Zárt napok</a> |
-        <a @click="view = 'products'">Barangolások</a> |
+        <a @click="view = 'guests'" class="button">Vendégek</a>
+        <a @click="view = 'closed'" class="button">Zárt napok</a>
+        <a @click="view = 'products'" class="button">Barangolások</a>
+        <a @click="view = 'days'" class="button">Napok</a>
       </nav>
 
       <Products v-show="view == 'products'" />
+      <Days v-show="view == 'days'" />
 
       <div v-show="view == 'closed'">
         <h2>Zárt napok</h2>
@@ -123,6 +125,7 @@
   import axios from 'axios'
   import swal from 'sweetalert'
   import Products from './Products.vue'
+  import Days from './Days.vue'
   import { CalendarView, CalendarViewHeader } from 'vue-simple-calendar'
   // https://github.com/richardtallent/vue-simple-calendar
 
@@ -133,6 +136,7 @@
     components: {
       CalendarView,
       CalendarViewHeader,
+      Days,
       Products,
     },
     created() {
@@ -365,7 +369,9 @@
   #admin {
     height: 75vh;
   }
-
+  nav a {
+    margin: 0 0.5rem;
+  }
   ul {
     list-style-type: none;
   }

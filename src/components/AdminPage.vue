@@ -29,8 +29,8 @@
         <a @click="view = 'days'" class="button">Napok</a>
       </nav>
 
-      <Products v-show="view == 'products'" />
-      <Days v-show="view == 'days'" />
+      <Products v-show="view == 'products'" :products="products" />
+      <Days v-show="view == 'days'" :products="products" />
 
       <div v-show="view == 'closed'">
         <h2>Zárt napok</h2>
@@ -141,6 +141,11 @@
     },
     created() {
       axios
+        .get(process.env.VUE_APP_API_URL + '?products')
+        .then(response => (this.products = response.data))
+        .catch(error => console.log(error))
+
+      axios
         .get(process.env.VUE_APP_API_URL + '?checkins')
         .then(response => (this.checkins = response.data))
         .catch(error => console.log(error))
@@ -157,6 +162,7 @@
         newSpecialDay: null,
         visitors: [],
         password: '',
+        products: [],
         searchTerm: '',
         showDate: new Date(),
         specialDays: [],

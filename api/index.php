@@ -43,7 +43,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $data = file_get_contents('php://input');
     // $response = new stdClass;
 
-    if (isset(json_decode($data)->product)) {
+    if (isset(json_decode($data)->product) && !isset(json_decode($data)->date)) {
+        // add / edit product
         $products = json_decode(file_get_contents('products.json'));
         $product = json_decode($data)->product;
         $i = json_decode($data)->i;
@@ -55,6 +56,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
         $handle = fopen('products.json', 'w');
         fwrite($handle, json_encode($products));
+        fclose($handle);
+
+        echo $data;
+    }
+
+    if (isset(json_decode($data)->product) && isset(json_decode($data)->date)) {
+        // add edit day
+        $days = json_decode(file_get_contents('days.json'));
+        $day = json_decode($data);
+        array_push($days, [$day->date => $day->product]);
+
+        $handle = fopen('days.json', 'w');
+        fwrite($handle, json_encode($days));
         fclose($handle);
 
         echo $data;

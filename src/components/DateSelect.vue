@@ -12,10 +12,9 @@
       <div class="row">
         <font-awesome-icon icon="clock" size="lg" class="column small-2" />
         <date-picker
-          v-show="type == 'tematic'"
           @close="checkAvailableSlots"
           v-model="date"
-          :default-value="nextTourDay.setHours(11, 0, 0, 0)"
+          :default-value="nextTourDay"
           type="datetime"
           format="YYYY-MM-DD HH:mm"
           placeholder="Dátum"
@@ -198,6 +197,7 @@
         child: null,
         date: null,
         dateError: false,
+        days: [],
         email: null,
         emailError: false,
         manError: false,
@@ -230,6 +230,22 @@
     },
     created() {
       this.type = 'tematic' //it is needed if the user come the page from elvonulas with the browser back button
+
+      axios
+        .get(`${process.env.VUE_APP_API_URL}?days`)
+        .then(response => {
+          this.days = response.data
+          const days = []
+          for (const prop in response.data) {
+            const d = {}
+            d[prop] = response.data[prop]
+            days.push(d)
+          }
+          const nextTourDay = Object.keys(days[days.length - 1])[0]
+          this.nextTourDay = new Date(nextTourDay).setHours(11, 0, 0, 0)
+        })
+        .catch(error => console.log(error))
+
       axios
         .get(process.env.VUE_APP_API_URL + '?prices')
         .then(response => (this.prices = response.data))
@@ -244,10 +260,10 @@
         .catch(error => console.log(error))
 
       // TODO remove special days
-      axios
+      /*axios
         .get(process.env.VUE_APP_API_URL + '?specialDays')
         .then(response => (this.specialDays = response.data))
-        .catch(error => console.log(error))
+        .catch(error => console.log(error))*/
     },
     methods: {
       checkAvailableSlots() {
@@ -278,15 +294,11 @@
           .catch(error => console.log(error))
       },
       isDisabledDate(date) {
-        return (
-          this.isPast(date) ||
-          this.isToday(date) ||
-          /* this.isTomorrow(date) ||*/ this.isNotTourDay(date) ||
-          this.isSpecialDate(date)
-        )
+        return this.isPast(date) || this.isToday(date) || !this.isTourDay(date)
       },
-      isNotTourDay(date) {
-        return date.getDay() != 6 // && date.getDay() != 3 // Saturdays or Wednesdays
+      isTourDay(date) {
+        const d = new Date(date.setDate(date.getDate() + 1)) // somehow we should add 1 day
+        return this.days[d.toISOString().substring(0, 10)]
       },
       isPast(date) {
         return date < today
@@ -294,14 +306,11 @@
       isToday(date) {
         return date.getTime() == today.getTime()
       },
-      /*isTomorrow(date) {
-        return date.getTime() == this.tomorrow.getTime()
-    },*/
-      isSpecialDate(date) {
-        // we should add 1 day to get it work as expected
-        const d = new Date(date.setDate(date.getDate() + 1))
-        return this.specialDays.indexOf(d.toISOString().split('T')[0]) != -1
-      },
+      /*isSpecialDate(date) {
+          // we should add 1 day to get it work as expected
+          const d = new Date(date.setDate(date.getDate() + 1))
+          return this.specialDays.indexOf(d.toISOString().split('T')[0]) != -1
+        },*/
       getFormattedDate(date) {
         const timezoneOffset = date.getTimezoneOffset() * 60000
         return (
@@ -410,5 +419,8 @@
 <style>
   .mx-date-row .cell:not(.disabled) {
     color: green;
+  }
+  .mx-calendar-content .cell.active {
+    color: #fff;
   }
 </style>

@@ -109,7 +109,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $orderId = uniqid();
         $data = json_decode($data);
 
-        $amount = ($data->type == 'tematic') ? $prices['adult'] * $data->adult + $prices['child'] * $data->child : $prices['herbs'] * $data->adult;
+        // $data->type
+        $products = json_decode(file_get_contents('products.json'));
+        $product = array_filter($products, function ($product) use ($data) {
+            return $product->product == $data->type;
+        })[0];
+        $amount = $product->adult * $data->adult + $product->child * $data->child;
 
         // save order to the database
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);

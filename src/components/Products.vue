@@ -3,12 +3,7 @@
 
   export default {
     name: 'Products',
-    created() {
-      axios
-        .get(process.env.VUE_APP_API_URL + '?products')
-        .then(response => (this.products = response.data))
-        .catch(error => console.log(error))
-    },
+    props: ['products'],
     data() {
       return {
         product: {
@@ -17,7 +12,6 @@
           child: null,
           slots: null,
         },
-        products: [],
       }
     },
     methods: {

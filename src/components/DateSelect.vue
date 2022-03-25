@@ -11,9 +11,9 @@
         >
           <option value="tematic">Barangolások Krisna-völgyben</option>
           <!--option value="tematic-extra">
-            Extra Spirituális zarándoklat csomag
+            Ökrös szekerezés
           </!--option-->
-          <!--option value="herbs">Gyógynövény</!--option-->
+          <!--option value="extra">Ökrös szekerezés</!--option-->
         </select>
       </div>
 

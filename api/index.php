@@ -9,8 +9,8 @@ require('./secrets.php');
 require('./simplepay/config.php');
 require('./simplepay/SimplePayV21.php');
 
-//ini_set('display_errors', 1);
-//error_reporting(E_ALL);
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
 
 // TODO get it from products.json
 $prices = [
@@ -65,7 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // add edit day
         $days = json_decode(file_get_contents('days.json'));
         $day = json_decode($data);
-        array_push($days, [$day->date => $day->product]);
+        array_push($days, ['date' => $day->date, 'product' => $day->product]);
 
         $handle = fopen('days.json', 'w');
         fwrite($handle, json_encode($days));
@@ -195,6 +195,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
     if (isset($_GET['products'])) {
         echo file_get_contents('./products.json');
+    }
+
+    if (isset($_GET['days'])) {
+        $_days = json_decode(file_get_contents('./days.json'));
+        // we only need days from today 
+        // TODO delete former days
+        $days = [];
+        foreach ($_days as $day) {
+            if (strtotime($day->date) >= strtotime('today')) {
+                $days[$day->date] = $day->product;
+            }
+        }
+        krsort($days);
+        echo json_encode($days);
     }
 
     if (isset($_GET['prices'])) {

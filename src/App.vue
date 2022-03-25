@@ -54,18 +54,24 @@
     margin: 0 2vh;
   }
 
-  #app h1,
-  #app h2,
-  #app h3 {
+  h1,
+  h2,
+  h3 {
     font-family: 'Quicksand', sans-serif;
     font-weight: bold;
   }
 
-  #app input {
+  input {
     font-size: 1.5rem;
   }
 
   .grid {
     display: grid;
+  }
+
+  .error {
+    background-color: #fff;
+    color: #f00;
+    padding: 0.5rem;
   }
 </style>

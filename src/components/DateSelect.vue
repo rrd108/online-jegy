@@ -4,17 +4,7 @@
       <h3>Túra típus</h3>
       <div class="row">
         <font-awesome-icon icon="fire" size="lg" class="column small-2" />
-        <select
-          class="column small-10"
-          v-model="type"
-          @change="checkAvailableSlots"
-        >
-          <option value="tematic">Barangolások Krisna-völgyben</option>
-          <!--option value="tematic-extra">
-            Ökrös szekerezés
-          </!--option-->
-          <!--option value="extra">Ökrös szekerezés</!--option-->
-        </select>
+        {{ type }}
       </div>
 
       <h3>Túra időpont</h3>
@@ -79,16 +69,6 @@
           >
         </div>
       </div>
-      <!--div v-if="type=='herbs'">
-            <h4>Max {{herbSlots}} fő erre az időpontra</h4>
-            <p class="callout alert" v-show="overBooking">Erre az időpontra csak {{herbSlots}} helyünk van!</p>
-            <p class="callout alert" v-show="manError">Add meg a létszámot!</p>
-            <div class="row">
-                <font-awesome-icon icon="male" size="lg" class="column small-2"/>
-                <input type="number" @blur="manError = false" min="0" v-model="adult" class="column small-2">
-                <span class="column small-8">felnőtt {{prices.herbs | toNumFormat}} Ft/fő</span>
-            </div>
-        </div-->
 
       <h3>Elérhetőségeid</h3>
       <p class="callout alert" v-show="nameError">Add meg a neved!</p>
@@ -214,17 +194,12 @@
     data() {
       return {
         adult: null,
-        nextTourDay: new Date(
-          new Date(today).setDate(
-            new Date(today).getDate() + ((6 + 7 - today.getDay()) % 7)
-          )
-        ),
+        nextTourDay: null,
         child: null,
         date: null,
         dateError: false,
         email: null,
         emailError: false,
-        //herbSlots: 0,
         manError: false,
         name: null,
         nameError: false,
@@ -239,18 +214,14 @@
         //tomorrow: new Date(new Date(today).setDate(new Date(today).getDate() + 1)),
         tos: false,
         tosError: false,
-        type: 'tematic', // window.location.href.search('herbs') > 0 ? 'herbs' : 'tematic'
+        type: 'tematic',
       }
     },
     computed: {
       amount() {
-        //if (this.type == 'tematic') {
         return this.adult * this.prices.adult + this.child * this.prices.child
-        //}
-        //return this.adult * this.prices.herbs
       },
       overBooking() {
-        //const slots = (this.type == 'tematic') ? this.slots : this.herbSlots
         const slots = this.slots
         const adult = this.adult ? this.adult : 0
         const child = this.child ? this.child : 0
@@ -272,6 +243,7 @@
         })
         .catch(error => console.log(error))
 
+      // TODO remove special days
       axios
         .get(process.env.VUE_APP_API_URL + '?specialDays')
         .then(response => (this.specialDays = response.data))

@@ -30,7 +30,7 @@
       </nav>
 
       <Products v-show="view == 'products'" :products="products" />
-      <Days v-show="view == 'days'" :products="products" />
+      <Days v-show="view == 'days'" :products="products" :days="days" />
 
       <!--div v-show="view == 'closed'">
         <h2>Zárt napok</h2>
@@ -141,6 +141,17 @@
     },
     created() {
       axios
+        .get(`${process.env.VUE_APP_API_URL}?days`)
+        .then(response => {
+          for (const prop in response.data) {
+            const d = {}
+            d[prop] = response.data[prop]
+            this.days.push(d)
+          }
+        })
+        .catch(error => console.log(error))
+
+      axios
         .get(process.env.VUE_APP_API_URL + '?products')
         .then(response => (this.products = response.data))
         .catch(error => console.log(error))
@@ -158,6 +169,7 @@
     data() {
       return {
         checkins: [],
+        days: [],
         email: '',
         newSpecialDay: null,
         visitors: [],

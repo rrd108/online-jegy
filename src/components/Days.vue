@@ -3,27 +3,14 @@
 
   export default {
     name: 'Days',
-    props: ['products'],
+    props: ['days', 'products'],
     data() {
       return {
         date: new Date().toISOString().substring(0, 10),
-        days: [],
         error: '',
         product: {},
         selectedProduct: '',
       }
-    },
-    created() {
-      axios
-        .get(`${process.env.VUE_APP_API_URL}?days`)
-        .then(response => {
-          for (const prop in response.data) {
-            const d = {}
-            d[prop] = response.data[prop]
-            this.days.push(d)
-          }
-        })
-        .catch(error => console.log(error))
     },
     methods: {
       addDate() {

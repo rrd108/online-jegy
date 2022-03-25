@@ -25,8 +25,10 @@
       <nav>
         <a @click="view = 'guests'">Vendégek</a> |
         <a @click="view = 'closed'">Zárt napok</a> |
-        <!--a @click="view = 'prices'">Árak</!--a-->
+        <a @click="view = 'products'">Barangolások</a> |
       </nav>
+
+      <Products v-show="view == 'products'" />
 
       <div v-show="view == 'closed'">
         <h2>Zárt napok</h2>
@@ -118,280 +120,283 @@
 </template>
 
 <script>
-import axios from "axios"
-import swal from "sweetalert"
-import { CalendarView, CalendarViewHeader } from "vue-simple-calendar"
-// https://github.com/richardtallent/vue-simple-calendar
+  import axios from 'axios'
+  import swal from 'sweetalert'
+  import Products from './Products.vue'
+  import { CalendarView, CalendarViewHeader } from 'vue-simple-calendar'
+  // https://github.com/richardtallent/vue-simple-calendar
 
-require("vue-simple-calendar/static/css/default.css")
+  require('vue-simple-calendar/static/css/default.css')
 
-export default {
-  name: "AdminPage",
-  components: {
-    CalendarView,
-    CalendarViewHeader,
-  },
-  created() {
-    axios
-      .get(process.env.VUE_APP_API_URL + "?checkins")
-      .then((response) => (this.checkins = response.data))
-      .catch((error) => console.log(error))
-
-    axios
-      .get(process.env.VUE_APP_API_URL + "?specialDays")
-      .then((response) => (this.specialDays = response.data))
-      .catch((error) => console.log(error))
-  },
-  data() {
-    return {
-      checkins: [],
-      email: "",
-      newSpecialDay: null,
-      visitors: [],
-      password: "",
-      searchTerm: "",
-      showDate: new Date(),
-      specialDays: [],
-      timeSlot: "",
-      token: "",
-      view: "guests",
-    }
-  },
-  computed: {
-    sortedSpecialDays() {
-      let specialDays = this.specialDays
-      return specialDays.sort((a, b) => (a < b ? 1 : -1))
+  export default {
+    name: 'AdminPage',
+    components: {
+      CalendarView,
+      CalendarViewHeader,
+      Products,
     },
-  },
-  methods: {
-    addSpecialDay() {
+    created() {
       axios
-        .patch(process.env.VUE_APP_API_URL, {
-          newSpecialDay: this.newSpecialDay,
-        })
-        .then((response) => {
-          console.log(response.data)
-          this.specialDays.push(response.data.newSpecialDay)
-          this.newSpecialDay = null
-        })
-        .catch((error) => console.log(error))
-    },
-    clickEvent(event) {
-      // event.id : 2020-05-17 14:00:00
-      this.timeSlot = event.id
+        .get(process.env.VUE_APP_API_URL + '?checkins')
+        .then(response => (this.checkins = response.data))
+        .catch(error => console.log(error))
+
       axios
-        .get(process.env.VUE_APP_API_URL + "?visitors=" + event.id)
-        .then((response) => (this.visitors = response.data))
-        .catch((error) => console.log(error))
+        .get(process.env.VUE_APP_API_URL + '?specialDays')
+        .then(response => (this.specialDays = response.data))
+        .catch(error => console.log(error))
     },
-    editTicket(visitor) {
-      swal({
-        title: "Foglalás módosítása " + visitor.name,
-        text: "Add meg az új dátumot (éééé-hh-nn óó) formátumban",
-        icon: "warning",
-        buttons: true,
-        dangerMode: true,
-        content: "input",
-      })
-        .then((newDate) => {
-          if (newDate != visitor.date.substr(0, 13)) {
-            newDate = newDate + ":00:00"
-            axios
-              .patch(process.env.VUE_APP_API_URL, {
-                newDate,
-                booking: visitor.id,
-              })
-              .then((response) => {
-                if (response.data.changedRecords === 1) {
-                  const visitorsChanged =
-                    parseInt(visitor.adult || 0) + parseInt(visitor.child || 0)
-
-                  // remove current booking from the list
-                  this.visitors = this.visitors.filter(
-                    (v) => v.id != visitor.id
-                  )
-
-                  // change old chekin title in the calendar
-                  const oldCheckin = this.checkins.find(
-                    (checkin) => checkin.id == this.timeSlot
-                  )
-                  const oldCheckinVisitorsNumber = parseInt(
-                    oldCheckin.title.substr(
-                      3,
-                      oldCheckin.title.indexOf(" ") - 3
-                    )
-                  )
-                  if (oldCheckinVisitorsNumber - visitorsChanged) {
-                    oldCheckin.title = oldCheckin.title.replace(
-                      `${oldCheckinVisitorsNumber} fő`,
-                      `${oldCheckinVisitorsNumber - visitorsChanged} fő`
-                    )
-                  } else {
-                    oldCheckin.title = " "
-                  }
-
-                  const newCheckin = this.checkins.find(
-                    (checkin) => checkin.startDate == newDate
-                  )
-                  if (!newCheckin) {
-                    // add new checkin to the calendar
-                    this.checkins.push({
-                      id: newDate,
-                      startDate: newDate,
-                      title: `${newDate.substr(11, 2)}-${visitorsChanged} fő`,
-                    })
-                  }
-                  if (newCheckin) {
-                    // update new checkin title
-                    const newCheckinVisitorsNumber = parseInt(
-                      newCheckin.title.substr(
-                        3,
-                        newCheckin.title.indexOf(" ") - 3
-                      )
-                    )
-                    newCheckin.title = newCheckin.title.replace(
-                      `${newCheckinVisitorsNumber} fő`,
-                      `${newCheckinVisitorsNumber + visitorsChanged} fő`
-                    )
-                  }
-                } else {
-                  console.error(response.data)
-                }
-              })
-          }
-        })
-        .catch((error) => console.log(error))
-    },
-    login() {
-      axios
-        .post(process.env.VUE_APP_API_TOKEN_URL, {
-          email: this.email,
-          password: this.password,
-        })
-        .then((response) => (this.token = response.data))
-        .catch((error) => console.log(error))
-    },
-    removeBooking(visitor) {
-      swal({
-        title: "Foglalás törlése " + visitor.name,
-        text: "Ezt a foglalást töröljük? " + visitor.id,
-        icon: "warning",
-        buttons: true,
-        dangerMode: true,
-      }).then((ticket) => {
-        if (ticket) {
-          axios
-            .delete(process.env.VUE_APP_API_URL, {
-              data: { delete: visitor.id },
-            })
-            .then(
-              (response) =>
-                (this.visitors = this.visitors.filter(
-                  (visitor) => visitor.id != response.data.delete
-                ))
-            )
-            .catch((error) => console.log(error))
-        }
-      })
-    },
-    search() {
-      this.timeSlot = ""
-      this.visitors = []
-      if (this.searchTerm.length > 2) {
-        axios
-          .get(process.env.VUE_APP_API_URL + "?search=" + this.searchTerm)
-          .then((response) => (this.visitors = response.data))
-          .catch((error) => console.log(error))
+    data() {
+      return {
+        checkins: [],
+        email: '',
+        newSpecialDay: null,
+        visitors: [],
+        password: '',
+        searchTerm: '',
+        showDate: new Date(),
+        specialDays: [],
+        timeSlot: '',
+        token: '',
+        view: 'guests',
       }
     },
-    setPayed(visitor) {
-      swal({
-        title: "Foglalás fizetett " + visitor.name,
-        text: "Ezt a foglalást állítsuk kifizetettre? " + visitor.id,
-        icon: "warning",
-        buttons: true,
-        dangerMode: true,
-      }).then((ticket) => {
-        if (ticket) {
-          axios
-            .patch(process.env.VUE_APP_API_URL, {
-              setPayed: visitor.id,
-            })
-            .then(
-              (response) =>
-                (this.visitors = this.visitors.map((visitor) =>
-                  visitor.id == response.data.setPayed
-                    ? { ...visitor, ...{ payed: 1 } }
-                    : visitor
-                ))
-            )
-            .catch((error) => console.log(error))
-        }
-      })
+    computed: {
+      sortedSpecialDays() {
+        let specialDays = this.specialDays
+        return specialDays.sort((a, b) => (a < b ? 1 : -1))
+      },
     },
-    setShowDate(d) {
-      this.showDate = d
-    },
-    useTicket(visitor) {
-      if (visitor.payed == 1) {
+    methods: {
+      addSpecialDay() {
+        axios
+          .patch(process.env.VUE_APP_API_URL, {
+            newSpecialDay: this.newSpecialDay,
+          })
+          .then(response => {
+            console.log(response.data)
+            this.specialDays.push(response.data.newSpecialDay)
+            this.newSpecialDay = null
+          })
+          .catch(error => console.log(error))
+      },
+      clickEvent(event) {
+        // event.id : 2020-05-17 14:00:00
+        this.timeSlot = event.id
+        axios
+          .get(process.env.VUE_APP_API_URL + '?visitors=' + event.id)
+          .then(response => (this.visitors = response.data))
+          .catch(error => console.log(error))
+      },
+      editTicket(visitor) {
         swal({
-          title: "Jegy érvényesítés " + visitor.name,
-          text: "Ezt a jegyet használjuk most fel? " + visitor.id,
-          icon: "warning",
+          title: 'Foglalás módosítása ' + visitor.name,
+          text: 'Add meg az új dátumot (éééé-hh-nn óó) formátumban',
+          icon: 'warning',
           buttons: true,
           dangerMode: true,
-        }).then((ticket) => {
+          content: 'input',
+        })
+          .then(newDate => {
+            if (newDate != visitor.date.substr(0, 13)) {
+              newDate = newDate + ':00:00'
+              axios
+                .patch(process.env.VUE_APP_API_URL, {
+                  newDate,
+                  booking: visitor.id,
+                })
+                .then(response => {
+                  if (response.data.changedRecords === 1) {
+                    const visitorsChanged =
+                      parseInt(visitor.adult || 0) +
+                      parseInt(visitor.child || 0)
+
+                    // remove current booking from the list
+                    this.visitors = this.visitors.filter(
+                      v => v.id != visitor.id
+                    )
+
+                    // change old chekin title in the calendar
+                    const oldCheckin = this.checkins.find(
+                      checkin => checkin.id == this.timeSlot
+                    )
+                    const oldCheckinVisitorsNumber = parseInt(
+                      oldCheckin.title.substr(
+                        3,
+                        oldCheckin.title.indexOf(' ') - 3
+                      )
+                    )
+                    if (oldCheckinVisitorsNumber - visitorsChanged) {
+                      oldCheckin.title = oldCheckin.title.replace(
+                        `${oldCheckinVisitorsNumber} fő`,
+                        `${oldCheckinVisitorsNumber - visitorsChanged} fő`
+                      )
+                    } else {
+                      oldCheckin.title = ' '
+                    }
+
+                    const newCheckin = this.checkins.find(
+                      checkin => checkin.startDate == newDate
+                    )
+                    if (!newCheckin) {
+                      // add new checkin to the calendar
+                      this.checkins.push({
+                        id: newDate,
+                        startDate: newDate,
+                        title: `${newDate.substr(11, 2)}-${visitorsChanged} fő`,
+                      })
+                    }
+                    if (newCheckin) {
+                      // update new checkin title
+                      const newCheckinVisitorsNumber = parseInt(
+                        newCheckin.title.substr(
+                          3,
+                          newCheckin.title.indexOf(' ') - 3
+                        )
+                      )
+                      newCheckin.title = newCheckin.title.replace(
+                        `${newCheckinVisitorsNumber} fő`,
+                        `${newCheckinVisitorsNumber + visitorsChanged} fő`
+                      )
+                    }
+                  } else {
+                    console.error(response.data)
+                  }
+                })
+            }
+          })
+          .catch(error => console.log(error))
+      },
+      login() {
+        axios
+          .post(process.env.VUE_APP_API_TOKEN_URL, {
+            email: this.email,
+            password: this.password,
+          })
+          .then(response => (this.token = response.data))
+          .catch(error => console.log(error))
+      },
+      removeBooking(visitor) {
+        swal({
+          title: 'Foglalás törlése ' + visitor.name,
+          text: 'Ezt a foglalást töröljük? ' + visitor.id,
+          icon: 'warning',
+          buttons: true,
+          dangerMode: true,
+        }).then(ticket => {
           if (ticket) {
             axios
-              .post(process.env.VUE_APP_API_URL, {
-                used: visitor.id,
+              .delete(process.env.VUE_APP_API_URL, {
+                data: { delete: visitor.id },
               })
-              .then(() => (visitor.used = Math.abs(visitor.used - 1)))
-              .catch((error) => console.log(error))
+              .then(
+                response =>
+                  (this.visitors = this.visitors.filter(
+                    visitor => visitor.id != response.data.delete
+                  ))
+              )
+              .catch(error => console.log(error))
           }
         })
-      }
+      },
+      search() {
+        this.timeSlot = ''
+        this.visitors = []
+        if (this.searchTerm.length > 2) {
+          axios
+            .get(process.env.VUE_APP_API_URL + '?search=' + this.searchTerm)
+            .then(response => (this.visitors = response.data))
+            .catch(error => console.log(error))
+        }
+      },
+      setPayed(visitor) {
+        swal({
+          title: 'Foglalás fizetett ' + visitor.name,
+          text: 'Ezt a foglalást állítsuk kifizetettre? ' + visitor.id,
+          icon: 'warning',
+          buttons: true,
+          dangerMode: true,
+        }).then(ticket => {
+          if (ticket) {
+            axios
+              .patch(process.env.VUE_APP_API_URL, {
+                setPayed: visitor.id,
+              })
+              .then(
+                response =>
+                  (this.visitors = this.visitors.map(visitor =>
+                    visitor.id == response.data.setPayed
+                      ? { ...visitor, ...{ payed: 1 } }
+                      : visitor
+                  ))
+              )
+              .catch(error => console.log(error))
+          }
+        })
+      },
+      setShowDate(d) {
+        this.showDate = d
+      },
+      useTicket(visitor) {
+        if (visitor.payed == 1) {
+          swal({
+            title: 'Jegy érvényesítés ' + visitor.name,
+            text: 'Ezt a jegyet használjuk most fel? ' + visitor.id,
+            icon: 'warning',
+            buttons: true,
+            dangerMode: true,
+          }).then(ticket => {
+            if (ticket) {
+              axios
+                .post(process.env.VUE_APP_API_URL, {
+                  used: visitor.id,
+                })
+                .then(() => (visitor.used = Math.abs(visitor.used - 1)))
+                .catch(error => console.log(error))
+            }
+          })
+        }
+      },
     },
-  },
-}
+  }
 </script>
 
 <style scoped>
-#admin {
-  height: 75vh;
-}
+  #admin {
+    height: 75vh;
+  }
 
-ul {
-  list-style-type: none;
-}
-.payed {
-  color: green;
-}
-.fa-check-circle:hover {
-  color: #fff;
-  background: #258dad;
-  cursor: pointer;
-}
-.unpayed {
-  color: gray;
-}
-.used {
-  text-decoration: line-through;
-}
-.action {
-  cursor: pointer;
-}
-.action:hover {
-  color: #258dad;
-}
+  ul {
+    list-style-type: none;
+  }
+  .payed {
+    color: green;
+  }
+  .fa-check-circle:hover {
+    color: #fff;
+    background: #258dad;
+    cursor: pointer;
+  }
+  .unpayed {
+    color: gray;
+  }
+  .used {
+    text-decoration: line-through;
+  }
+  .action {
+    cursor: pointer;
+  }
+  .action:hover {
+    color: #258dad;
+  }
 
-.list-enter-active,
-.list-leave-active {
-  transition: all 1s;
-}
-.list-enter,
-.list-leave-to {
-  opacity: 0;
-  transform: translateY(30px);
-}
+  .list-enter-active,
+  .list-leave-active {
+    transition: all 1s;
+  }
+  .list-enter,
+  .list-leave-to {
+    opacity: 0;
+    transform: translateY(30px);
+  }
 </style>

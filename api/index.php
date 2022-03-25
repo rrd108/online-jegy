@@ -38,6 +38,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $data = file_get_contents('php://input');
     // $response = new stdClass;
 
+    if (isset(json_decode($data)->product)) {
+        $products = json_decode(file_get_contents('products.json'));
+        $product = json_decode($data)->product;
+        /*        // if it is an edit
+        foreach ($_products as $p) {
+            if ($p->product == $product->product) {
+                $products[] = $product;
+                break;
+            }
+        }*/
+        array_push($products, $product);
+        $handle = fopen('products.json', 'w');
+        fwrite($handle, json_encode($products));
+        fclose($handle);
+
+        echo $data;
+    }
+
     if (isset(json_decode($data)->newsletter)) {
         $mailchimpData = [
             'status' => 'subscribed',
@@ -155,6 +173,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $stmt->execute(['%' . $_GET['search'] . '%', '%' . $_GET['search'] . '%', '%' . $_GET['search'] . '%']);
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
         echo json_encode($result);
+    }
+
+    if (isset($_GET['products'])) {
+        echo file_get_contents('./products.json');
     }
 
     if (isset($_GET['prices'])) {

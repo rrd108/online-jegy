@@ -12,50 +12,60 @@
 </template>
 
 <script>
-import AdminPage from "./components/AdminPage"
-import AppHeader from "./components/AppHeader"
-import DateSelect from "./components/DateSelect"
-import PaymentInfo from "./components/PaymentInfo"
+  import AdminPage from './components/AdminPage'
+  import AppHeader from './components/AppHeader'
+  import DateSelect from './components/DateSelect'
+  import PaymentInfo from './components/PaymentInfo'
 
-export default {
-  name: 'App',
-  components: {
-    AdminPage,
-    AppHeader,
-    DateSelect,
-    PaymentInfo
-  },
-  data() {
-    return {
-      url : window.location.pathname,
-      urlParams: (window.location.href.split('?')[1] && window.location.href.split('?')[1].search('fbclid') !== 0) ? window.location.href.split('?')[1] : null,
-    }
-  },
-}
+  export default {
+    name: 'App',
+    components: {
+      AdminPage,
+      AppHeader,
+      DateSelect,
+      PaymentInfo,
+    },
+    data() {
+      return {
+        url: window.location.pathname,
+        urlParams:
+          window.location.href.split('?')[1] &&
+          window.location.href.split('?')[1].search('fbclid') !== 0
+            ? window.location.href.split('?')[1]
+            : null,
+      }
+    },
+  }
 </script>
 
 <style>
-@import url("https://fonts.googleapis.com/css?family=Quicksand:500");
-@import url("./assets/foundation.min.css");
+  @import url('https://fonts.googleapis.com/css?family=Quicksand:500');
+  @import url('./assets/foundation.min.css');
 
-body {
-  background: url("./assets/background.png") #efdfd2 !important;
-}
+  body {
+    background: url('./assets/background.png') #efdfd2 !important;
+  }
 
-#app {
-  font-family: "Quicksand", sans-serif;
-  color: #574634;
-  min-height: 100vh;
-  font-size: 1.4rem;
-  margin: 0 2vh;
-}
+  #app {
+    font-family: 'Quicksand', sans-serif;
+    color: #574634;
+    min-height: 100vh;
+    font-size: 1.4rem;
+    margin: 0 2vh;
+  }
 
-#app h1, #app h2, #app h3 {
-  font-family: "Quicksand", sans-serif;
-  font-weight: bold;
-}
+  #app h1,
+  #app h2,
+  #app h3 {
+    font-family: 'Quicksand', sans-serif;
+    font-weight: bold;
+  }
 
-#app input {
-  font-size: 1.5rem;
-}
+  #app input {
+    font-size: 1.5rem;
+  }
+
+  .grid {
+    display: grid;
+  }
 </style>

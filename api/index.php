@@ -252,7 +252,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             AND payed = 1");
         $stmt->execute([$_GET['slots']]);
         $result = $stmt->fetch();
-        echo $maxSlots[$_GET['type']] - $result['visitors'];
+        echo $result['visitors'];
     }
 
     // simplepay back

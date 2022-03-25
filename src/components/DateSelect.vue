@@ -51,7 +51,7 @@
             class="column small-2"
           />
           <span class="column small-8"
-            >felnőtt {{ prices.adult | toNumFormat }} Ft/fő</span
+            >felnőtt {{ product.adult | toNumFormat }} Ft/fő</span
           >
         </div>
         <div class="row">
@@ -64,7 +64,7 @@
             class="column small-2"
           />
           <span class="column small-8"
-            >gyerek/nyugdíjas {{ prices.child | toNumFormat }} Ft/fő</span
+            >gyerek/nyugdíjas {{ product.child | toNumFormat }} Ft/fő</span
           >
         </div>
       </div>
@@ -207,7 +207,8 @@
         summary: false,
         phone: null,
         phoneError: false,
-        prices: {},
+        product: {},
+        products: [],
         simpleForm: '',
         slots: 0,
         specialDays: [],
@@ -219,7 +220,7 @@
     },
     computed: {
       amount() {
-        return this.adult * this.prices.adult + this.child * this.prices.child
+        return this.adult * this.product.adult + this.child * this.product.child
       },
       overBooking() {
         const slots = this.slots
@@ -245,34 +246,21 @@
         .catch(error => console.log(error))
 
       axios
-        .get(process.env.VUE_APP_API_URL + '?prices')
-        .then(response => (this.prices = response.data))
-        .catch(error => console.log(error))
-
-      axios
-        .get(process.env.VUE_APP_API_URL + '?maxSlots')
-        .then(response => {
-          this.slots = response.data.tematic
-          //this.herbSlots = response.data.herbs
-        })
-        .catch(error => console.log(error))
+        .get(process.env.VUE_APP_API_URL + '?products')
+        .then(response => (this.products = response.data))
+        .catch(error => console.error(error))
     },
     methods: {
       checkAvailableSlots() {
         const date = this.date.toISOString().slice(0, 10)
         this.type = this.days[date]
+        this.product = this.products.find(
+          product => product.product === this.type
+        )
         this.dateError = false
         axios
-          .get(
-            process.env.VUE_APP_API_URL +
-              '?type=' +
-              this.type +
-              '&slots=' +
-              this.getFormattedDate(this.date)
-          )
-          .then(response => {
-            this.slots = response.data
-          })
+          .get(`${process.env.VUE_APP_API_URL}?slots=${date.substring(0, 10)}`)
+          .then(response => (this.slots = this.product.slots - response.data))
           .catch(error => console.log(error))
       },
       isDisabledDate(date) {

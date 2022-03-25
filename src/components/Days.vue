@@ -52,6 +52,9 @@
           })
           .catch(error => console.log(error))
       },
+      getProduct(productName) {
+        return this.products.find(product => product.product == productName)
+      },
     },
   }
 </script>
@@ -78,7 +81,8 @@
     <ul>
       <li v-for="product in days" :key="product.product" class="grid">
         <span>{{ Object.keys(product)[0] }}</span>
-        <span>{{ product[Object.keys(product)[0]] }}</span>
+        <span>{{ getProduct(product[Object.keys(product)[0]]).product }}</span>
+        <span>{{ getProduct(product[Object.keys(product)[0]]).slots }} fő</span>
       </li>
     </ul>
   </div>

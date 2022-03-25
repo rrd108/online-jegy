@@ -1,12 +1,6 @@
 <template>
   <div class="column">
     <section v-show="!summary">
-      <h3>Túra típus</h3>
-      <div class="row">
-        <font-awesome-icon icon="fire" size="lg" class="column small-2" />
-        {{ type }}
-      </div>
-
       <h3>Túra időpont</h3>
       <p class="callout alert" v-show="dateError">Válassz időpontot!</p>
       <div class="row">
@@ -30,12 +24,18 @@
           :disabled-date="isDisabledDate"
           class="column small-10"
         />
-
-        <!--p v-show="type=='herbs'" class="column small-10">2020. október 11. 09:00</!--p-->
       </div>
 
+      <h3>Túra típus</h3>
+      <div class="row">
+        <font-awesome-icon icon="fire" size="lg" class="column small-2" />
+        {{ type }}
+      </div>
+    </section>
+
+    <section v-show="type">
       <h3>Vendégek száma</h3>
-      <div v-if="type == 'tematic'">
+      <div>
         <h4>Max {{ slots }} fő erre az időpontra</h4>
         <p class="callout alert" v-show="overBooking">
           Erre az időpontra csak {{ slots }} helyünk van!
@@ -214,7 +214,7 @@
         //tomorrow: new Date(new Date(today).setDate(new Date(today).getDate() + 1)),
         tos: false,
         tosError: false,
-        type: 'tematic',
+        type: '',
       }
     },
     computed: {
@@ -229,8 +229,6 @@
       },
     },
     created() {
-      this.type = 'tematic' //it is needed if the user come the page from elvonulas with the browser back button
-
       axios
         .get(`${process.env.VUE_APP_API_URL}?days`)
         .then(response => {
@@ -258,22 +256,11 @@
           //this.herbSlots = response.data.herbs
         })
         .catch(error => console.log(error))
-
-      // TODO remove special days
-      /*axios
-        .get(process.env.VUE_APP_API_URL + '?specialDays')
-        .then(response => (this.specialDays = response.data))
-        .catch(error => console.log(error))*/
     },
     methods: {
       checkAvailableSlots() {
-        // if (this.type == 'herbs') {
-        //     this.date = new Date(Date.parse('2020-10-11 09:00'))
-        // }
-        if (this.type == 'tematic-extra') {
-          window.location.href =
-            'https://elvonulas.krisnavolgy.hu/termek/spiritualis-zarandoklatok-extra/'
-        }
+        const date = this.date.toISOString().slice(0, 10)
+        this.type = this.days[date]
         this.dateError = false
         axios
           .get(
@@ -284,12 +271,7 @@
               this.getFormattedDate(this.date)
           )
           .then(response => {
-            // if (this.type == 'herbs') {
-            //     this.herbSlots = response.data
-            // }
-            if (this.type == 'tematic') {
-              this.slots = response.data
-            }
+            this.slots = response.data
           })
           .catch(error => console.log(error))
       },

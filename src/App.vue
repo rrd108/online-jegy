@@ -53,7 +53,9 @@
     font-size: 1.4rem;
     margin: 0 2vh;
   }
-
+  article {
+    width: 100%;
+  }
   h1,
   h2,
   h3 {

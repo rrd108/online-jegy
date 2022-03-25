@@ -9,12 +9,17 @@ require('./secrets.php');
 require('./simplepay/config.php');
 require('./simplepay/SimplePayV21.php');
 
+//ini_set('display_errors', 1);
+//error_reporting(E_ALL);
+
+// TODO get it from products.json
 $prices = [
     'adult' => 6190,
     'child' => 5290,
     'herbs' => 12000
 ];
 
+// TODO get it from products.json
 $maxSlots = [
     'tematic' => 30,
     'herbs' => 15
@@ -41,14 +46,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset(json_decode($data)->product)) {
         $products = json_decode(file_get_contents('products.json'));
         $product = json_decode($data)->product;
-        /*        // if it is an edit
-        foreach ($_products as $p) {
-            if ($p->product == $product->product) {
-                $products[] = $product;
-                break;
-            }
-        }*/
-        array_push($products, $product);
+        $i = json_decode($data)->i;
+
+        if ($i == -1) {
+            array_push($products, $product);
+        } else {
+            $products[$i] = $product;
+        }
         $handle = fopen('products.json', 'w');
         fwrite($handle, json_encode($products));
         fclose($handle);

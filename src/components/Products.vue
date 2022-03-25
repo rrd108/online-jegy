@@ -11,21 +11,42 @@
     },
     data() {
       return {
-        product: { product: '', adult: null, child: null, slots: null },
+        product: {
+          product: '',
+          adult: null,
+          child: null,
+          slots: null,
+        },
         products: [],
       }
     },
     methods: {
       saveProduct() {
+        const i = this.products.findIndex(
+          p => p.product == this.product.product
+        )
         axios
           .post(process.env.VUE_APP_API_URL, {
             product: this.product,
+            i,
           })
           .then(response => {
-            this.products.push(response.data.product)
-            this.product = { product: '', adult: null, child: null, slots: 0 }
+            if (i == -1) {
+              this.products.push(response.data.product)
+            } else {
+              this.products[i] = response.data.product
+            }
+            this.product = {
+              product: '',
+              adult: null,
+              child: null,
+              slots: null,
+            }
           })
           .catch(error => console.log(error))
+      },
+      setProduct(product) {
+        this.product = product
       },
     },
   }
@@ -56,7 +77,12 @@
       <button class="button" @click="saveProduct">Ment</button>
     </div>
     <ul>
-      <li v-for="product in products" :key="product" class="grid">
+      <li
+        v-for="product in products"
+        :key="product.product"
+        class="grid"
+        @click="setProduct(product)"
+      >
         <span>{{ product.product }}</span>
         <span>{{ product.slots }}</span>
         <span class="right">{{

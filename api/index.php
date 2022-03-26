@@ -9,19 +9,6 @@ require('./secrets.php');
 require('./simplepay/config.php');
 require('./simplepay/SimplePayV21.php');
 
-// TODO get it from products.json
-$prices = [
-    'adult' => 6190,
-    'child' => 5290,
-    'herbs' => 12000
-];
-
-// TODO get it from products.json
-$maxSlots = [
-    'tematic' => 30,
-    'herbs' => 15
-];
-
 // no programs on these days
 $fileSpecialDays = './specialDays';
 $handle = fopen($fileSpecialDays, 'r');
@@ -211,14 +198,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         }
         krsort($days);
         echo json_encode($days);
-    }
-
-    if (isset($_GET['prices'])) {
-        echo json_encode($prices);
-    }
-
-    if (isset($_GET['maxSlots'])) {
-        echo json_encode($maxSlots);
     }
 
     if (isset($_GET['specialDays'])) {

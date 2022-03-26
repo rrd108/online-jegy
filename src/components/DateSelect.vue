@@ -6,7 +6,7 @@
       <div class="row">
         <font-awesome-icon icon="clock" size="lg" class="column small-2" />
         <date-picker
-          @close="checkAvailableSlots"
+          @close="setData"
           v-model="date"
           :default-value="nextTourDay"
           type="datetime"
@@ -253,12 +253,15 @@
         .catch(error => console.error(error))
     },
     methods: {
-      checkAvailableSlots() {
+      setData() {
         const date = this.date.toISOString().slice(0, 10)
         this.type = this.days[date]
         this.product = this.products.find(
           product => product.product === this.type
         )
+
+        this.$emit('productChanged', this.product)
+
         this.dateError = false
         axios
           .get(

@@ -36,18 +36,11 @@
           bankkártyával kifizeted a jegy összegét.
         </p>
         <h2>A túra tartalma</h2>
-        <p>
-          Az exkluzív, 3 órás, Barangolások Krisna-völgyben Túra Krisna-völgy
-          recepciójáról indul (az elefántoknál), 11 órakor (javasolt érkezés:
-          10:50). Vendégvezetővel kísért programunk során, Krisna-völgy főbb
-          látnivalóit bejárva – díszparkok, dísztavak, közösségi iskola épülete
-          (kívülről), tehénvédelmi központ, vegyszermentes zöldségkertészetek,
-          indiai szentély – beszélgetünk, mind a helyi látnivalókról mind az
-          aktuálisan meghirdetett tematikus spirituális témáról. A program
-          regisztrációs díja magában foglalja a Krisna-völgyi belépőjegyet és
-          egy ajurvédikus ebédet is, mely Krisna-völgy szezonális,
-          vegyszermentes terményeiből készül.
+        <p v-show="!product.product">
+          A túra tartalma a dátum választás után jelenik meg.
         </p>
+        <h3>{{ product.product }}</h3>
+        <p>{{ product.info }}</p>
         <h2>Adattovábbítási nyilatkozat</h2>
         <p>
           A rendelés leadásával a honlap használója tudomásul veszi, hogy a Vénu
@@ -72,7 +65,7 @@
 <script>
   export default {
     name: 'AppHeader',
-
+    props: ['product'],
     data() {
       return {
         showInfo: false,
@@ -89,8 +82,8 @@
     padding-left: 0;
     padding-right: 0;
   }
-  h1 {
-    font-family: 'Quicksand', sans-serif;
+  #app header h1 {
+    margin: 0;
   }
   .info {
     cursor: pointer;

@@ -8,6 +8,7 @@
       return {
         product: {
           product: '',
+          info: '',
           adult: null,
           child: null,
           slots: null,
@@ -32,6 +33,7 @@
             }
             this.product = {
               product: '',
+              info: '',
               adult: null,
               child: null,
               slots: null,
@@ -70,6 +72,8 @@
       />
       <button class="button" @click="saveProduct">Ment</button>
     </div>
+    <textarea v-model="product.info"></textarea>
+
     <ul>
       <li
         v-for="product in products"
@@ -96,11 +100,15 @@
   div,
   li {
     grid-template-columns: 4fr 2fr 2fr 2fr 1fr;
+    cursor: pointer;
   }
   .right {
     text-align: right;
   }
   input::placeholder {
     font-size: 1rem;
+  }
+  textarea {
+    height: 17rem;
   }
 </style>

@@ -1,10 +1,10 @@
 <template>
   <div id="app">
-    <AppHeader />
+    <AppHeader :product="product" />
     <main class="row align-center">
       <AdminPage v-if="url == '/admin'" />
       <article v-if="url != '/admin'">
-        <DateSelect v-if="!urlParams" />
+        <DateSelect v-if="!urlParams" @productChanged="setProduct" />
         <PaymentInfo v-if="urlParams" :urlParams="urlParams" />
       </article>
     </main>
@@ -27,6 +27,7 @@
     },
     data() {
       return {
+        product: {},
         url: window.location.pathname,
         urlParams:
           window.location.href.split('?')[1] &&
@@ -35,11 +36,16 @@
             : null,
       }
     },
+    methods: {
+      setProduct(product) {
+        this.product = product
+      },
+    },
   }
 </script>
 
 <style>
-  @import url('https://fonts.googleapis.com/css?family=Quicksand:500');
+  @import url('https://fonts.googleapis.com/css?family=Quicksand');
   @import url('./assets/foundation.min.css');
 
   html {
@@ -48,23 +54,24 @@
 
   body {
     background: url('./assets/background.png') #efdfd2 !important;
+    font-family: 'Quicksand', sans-serif;
   }
 
   #app {
-    font-family: 'Quicksand', sans-serif;
     color: #574634;
     min-height: 100vh;
     font-size: 1.4rem;
     margin: 0 2vh;
   }
+
   article {
     width: 100%;
   }
-  h1,
-  h2,
-  h3 {
-    font-family: 'Quicksand', sans-serif;
+
+  #app h1,
+  #app h2 {
     font-weight: bold;
+    margin: 1rem 0;
   }
 
   input {

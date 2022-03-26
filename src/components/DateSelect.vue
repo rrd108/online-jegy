@@ -25,7 +25,9 @@
           class="column small-10"
         />
       </div>
+    </section>
 
+    <section v-show="date">
       <h3>Túra típus</h3>
       <div class="row">
         <font-awesome-icon icon="fire" size="lg" class="column small-2" />

@@ -1,6 +1,6 @@
 <?php
 
-use PDO;
+//use PDO;
 
 // TODO do not responde to api calls without authentication check if we have a valid token
 
@@ -8,9 +8,6 @@ require('./headers.php');
 require('./secrets.php');
 require('./simplepay/config.php');
 require('./simplepay/SimplePayV21.php');
-
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
 
 // TODO get it from products.json
 $prices = [
@@ -31,7 +28,7 @@ $handle = fopen($fileSpecialDays, 'r');
 $specialDays = explode("\n", fread($handle, filesize($fileSpecialDays)));
 fclose($handle);
 
-$pdo = new PDO('mysql:host=localhost;dbname=' . $secrets['mysqlTable'], $secrets['mysqlUser'], $secrets['mysqlPass']);
+$pdo = new PDO('mysql:host=' . $secrets['mysql']['host'] . ';dbname=' . $secrets['mysql']['table'], $secrets['mysql']['user'], $secrets['mysql']['pass']);
 
 if ($development) {
     ini_set('display_errors', 1);

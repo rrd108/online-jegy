@@ -13,7 +13,8 @@ $message = '<html>
   <p><strong>Belépés a rendelési számod azonosításával történik, kérlek nyomtasd ezt ki, vagy mutasd fel telefonodon.</strong></p>
 
   <h1>Útvonal</h1>
-  <p>Az exkluzív, 3 órás, Barangolások Krisna-völgyben Túra Krisna-völgy recepciójáról indul (az elefántoknál) szerdán és szombaton, 11 órakor (javasolt érkezés: 10:50). Vendégvezetővel kísért programunk során, Krisna-völgy főbb látnivalóit bejárva – díszparkok, dísztavak, közösségi iskola épülete (kívülről), tehénvédelmi központ, vegyszermentes zöldségkertészetek, indiai szentély – beszélgetünk, mind a helyi látnivalókról mind az aktuálisan meghirdetett tematikus spirituális témáról. A program regisztrációs díja magában foglalja a Krisna-völgyi belépőjegyet és egy ajurvédikus ebédet is, mely Krisna-völgy szezonális, vegyszermentes terményeiből készül.</p>
+  <h2>' . $product->product . '</h2>
+  <p>' . $product->info . '</p>
 
   <h1>Fontos infók</h1>
   <p>A kiválasztott jegyek nem válthatóak vissza és csak a kiválasztott időpontban használhatóak fel. A Krisna-völgyi kedvezménykártya ehhez a kiemelt programunkhoz nem biztosít kedvezményt.

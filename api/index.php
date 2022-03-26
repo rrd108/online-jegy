@@ -279,7 +279,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $stmt->execute([$result['o']]);
             $order = $stmt->fetch();
 
+            // from the order date we can get the product info
+            $days = json_decode(file_get_contents('days.json'));
+            foreach ($days as $day) {
+                if ($day->date == substr($order['date'], 0, 10)) {
+                    $product = $day->product;
+                    break;
+                }
+            }
+
+            $products = json_decode(file_get_contents('products.json'));
+            foreach ($products as $p) {
+                if ($p->product == $product) {
+                    $product = $p;
+                    break;
+                }
+            }
+
             require('./payment-success.php');
+
             $message = str_replace('{{name}}', $order['name'], $message);
             $message = str_replace('{{orderId}}', $result['o'], $message);
             $message = str_replace('{{tourTime}}', $order['date'], $message);

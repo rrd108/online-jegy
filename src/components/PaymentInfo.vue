@@ -36,6 +36,7 @@
 
   export default {
     name: 'PaymentInfo',
+    props: ['urlParams'],
     data() {
       return {
         response: '',
@@ -43,7 +44,7 @@
     },
     created() {
       axios
-        .get(process.env.VUE_APP_API_URL + '?' + this.urlParams)
+        .get(`${process.env.VUE_APP_API_URL}?${this.urlParams}`)
         .then(response => {
           this.response = response.data
           if (response.data.amount) {

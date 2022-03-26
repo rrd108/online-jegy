@@ -1,6 +1,6 @@
 <?php
 
-use PDO;
+//use PDO;
 
 // TODO do not responde to api calls without authentication check if we have a valid token
 
@@ -9,24 +9,13 @@ require('./secrets.php');
 require('./simplepay/config.php');
 require('./simplepay/SimplePayV21.php');
 
-$prices = [
-    'adult' => 6190,
-    'child' => 5290,
-    'herbs' => 12000
-];
-
-$maxSlots = [
-    'tematic' => 30,
-    'herbs' => 15
-];
-
 // no programs on these days
 $fileSpecialDays = './specialDays';
 $handle = fopen($fileSpecialDays, 'r');
 $specialDays = explode("\n", fread($handle, filesize($fileSpecialDays)));
 fclose($handle);
 
-$pdo = new PDO('mysql:host=localhost;dbname=' . $secrets['mysqlTable'], $secrets['mysqlUser'], $secrets['mysqlPass']);
+$pdo = new PDO('mysql:host=' . $secrets['mysql']['host'] . ';dbname=' . $secrets['mysql']['table'], $secrets['mysql']['user'], $secrets['mysql']['pass']);
 
 if ($development) {
     ini_set('display_errors', 1);
@@ -37,6 +26,37 @@ if ($development) {
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $data = file_get_contents('php://input');
     // $response = new stdClass;
+
+    if (isset(json_decode($data)->product) && !isset(json_decode($data)->date)) {
+        // add / edit product
+        $products = json_decode(file_get_contents('products.json'));
+        $product = json_decode($data)->product;
+        $i = json_decode($data)->i;
+
+        if ($i == -1) {
+            array_push($products, $product);
+        } else {
+            $products[$i] = $product;
+        }
+        $handle = fopen('products.json', 'w');
+        fwrite($handle, json_encode($products));
+        fclose($handle);
+
+        echo $data;
+    }
+
+    if (isset(json_decode($data)->product) && isset(json_decode($data)->date)) {
+        // add edit day
+        $days = json_decode(file_get_contents('days.json'));
+        $day = json_decode($data);
+        array_push($days, ['date' => $day->date, 'product' => $day->product]);
+
+        $handle = fopen('days.json', 'w');
+        fwrite($handle, json_encode($days));
+        fclose($handle);
+
+        echo $data;
+    }
 
     if (isset(json_decode($data)->newsletter)) {
         $mailchimpData = [
@@ -73,7 +93,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $orderId = uniqid();
         $data = json_decode($data);
 
-        $amount = ($data->type == 'tematic') ? $prices['adult'] * $data->adult + $prices['child'] * $data->child : $prices['herbs'] * $data->adult;
+        // $data->type
+        $products = json_decode(file_get_contents('products.json'));
+        $product = array_filter($products, function ($product) use ($data) {
+            return $product->product == $data->type;
+        })[0];
+        $amount = $product->adult * $data->adult + $product->child * $data->child;
 
         // save order to the database
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -157,12 +182,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         echo json_encode($result);
     }
 
-    if (isset($_GET['prices'])) {
-        echo json_encode($prices);
+    if (isset($_GET['products'])) {
+        echo file_get_contents('./products.json');
     }
 
-    if (isset($_GET['maxSlots'])) {
-        echo json_encode($maxSlots);
+    if (isset($_GET['days'])) {
+        $_days = json_decode(file_get_contents('./days.json'));
+        // we only need days from today 
+        // TODO delete former days
+        $days = [];
+        foreach ($_days as $day) {
+            if (strtotime($day->date) >= strtotime('today')) {
+                $days[$day->date] = $day->product;
+            }
+        }
+        krsort($days);
+        echo json_encode($days);
     }
 
     if (isset($_GET['specialDays'])) {
@@ -198,7 +233,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             AND payed = 1");
         $stmt->execute([$_GET['slots']]);
         $result = $stmt->fetch();
-        echo $maxSlots[$_GET['type']] - $result['visitors'];
+        echo $result['visitors'];
     }
 
     // simplepay back
@@ -244,7 +279,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $stmt->execute([$result['o']]);
             $order = $stmt->fetch();
 
+            // from the order date we can get the product info
+            $days = json_decode(file_get_contents('days.json'));
+            foreach ($days as $day) {
+                if ($day->date == substr($order['date'], 0, 10)) {
+                    $product = $day->product;
+                    break;
+                }
+            }
+
+            $products = json_decode(file_get_contents('products.json'));
+            foreach ($products as $p) {
+                if ($p->product == $product) {
+                    $product = $p;
+                    break;
+                }
+            }
+
             require('./payment-success.php');
+
             $message = str_replace('{{name}}', $order['name'], $message);
             $message = str_replace('{{orderId}}', $result['o'], $message);
             $message = str_replace('{{tourTime}}', $order['date'], $message);

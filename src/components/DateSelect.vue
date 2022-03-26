@@ -1,31 +1,14 @@
 <template>
   <div class="column">
     <section v-show="!summary">
-      <h3>Túra típus</h3>
-      <div class="row">
-        <font-awesome-icon icon="fire" size="lg" class="column small-2" />
-        <select
-          class="column small-10"
-          v-model="type"
-          @change="checkAvailableSlots"
-        >
-          <option value="tematic">Barangolások Krisna-völgyben</option>
-          <!--option value="tematic-extra">
-            Extra Spirituális zarándoklat csomag
-          </!--option-->
-          <!--option value="herbs">Gyógynövény</!--option-->
-        </select>
-      </div>
-
       <h3>Túra időpont</h3>
       <p class="callout alert" v-show="dateError">Válassz időpontot!</p>
       <div class="row">
         <font-awesome-icon icon="clock" size="lg" class="column small-2" />
         <date-picker
-          v-show="type == 'tematic'"
-          @close="checkAvailableSlots"
+          @close="setData"
           v-model="date"
-          :default-value="nextTourDay.setHours(11, 0, 0, 0)"
+          :default-value="nextTourDay"
           type="datetime"
           format="YYYY-MM-DD HH:mm"
           placeholder="Dátum"
@@ -41,12 +24,20 @@
           :disabled-date="isDisabledDate"
           class="column small-10"
         />
-
-        <!--p v-show="type=='herbs'" class="column small-10">2020. október 11. 09:00</!--p-->
       </div>
+    </section>
 
+    <section v-show="date">
+      <h3>Túra típus</h3>
+      <div class="row">
+        <font-awesome-icon icon="fire" size="lg" class="column small-2" />
+        {{ type }}
+      </div>
+    </section>
+
+    <section v-show="type">
       <h3>Vendégek száma</h3>
-      <div v-if="type == 'tematic'">
+      <div>
         <h4>Max {{ slots }} fő erre az időpontra</h4>
         <p class="callout alert" v-show="overBooking">
           Erre az időpontra csak {{ slots }} helyünk van!
@@ -62,7 +53,7 @@
             class="column small-2"
           />
           <span class="column small-8"
-            >felnőtt {{ prices.adult | toNumFormat }} Ft/fő</span
+            >felnőtt {{ product.adult | toNumFormat }} Ft/fő</span
           >
         </div>
         <div class="row">
@@ -75,20 +66,10 @@
             class="column small-2"
           />
           <span class="column small-8"
-            >gyerek/nyugdíjas {{ prices.child | toNumFormat }} Ft/fő</span
+            >gyerek/nyugdíjas {{ product.child | toNumFormat }} Ft/fő</span
           >
         </div>
       </div>
-      <!--div v-if="type=='herbs'">
-            <h4>Max {{herbSlots}} fő erre az időpontra</h4>
-            <p class="callout alert" v-show="overBooking">Erre az időpontra csak {{herbSlots}} helyünk van!</p>
-            <p class="callout alert" v-show="manError">Add meg a létszámot!</p>
-            <div class="row">
-                <font-awesome-icon icon="male" size="lg" class="column small-2"/>
-                <input type="number" @blur="manError = false" min="0" v-model="adult" class="column small-2">
-                <span class="column small-8">felnőtt {{prices.herbs | toNumFormat}} Ft/fő</span>
-            </div>
-        </div-->
 
       <h3>Elérhetőségeid</h3>
       <p class="callout alert" v-show="nameError">Add meg a neved!</p>
@@ -150,7 +131,7 @@
       </div>
     </section>
 
-    <section v-show="summary">
+    <section v-show="summary" id="summary">
       <h3>Összegzés</h3>
       <div class="row">
         <font-awesome-icon icon="user" size="lg" class="column small-2" />
@@ -214,17 +195,13 @@
     data() {
       return {
         adult: null,
-        nextTourDay: new Date(
-          new Date(today).setDate(
-            new Date(today).getDate() + ((6 + 7 - today.getDay()) % 7)
-          )
-        ),
+        nextTourDay: null,
         child: null,
         date: null,
         dateError: false,
+        days: [],
         email: null,
         emailError: false,
-        //herbSlots: 0,
         manError: false,
         name: null,
         nameError: false,
@@ -232,25 +209,22 @@
         summary: false,
         phone: null,
         phoneError: false,
-        prices: {},
+        product: {},
+        products: [],
         simpleForm: '',
         slots: 0,
         specialDays: [],
         //tomorrow: new Date(new Date(today).setDate(new Date(today).getDate() + 1)),
         tos: false,
         tosError: false,
-        type: 'tematic', // window.location.href.search('herbs') > 0 ? 'herbs' : 'tematic'
+        type: '',
       }
     },
     computed: {
       amount() {
-        //if (this.type == 'tematic') {
-        return this.adult * this.prices.adult + this.child * this.prices.child
-        //}
-        //return this.adult * this.prices.herbs
+        return this.adult * this.product.adult + this.child * this.product.child
       },
       overBooking() {
-        //const slots = (this.type == 'tematic') ? this.slots : this.herbSlots
         const slots = this.slots
         const adult = this.adult ? this.adult : 0
         const child = this.child ? this.child : 0
@@ -258,63 +232,55 @@
       },
     },
     created() {
-      this.type = 'tematic' //it is needed if the user come the page from elvonulas with the browser back button
       axios
-        .get(process.env.VUE_APP_API_URL + '?prices')
-        .then(response => (this.prices = response.data))
-        .catch(error => console.log(error))
-
-      axios
-        .get(process.env.VUE_APP_API_URL + '?maxSlots')
+        .get(`${process.env.VUE_APP_API_URL}?days`)
         .then(response => {
-          this.slots = response.data.tematic
-          //this.herbSlots = response.data.herbs
+          this.days = response.data
+          const days = []
+          for (const prop in response.data) {
+            const d = {}
+            d[prop] = response.data[prop]
+            days.push(d)
+          }
+          const nextTourDay = Object.keys(days[days.length - 1])[0]
+          this.nextTourDay = new Date(nextTourDay).setHours(11, 0, 0, 0)
         })
         .catch(error => console.log(error))
 
       axios
-        .get(process.env.VUE_APP_API_URL + '?specialDays')
-        .then(response => (this.specialDays = response.data))
-        .catch(error => console.log(error))
+        .get(process.env.VUE_APP_API_URL + '?products')
+        .then(response => (this.products = response.data))
+        .catch(error => console.error(error))
     },
     methods: {
-      checkAvailableSlots() {
-        // if (this.type == 'herbs') {
-        //     this.date = new Date(Date.parse('2020-10-11 09:00'))
-        // }
-        if (this.type == 'tematic-extra') {
-          window.location.href =
-            'https://elvonulas.krisnavolgy.hu/termek/spiritualis-zarandoklatok-extra/'
-        }
+      setData() {
+        const date = this.date.toISOString().slice(0, 10)
+        this.type = this.days[date]
+        this.product = this.products.find(
+          product => product.product === this.type
+        )
+
+        this.$emit('productChanged', this.product)
+
         this.dateError = false
         axios
           .get(
-            process.env.VUE_APP_API_URL +
-              '?type=' +
-              this.type +
-              '&slots=' +
-              this.getFormattedDate(this.date)
+            `${process.env.VUE_APP_API_URL}?slots=${this.getFormattedDate(
+              this.date
+            )}`
           )
           .then(response => {
-            // if (this.type == 'herbs') {
-            //     this.herbSlots = response.data
-            // }
-            if (this.type == 'tematic') {
-              this.slots = response.data
-            }
+            this.slots = this.product.slots - response.data
+            window.scrollBy(0, 150)
           })
           .catch(error => console.log(error))
       },
       isDisabledDate(date) {
-        return (
-          this.isPast(date) ||
-          this.isToday(date) ||
-          /* this.isTomorrow(date) ||*/ this.isNotTourDay(date) ||
-          this.isSpecialDate(date)
-        )
+        return this.isPast(date) || this.isToday(date) || !this.isTourDay(date)
       },
-      isNotTourDay(date) {
-        return date.getDay() != 6 // && date.getDay() != 3 // Saturdays or Wednesdays
+      isTourDay(date) {
+        const d = new Date(date.setDate(date.getDate() + 1)) // somehow we should add 1 day
+        return this.days[d.toISOString().substring(0, 10)]
       },
       isPast(date) {
         return date < today
@@ -322,14 +288,11 @@
       isToday(date) {
         return date.getTime() == today.getTime()
       },
-      /*isTomorrow(date) {
-        return date.getTime() == this.tomorrow.getTime()
-    },*/
-      isSpecialDate(date) {
-        // we should add 1 day to get it work as expected
-        const d = new Date(date.setDate(date.getDate() + 1))
-        return this.specialDays.indexOf(d.toISOString().split('T')[0]) != -1
-      },
+      /*isSpecialDate(date) {
+          // we should add 1 day to get it work as expected
+          const d = new Date(date.setDate(date.getDate() + 1))
+          return this.specialDays.indexOf(d.toISOString().split('T')[0]) != -1
+        },*/
       getFormattedDate(date) {
         const timezoneOffset = date.getTimezoneOffset() * 60000
         return (
@@ -380,6 +343,7 @@
         window.fbq('track', 'AddToCart')
 
         this.summary = true
+        setTimeout(() => window.scrollBy(0, window.innerHeight - 150), 100)
 
         axios
           .post(process.env.VUE_APP_API_URL, {
@@ -438,5 +402,8 @@
 <style>
   .mx-date-row .cell:not(.disabled) {
     color: green;
+  }
+  .mx-calendar-content .cell.active {
+    color: #fff;
   }
 </style>

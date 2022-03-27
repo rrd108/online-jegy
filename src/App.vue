@@ -4,8 +4,12 @@
     <main class="row align-center">
       <AdminPage v-if="url == '/admin'" />
       <article v-if="url != '/admin'">
-        <DateSelect v-if="!urlParams" @productChanged="setProduct" />
-        <PaymentInfo v-if="urlParams" :urlParams="urlParams" />
+        <DateSelect
+          v-if="!backrefParams"
+          @productChanged="setProduct"
+          :day="day"
+        />
+        <PaymentInfo v-if="backrefParams" :urlParams="backrefParams" />
       </article>
     </main>
   </div>
@@ -27,13 +31,15 @@
     },
     data() {
       return {
-        product: {},
-        url: window.location.pathname,
-        urlParams:
+        backrefParams:
           window.location.href.split('?')[1] &&
-          window.location.href.split('?')[1].search('fbclid') !== 0
+          window.location.href.split('?')[1].search('r=') !== -1 &&
+          window.location.href.split('?')[1].search('s=') !== -1
             ? window.location.href.split('?')[1]
             : null,
+        day: window.location.href.split('?day=')[1] || null,
+        product: {},
+        url: window.location.pathname,
       }
     },
     methods: {

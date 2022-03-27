@@ -166,7 +166,7 @@
 
   export default {
     name: 'DateSelect',
-    //    components: { DatePicker },
+    props: ['day'],
     data() {
       return {
         adult: null,
@@ -211,27 +211,35 @@
     },
     created() {
       axios
-        .get(`${process.env.VUE_APP_API_URL}?days`)
-        .then(response => {
-          this.days = response.data
-          const days = []
-          for (const prop in response.data) {
-            const d = {}
-            d[prop] = response.data[prop]
-            days.push(d)
-          }
-          const nextTourDay = Object.keys(days[days.length - 1])[0]
-          this.nextTourDay = new Date(nextTourDay).setHours(11, 0, 0, 0)
-        })
-        .catch(error => console.log(error))
-
-      axios
         .get(process.env.VUE_APP_API_URL + '?products')
-        .then(response => (this.products = response.data))
+        .then(response => {
+          this.products = response.data
+          axios
+            .get(`${process.env.VUE_APP_API_URL}?days`)
+            .then(response => {
+              this.days = response.data
+              const days = []
+              for (const prop in response.data) {
+                const d = {}
+                d[prop] = response.data[prop]
+                days.push(d)
+              }
+              const nextTourDay = Object.keys(days[days.length - 1])[0]
+              this.nextTourDay = new Date(nextTourDay).setHours(11, 0, 0, 0)
+
+              if (this.day) {
+                // we got a selected date in the url
+                this.tour = `${this.day} ${this.days[this.day]}`
+                this.setData()
+              }
+            })
+            .catch(error => console.log(error))
+        })
         .catch(error => console.error(error))
     },
     methods: {
       setData() {
+        console.log('setData')
         const date = this.tour.split(' ')[0]
         this.date = new Date(`${date}T11:00:00`)
         this.type = this.days[date]

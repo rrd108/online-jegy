@@ -192,7 +192,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         // TODO delete former days
         $days = [];
         foreach ($_days as $day) {
-            if (strtotime($day->date) >= strtotime('today')) {
+            if (strtotime($day->date) > strtotime('today')) {
                 $days[$day->date] = $day->product;
             }
         }

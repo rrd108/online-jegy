@@ -70,6 +70,7 @@
 
   #app h1,
   #app h2 {
+    font-family: 'Quicksand', sans-serif;
     font-weight: bold;
     margin: 1rem 0;
   }

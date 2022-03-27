@@ -253,24 +253,7 @@
           })
           .catch(error => console.log(error))
       },
-      /*isDisabledDate(date) {
-        return this.isPast(date) || this.isToday(date) || !this.isTourDay(date)
-      },
-      isTourDay(date) {
-        const d = new Date(date.setDate(date.getDate() + 1)) // somehow we should add 1 day
-        return this.days[d.toISOString().substring(0, 10)]
-      },
-      isPast(date) {
-        return date < today
-      },
-      isToday(date) {
-        return date.getTime() == today.getTime()
-      },
-      /*isSpecialDate(date) {
-          // we should add 1 day to get it work as expected
-          const d = new Date(date.setDate(date.getDate() + 1))
-          return this.specialDays.indexOf(d.toISOString().split('T')[0]) != -1
-        },*/
+
       getFormattedDate(date) {
         const timezoneOffset = date.getTimezoneOffset() * 60000
         return (

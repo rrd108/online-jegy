@@ -42,6 +42,10 @@
       getProduct(productName) {
         return this.products.find(product => product.product == productName)
       },
+      setClipboard(text) {
+        const url = window.location.href.replace('admin', '')
+        window.navigator.clipboard.writeText(`${url}?day=${text}`)
+      },
     },
   }
 </script>
@@ -68,8 +72,13 @@
     <ul>
       <li v-for="product in days" :key="product.product" class="grid">
         <span>{{ Object.keys(product)[0] }}</span>
-        <span>{{ getProduct(product[Object.keys(product)[0]]).product }}</span>
-        <span>{{ getProduct(product[Object.keys(product)[0]]).slots }} fő</span>
+        <span>
+          {{ getProduct(product[Object.keys(product)[0]]).product }}
+          {{ getProduct(product[Object.keys(product)[0]]).slots }} fő
+        </span>
+        <span @click="setClipboard(Object.keys(product)[0])" class="cg">
+          <font-awesome-icon icon="link" />
+        </span>
       </li>
     </ul>
   </div>
@@ -84,5 +93,8 @@
   }
   input::placeholder {
     font-size: 1rem;
+  }
+  .cg {
+    cursor: grab;
   }
 </style>

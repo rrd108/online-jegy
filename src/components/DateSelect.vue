@@ -1,11 +1,16 @@
 <template>
   <div class="column">
-    <section v-show="!summary">
+    <section>
       <h3>Túra időpont</h3>
       <p class="callout alert" v-show="dateError">Válassz időpontot!</p>
       <div class="row">
         <font-awesome-icon icon="clock" size="lg" class="column small-2" />
-        <select v-model="tour" class="column small-10" @change="setData">
+        <select
+          v-model="tour"
+          class="column small-10"
+          @change="setData"
+          :disabled="summary"
+        >
           <option v-for="day in filteredDays" :key="day[0]">
             {{ day[0] }} {{ day[1] }}
           </option>

@@ -1,24 +1,11 @@
 # jegy
 
-## Project setup
-```
-npm install
-```
+Start the app
 
-### Compiles and hot-reloads for development
 ```
+sudo systemctl start docker
+sudo chmod 666 /var/run/docker.sock                                                                                     1 ✘
+cd ~/docker
+docker compose up php74
 npm run serve
 ```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).

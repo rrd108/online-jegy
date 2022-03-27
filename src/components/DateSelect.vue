@@ -5,33 +5,11 @@
       <p class="callout alert" v-show="dateError">Válassz időpontot!</p>
       <div class="row">
         <font-awesome-icon icon="clock" size="lg" class="column small-2" />
-        <date-picker
-          @close="setData"
-          v-model="date"
-          :default-value="nextTourDay"
-          type="datetime"
-          format="YYYY-MM-DD HH:mm"
-          placeholder="Dátum"
-          :editable="false"
-          :show-minute="false"
-          :show-second="false"
-          :time-picker-options="{
-            start: '11:00',
-            step: '1:00',
-            end: '11:00',
-            format: 'HH:mm',
-          }"
-          :disabled-date="isDisabledDate"
-          class="column small-10"
-        />
-      </div>
-    </section>
-
-    <section v-show="date">
-      <h3>Túra típus</h3>
-      <div class="row">
-        <font-awesome-icon icon="fire" size="lg" class="column small-2" />
-        {{ type }}
+        <select v-model="tour" class="column small-10" @change="setData">
+          <option v-for="day in filteredDays" :key="day[0]">
+            {{ day[0] }} {{ day[1] }}
+          </option>
+        </select>
       </div>
     </section>
 
@@ -181,9 +159,6 @@
 </template>
 
 <script>
-  import DatePicker from 'vue2-datepicker'
-  import 'vue2-datepicker/index.css'
-  import 'vue2-datepicker/locale/hu'
   import axios from 'axios'
 
   const today = new Date()
@@ -191,7 +166,7 @@
 
   export default {
     name: 'DateSelect',
-    components: { DatePicker },
+    //    components: { DatePicker },
     data() {
       return {
         adult: null,
@@ -214,15 +189,18 @@
         simpleForm: '',
         slots: 0,
         specialDays: [],
-        //tomorrow: new Date(new Date(today).setDate(new Date(today).getDate() + 1)),
         tos: false,
         tosError: false,
+        tour: '',
         type: '',
       }
     },
     computed: {
       amount() {
         return this.adult * this.product.adult + this.child * this.product.child
+      },
+      filteredDays() {
+        return Object.entries(this.days).sort((a, b) => (a[0] < b[0] ? -1 : 1))
       },
       overBooking() {
         const slots = this.slots
@@ -254,7 +232,8 @@
     },
     methods: {
       setData() {
-        const date = this.date.toISOString().slice(0, 10)
+        const date = this.tour.split(' ')[0]
+        this.date = new Date(`${date}T11:00:00`)
         this.type = this.days[date]
         this.product = this.products.find(
           product => product.product === this.type
@@ -271,11 +250,10 @@
           )
           .then(response => {
             this.slots = this.product.slots - response.data
-            window.scrollBy(0, 150)
           })
           .catch(error => console.log(error))
       },
-      isDisabledDate(date) {
+      /*isDisabledDate(date) {
         return this.isPast(date) || this.isToday(date) || !this.isTourDay(date)
       },
       isTourDay(date) {

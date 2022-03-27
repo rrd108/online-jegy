@@ -50,7 +50,7 @@
 <template>
   <div>
     <h2>Barangolások</h2>
-    <div class="grid">
+    <div class="grid cp">
       <input type="text" v-model="product.product" placeholder="Túra név" />
       <input
         type="number"
@@ -78,7 +78,7 @@
       <li
         v-for="product in products"
         :key="product.product"
-        class="grid"
+        class="grid cp"
         @click="setProduct(product)"
       >
         <span>{{ product.product }}</span>
@@ -100,7 +100,6 @@
   div,
   li {
     grid-template-columns: 4fr 2fr 2fr 2fr 1fr;
-    cursor: pointer;
   }
   .right {
     text-align: right;

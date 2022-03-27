@@ -94,4 +94,10 @@
     color: #f00;
     padding: 0.5rem;
   }
+  .cp {
+    cursor: pointer;
+  }
+  li:nth-child(even) {
+    background-color: #eee;
+  }
 </style>

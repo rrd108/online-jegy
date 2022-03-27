@@ -64,7 +64,7 @@
               size="xs"
               @click="editTicket(visitor)"
               title="Foglalás szerkesztése"
-              class="action"
+              class="action cp"
             />
 
             <font-awesome-icon
@@ -73,7 +73,7 @@
               v-show="visitor.payed != 1"
               @click="removeBooking(visitor)"
               title="Foglalás törlése"
-              class="action"
+              class="action cp"
             />
 
             <font-awesome-icon
@@ -81,7 +81,7 @@
               size="xs"
               v-show="visitor.payed != 1"
               @click="setPayed(visitor)"
-              class="action"
+              class="action cp"
               title="Fizetvére állítom"
             />
             {{ visitor.id }}
@@ -397,9 +397,6 @@
   }
   .used {
     text-decoration: line-through;
-  }
-  .action {
-    cursor: pointer;
   }
   .action:hover {
     color: #258dad;

@@ -2,7 +2,7 @@
   <header>
     <div class="row">
       <div
-        class="column small-2 info"
+        class="column small-2 cp"
         @click="showInfo = showInfo ? false : true"
       >
         <font-awesome-icon
@@ -23,7 +23,7 @@
           <font-awesome-icon
             icon="info-circle"
             size="lg"
-            class="column small-2 info"
+            class="column small-2 cp"
           />
           Információk
         </h1>
@@ -85,9 +85,7 @@
   #app header h1 {
     margin: 0;
   }
-  .info {
-    cursor: pointer;
-  }
+
   p {
     margin: 0;
   }

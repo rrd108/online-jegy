@@ -35,9 +35,9 @@
             v-model="adult"
             class="column small-2"
           />
-          <span class="column small-8"
-            >felnőtt {{ product.adult | toNumFormat }} Ft/fő</span
-          >
+          <span class="column small-8">
+            felnőtt {{ product.adult | toNumFormat }} Ft/fő
+          </span>
         </div>
         <div class="row">
           <font-awesome-icon icon="child" size="lg" class="column small-2" />
@@ -48,9 +48,9 @@
             v-model="child"
             class="column small-2"
           />
-          <span class="column small-8"
-            >gyerek/nyugdíjas {{ product.child | toNumFormat }} Ft/fő</span
-          >
+          <span class="column small-8">
+            gyerek/nyugdíjas {{ product.child | toNumFormat }} Ft/fő
+          </span>
         </div>
       </div>
 
@@ -110,7 +110,9 @@
         <label for="newsletter">Feliratkozom a krisna-völgy hírlevélre</label>
       </div>
       <div class="row align-center">
-        <button class="button" @click="order">Megrendelés</button>
+        <button class="button" @click="order" :disabled="overBooking">
+          Megrendelés
+        </button>
       </div>
     </section>
 
@@ -216,11 +218,11 @@
     },
     created() {
       axios
-        .get(process.env.VUE_APP_API_URL + '?products')
+        .get(import.meta.env.VITE_APP_API_URL + '?products')
         .then(response => {
           this.products = response.data
           axios
-            .get(`${process.env.VUE_APP_API_URL}?days`)
+            .get(`${import.meta.env.VITE_APP_API_URL}?days`)
             .then(response => {
               this.days = response.data
               const days = []
@@ -257,7 +259,7 @@
         this.dateError = false
         axios
           .get(
-            `${process.env.VUE_APP_API_URL}?slots=${this.getFormattedDate(
+            `${import.meta.env.VITE_APP_API_URL}?slots=${this.getFormattedDate(
               this.date
             )}`
           )
@@ -320,7 +322,7 @@
         setTimeout(() => window.scrollBy(0, window.innerHeight - 150), 100)
 
         axios
-          .post(process.env.VUE_APP_API_URL, {
+          .post(import.meta.env.VITE_APP_API_URL, {
             date: this.getFormattedDate(this.date),
             adult: this.adult,
             child: this.child,

@@ -120,7 +120,7 @@
   import { CalendarView, CalendarViewHeader } from 'vue-simple-calendar'
   // https://github.com/richardtallent/vue-simple-calendar
 
-  require('vue-simple-calendar/static/css/default.css')
+  import 'vue-simple-calendar/static/css/default.css'
 
   export default {
     name: 'AdminPage',
@@ -132,7 +132,7 @@
     },
     created() {
       axios
-        .get(`${process.env.VUE_APP_API_URL}?days`)
+        .get(`${import.meta.env.VITE_APP_API_URL}?days`)
         .then(response => {
           for (const prop in response.data) {
             const d = {}
@@ -143,17 +143,17 @@
         .catch(error => console.log(error))
 
       axios
-        .get(process.env.VUE_APP_API_URL + '?products')
+        .get(import.meta.env.VITE_APP_API_URL + '?products')
         .then(response => (this.products = response.data))
         .catch(error => console.log(error))
 
       axios
-        .get(process.env.VUE_APP_API_URL + '?checkins')
+        .get(import.meta.env.VITE_APP_API_URL + '?checkins')
         .then(response => (this.checkins = response.data))
         .catch(error => console.log(error))
 
       axios
-        .get(process.env.VUE_APP_API_URL + '?specialDays')
+        .get(import.meta.env.VITE_APP_API_URL + '?specialDays')
         .then(response => (this.specialDays = response.data))
         .catch(error => console.log(error))
     },
@@ -183,7 +183,7 @@
     methods: {
       addSpecialDay() {
         axios
-          .patch(process.env.VUE_APP_API_URL, {
+          .patch(import.meta.env.VITE_APP_API_URL, {
             newSpecialDay: this.newSpecialDay,
           })
           .then(response => {
@@ -197,7 +197,7 @@
         // event.id : 2020-05-17 14:00:00
         this.timeSlot = event.id
         axios
-          .get(process.env.VUE_APP_API_URL + '?visitors=' + event.id)
+          .get(import.meta.env.VITE_APP_API_URL + '?visitors=' + event.id)
           .then(response => (this.visitors = response.data))
           .catch(error => console.log(error))
       },
@@ -214,7 +214,7 @@
             if (newDate != visitor.date.substr(0, 13)) {
               newDate = newDate + ':00:00'
               axios
-                .patch(process.env.VUE_APP_API_URL, {
+                .patch(import.meta.env.VITE_APP_API_URL, {
                   newDate,
                   booking: visitor.id,
                 })
@@ -282,7 +282,7 @@
       },
       login() {
         axios
-          .post(process.env.VUE_APP_API_TOKEN_URL, {
+          .post(import.meta.env.VITE_APP_API_TOKEN_URL, {
             email: this.email,
             password: this.password,
           })
@@ -299,7 +299,7 @@
         }).then(ticket => {
           if (ticket) {
             axios
-              .delete(process.env.VUE_APP_API_URL, {
+              .delete(import.meta.env.VITE_APP_API_URL, {
                 data: { delete: visitor.id },
               })
               .then(
@@ -317,7 +317,9 @@
         this.visitors = []
         if (this.searchTerm.length > 2) {
           axios
-            .get(process.env.VUE_APP_API_URL + '?search=' + this.searchTerm)
+            .get(
+              import.meta.env.VITE_APP_API_URL + '?search=' + this.searchTerm
+            )
             .then(response => (this.visitors = response.data))
             .catch(error => console.log(error))
         }
@@ -332,7 +334,7 @@
         }).then(ticket => {
           if (ticket) {
             axios
-              .patch(process.env.VUE_APP_API_URL, {
+              .patch(import.meta.env.VITE_APP_API_URL, {
                 setPayed: visitor.id,
               })
               .then(
@@ -361,7 +363,7 @@
           }).then(ticket => {
             if (ticket) {
               axios
-                .post(process.env.VUE_APP_API_URL, {
+                .post(import.meta.env.VITE_APP_API_URL, {
                   used: visitor.id,
                 })
                 .then(() => (visitor.used = Math.abs(visitor.used - 1)))

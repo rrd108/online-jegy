@@ -44,7 +44,7 @@
     },
     created() {
       axios
-        .get(`${process.env.VUE_APP_API_URL}?${this.urlParams}`)
+        .get(`${import.meta.env.VITE_APP_API_URL}?${this.urlParams}`)
         .then(response => {
           this.response = response.data
           if (response.data.amount) {

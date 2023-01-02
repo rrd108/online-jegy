@@ -3,29 +3,26 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.30",
     "@fortawesome/free-solid-svg-icons": "^5.14.0",
     "@fortawesome/vue-fontawesome": "^0.1.10",
     "axios": "^0.21.1",
-    "core-js": "^3.6.4",
     "sweetalert": "^2.1.2",
     "vue": "^2.6.11",
     "vue-simple-calendar": "^4.4.0",
-    "vue2-datepicker": "^3.6.2"
+    "vue2-datepicker": "^3.6.2",
+    "@vitejs/plugin-vue": "^1.6.1",
+    "vite": "^2.5.4",
+    "vite-plugin-vue2": "1.9.0"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "^4.5.4",
-    "@vue/cli-plugin-eslint": "^4.5.4",
-    "@vue/cli-service": "^4.1.1",
-    "babel-eslint": "^10.1.0",
     "eslint": "^6.7.2",
-    "eslint-plugin-vue": "^6.2.2",
-    "vue-template-compiler": "^2.6.11"
+    "eslint-plugin-vue": "^6.2.2"
   },
   "eslintConfig": {
     "root": true,

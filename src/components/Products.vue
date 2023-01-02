@@ -21,7 +21,7 @@
           p => p.product == this.product.product
         )
         axios
-          .post(process.env.VUE_APP_API_URL, {
+          .post(import.meta.env.VITE_APP_API_URL, {
             product: this.product,
             i,
           })

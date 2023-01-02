@@ -16,10 +16,10 @@
 </template>
 
 <script>
-  import AdminPage from './components/AdminPage'
-  import AppHeader from './components/AppHeader'
-  import DateSelect from './components/DateSelect'
-  import PaymentInfo from './components/PaymentInfo'
+  import AdminPage from './components/AdminPage.vue'
+  import AppHeader from './components/AppHeader.vue'
+  import DateSelect from './components/DateSelect.vue'
+  import PaymentInfo from './components/PaymentInfo.vue'
 
   export default {
     name: 'App',

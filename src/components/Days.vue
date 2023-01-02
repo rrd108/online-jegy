@@ -27,7 +27,7 @@
         }
 
         axios
-          .post(process.env.VUE_APP_API_URL, {
+          .post(import.meta.env.VITE_APP_API_URL, {
             date: this.date,
             product: this.selectedProduct,
           })

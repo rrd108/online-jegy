@@ -9,3 +9,5 @@ cd ~/docker
 docker compose up php74
 npm run serve
 ```
+
+Deploying is via ftp

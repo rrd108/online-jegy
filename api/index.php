@@ -95,9 +95,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         // $data->type
         $products = json_decode(file_get_contents('products.json'));
-        $product = array_filter($products, function ($product) use ($data) {
+        $product = array_values(array_filter($products, function ($product) use ($data) {
             return $product->product == $data->type;
-        })[0];
+        }))[0];
         $amount = $product->adult * $data->adult + $product->child * $data->child;
 
         // save order to the database

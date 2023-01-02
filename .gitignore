@@ -24,3 +24,5 @@ yarn-error.log*
 *.sw?
 
 .env.development
+
+api/log/

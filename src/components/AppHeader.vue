@@ -14,7 +14,7 @@
       </div>
       <h1 class="column small-7 text-center">Barangolások Krisna-völgyben</h1>
       <div class="column small-3">
-        <img src="../assets/logo.png" />
+        <img src="@/assets/logo.png" />
       </div>
     </div>
     <div class="row">

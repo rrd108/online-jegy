@@ -154,11 +154,12 @@
         <a
           href="http://simplepartner.hu/PaymentService/Fizetesi_tajekoztato.pdf"
           class="simplelogo column small-12 large-6"
-          ><img src="../assets/simple.jpg"
-        /></a>
+        >
+          <img src="@/assets/simple.jpg" />
+        </a>
       </div>
       <div class="row align-center">
-        <img src="../assets/ajax-loader.gif" v-show="!simpleForm" />
+        <img src="@/assets/ajax-loader.gif" v-show="!simpleForm" />
         <span v-html="simpleForm"></span>
       </div>
     </section>

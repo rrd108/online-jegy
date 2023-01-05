@@ -112,7 +112,7 @@
   </div>
 </template>
 
-<script>
+<script lang="js">
   import axios from 'axios'
   import swal from 'sweetalert'
   import Products from './Products.vue'

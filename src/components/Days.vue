@@ -12,6 +12,13 @@
         selectedProduct: '',
       }
     },
+    computed: {
+      sortedDays() {
+        return this.days
+          .map(d => ({ date: Object.keys(d)[0], product: Object.values(d)[0] }))
+          .sort((a, b) => new Date(a.date) - new Date(b.date))
+      },
+    },
     methods: {
       addDate() {
         this.error = ''
@@ -40,7 +47,9 @@
           .catch(error => console.log(error))
       },
       getProduct(productName) {
-        return this.products.find(product => product.product == productName)
+        return this.products.find(
+          p => p.product.slice(0, 12) == productName.slice(0, 12)
+        )
       },
       setClipboard(text) {
         const url = window.location.href.replace('admin', '')
@@ -70,15 +79,15 @@
       <button class="button" @click="addDate">Ment</button>
     </div>
     <ul>
-      <li v-for="product in days" :key="product.product" class="grid">
-        <span>{{ Object.keys(product)[0] }}</span>
-        <span>
-          {{ getProduct(product[Object.keys(product)[0]]).product }}
-          {{ getProduct(product[Object.keys(product)[0]]).slots }} fő
-        </span>
-        <span @click="setClipboard(Object.keys(product)[0])" class="cg">
-          <font-awesome-icon icon="link" />
-        </span>
+      <li v-for="product in sortedDays" class="grid">
+        <p>
+          {{ product.date }}
+          <span @click="setClipboard(product.date)" class="cg">
+            <font-awesome-icon icon="link" />
+          </span>
+        </p>
+        <span> {{ product.product }} </span>
+        <strong> {{ getProduct(product.product).slots }} fő </strong>
       </li>
     </ul>
   </div>

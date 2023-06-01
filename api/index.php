@@ -2,7 +2,7 @@
 
 //use PDO;
 
-// TODO do not responde to api calls without authentication check if we have a valid token
+// TODO do not respond to api calls without authentication check if we have a valid token
 
 require('./headers.php');
 require('./secrets.php');

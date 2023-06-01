@@ -160,6 +160,7 @@
       </div>
       <div class="row align-center">
         <img src="@/assets/ajax-loader.gif" v-show="!simpleForm" />
+        <small> Fizetéshez kérjük kattints az alábbi gombra</small>
         <span v-html="simpleForm"></span>
       </div>
     </section>
@@ -320,7 +321,7 @@
         window.fbq('track', 'AddToCart')
 
         this.summary = true
-        setTimeout(() => window.scrollBy(0, window.innerHeight - 150), 100)
+        setTimeout(() => window.scrollBy(0, window.innerHeight - 20), 100)
 
         axios
           .post(import.meta.env.VITE_APP_API_URL, {
@@ -354,7 +355,7 @@
   }
   .button,
   span >>> button {
-    background-color: #574634;
+    background-color: #258dad;
   }
   span >>> button {
     display: inline-block;
@@ -374,6 +375,9 @@
   }
   .simplelogo {
     margin: 1rem;
+  }
+  #summary {
+    margin-bottom: 2rem;
   }
 </style>
 <style>
